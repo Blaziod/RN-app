@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Headers from '../../Components/Headers/Headers';
 // import Headers from "../Components/Header";
 // import SettingsPic from '../../assets/SVG/3BB.svg';
 // import Instagram from '../../assets/SVG/InstagramSmall.svg';
@@ -147,6 +148,7 @@ export default function Home() {
         scrollEnabled={true}
         contentInsetAdjustmentBehavior="automatic">
         <View style={styles.AppContainer}>
+          <Headers />
           <View style={{paddingBottom: 20, paddingHorizontal: 20}}>
             <View style={styles.walletBalanceContainer}>
               <Text style={styles.WalletBalance}>Wallet bal:</Text>

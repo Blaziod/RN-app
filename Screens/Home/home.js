@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-shadow */
 /* eslint-disable react-native/no-inline-styles */
-/* eslint-disable no-undef */
 import React, {useEffect, useState} from 'react';
 import {
   Image,
@@ -84,7 +83,7 @@ export default function Home() {
         setUserData(userData);
         console.log('Here I am', userData);
 
-        if (!loaded || !userData) {
+        if (!userData) {
           navigation.navigate('SignIn');
         }
       })
@@ -108,39 +107,39 @@ export default function Home() {
     }
   }, [hasFetchedBalance, isFocused]);
 
-  const logout = async () => {
-    try {
-      const response = await fetch('https://api.trendit3.com/api/logout', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${userData.accessToken}`, // Add the access token to the headers
-        },
-        credentials: 'include', // This is required to include the cookie in the request
-      });
+  // const logout = async () => {
+  //   try {
+  //     const response = await fetch('https://api.trendit3.com/api/logout', {
+  //       method: 'DELETE',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         Authorization: `Bearer ${userData.accessToken}`, // Add the access token to the headers
+  //       },
+  //       credentials: 'include', // This is required to include the cookie in the request
+  //     });
 
-      const data = await response.json();
+  //     const data = await response.json();
 
-      if (response.ok) {
-        // return response.data;
-        console.log('Successful', response);
-        // Clear the access token
-        await AsyncStorage.removeItem('userbalance');
-        await AsyncStorage.removeItem('userdata1');
-        await AsyncStorage.removeItem('userdata');
-        await AsyncStorage.removeItem('userdata2');
-        await AsyncStorage.removeItem('userdatas');
-        await AsyncStorage.removeItem('userdatafiles1');
-        console.log('Token cleared successfully');
-        navigation.navigate('SignIn');
-      } else {
-        throw new Error(data.message);
-      }
-    } catch (error) {
-      console.error('Error during logout:', error);
-      return null;
-    }
-  };
+  //     if (response.ok) {
+  //       // return response.data;
+  //       console.log('Successful', response);
+  //       // Clear the access token
+  //       await AsyncStorage.removeItem('userbalance');
+  //       await AsyncStorage.removeItem('userdata1');
+  //       await AsyncStorage.removeItem('userdata');
+  //       await AsyncStorage.removeItem('userdata2');
+  //       await AsyncStorage.removeItem('userdatas');
+  //       await AsyncStorage.removeItem('userdatafiles1');
+  //       console.log('Token cleared successfully');
+  //       navigation.navigate('SignIn');
+  //     } else {
+  //       throw new Error(data.message);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error during logout:', error);
+  //     return null;
+  //   }
+  // };
 
   return (
     <SafeAreaView>
@@ -247,56 +246,6 @@ export default function Home() {
               <View style={styles.IconAA}>{/* <Cross /> */}</View>
             </View>
           </View>
-          <TouchableOpacity
-            style={{backgroundColor: '#fff', width: 100, height: 50}}
-            onPress={async () => {
-              const result = await logout();
-              if (result) {
-                console.log('Successful', data);
-                Toast.show({
-                  type: 'success',
-                  text1: 'Success',
-                  text2: data.message,
-                  style: {
-                    borderLeftColor: 'pink',
-                    backgroundColor: 'yellow',
-                    width: '80%',
-                    alignSelf: 'center',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  },
-                  text1Style: {
-                    color: 'red',
-                    fontSize: 20,
-                  },
-                  text2Style: {
-                    color: 'green',
-                    fontSize: 20,
-                    fontFamily: 'CamptonBold',
-                  },
-                });
-
-                // console.log("Wallet Balance", data.wallet);
-                navigation.navigate('SignIn');
-              } else {
-                // Show an error message
-              }
-            }}>
-            <Text>Logout</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{backgroundColor: '#fff', width: 100, height: 50}}
-            onPress={() => {
-              AsyncStorage.removeItem('userdata1');
-              AsyncStorage.removeItem('userdata');
-              AsyncStorage.removeItem('userdata2');
-              AsyncStorage.removeItem('userdatas');
-              AsyncStorage.removeItem('userdatafiles1');
-              console.log('Token cleared successfully');
-              navigation.navigate('SignIn');
-            }}>
-            <Text>Clear Token</Text>
-          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -348,20 +297,24 @@ const styles = StyleSheet.create({
   },
   fundText: {
     fontSize: 12.8,
+    color: '#000',
     fontFamily: 'CamptonBold',
   },
   withdrawText: {
     fontSize: 12.8,
     fontFamily: 'CamptonBold',
+    color: '#000',
   },
   WalletBalance: {
     fontSize: 14,
     paddingBottom: 10,
     fontFamily: 'CamptonMedium',
+    color: '#000',
   },
   WalletAmount: {
     fontFamily: 'CamptonBook',
     fontSize: 40,
+    color: '#000',
   },
   fundIcon: {
     height: 15,
@@ -387,12 +340,14 @@ const styles = StyleSheet.create({
     padding: 5,
     paddingTop: 50,
     paddingLeft: 10,
+    color: '#000',
   },
   advertSubText: {
     fontFamily: 'CamptonBook',
     padding: 5,
     fontSize: 13,
     paddingLeft: 10,
+    color: '#000',
   },
   AdvertImage: {
     position: 'absolute',
@@ -452,6 +407,7 @@ const styles = StyleSheet.create({
     width: 300,
     paddingBottom: 20,
     paddingLeft: 20,
+    color: '#000',
   },
   GotoButton: {
     width: 150,

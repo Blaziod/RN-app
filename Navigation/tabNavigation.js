@@ -7,7 +7,8 @@ import {View, Image, Text} from 'react-native';
 
 //Screens
 import Home from '../Screens/Home/home';
-import SignIn from '../Screens/Auth/signIn';
+// import SignIn from '../Screens/Auth/signIn';
+import Earn from '../Screens/Earn/earn';
 
 const Tab = createBottomTabNavigator();
 
@@ -52,7 +53,7 @@ const TabNavigation = () => {
       />
       <Tab.Screen
         name="EarnPage"
-        component={SignIn}
+        component={Earn}
         options={{
           headerShown: false,
           tabBarIcon: ({focused}) => (

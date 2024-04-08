@@ -101,40 +101,6 @@ export default function Home() {
     }
   }, [hasFetchedBalance, isFocused]);
 
-  // const logout = async () => {
-  //   try {
-  //     const response = await fetch('https://api.trendit3.com/api/logout', {
-  //       method: 'DELETE',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         Authorization: `Bearer ${userData.accessToken}`, // Add the access token to the headers
-  //       },
-  //       credentials: 'include', // This is required to include the cookie in the request
-  //     });
-
-  //     const data = await response.json();
-
-  //     if (response.ok) {
-  //       // return response.data;
-  //       console.log('Successful', response);
-  //       // Clear the access token
-  //       await AsyncStorage.removeItem('userbalance');
-  //       await AsyncStorage.removeItem('userdata1');
-  //       await AsyncStorage.removeItem('userdata');
-  //       await AsyncStorage.removeItem('userdata2');
-  //       await AsyncStorage.removeItem('userdatas');
-  //       await AsyncStorage.removeItem('userdatafiles1');
-  //       console.log('Token cleared successfully');
-  //       navigation.navigate('SignIn');
-  //     } else {
-  //       throw new Error(data.message);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error during logout:', error);
-  //     return null;
-  //   }
-  // };
-
   return (
     <SafeAreaView>
       <ScrollView

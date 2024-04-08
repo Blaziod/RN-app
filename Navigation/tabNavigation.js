@@ -9,6 +9,7 @@ import {View, Image, Text} from 'react-native';
 import Home from '../Screens/Home/home';
 // import SignIn from '../Screens/Auth/signIn';
 import Earn from '../Screens/Earn/earn';
+import More from '../Screens/More/more';
 
 const Tab = createBottomTabNavigator();
 
@@ -148,8 +149,8 @@ const TabNavigation = () => {
         }}
       />
       <Tab.Screen
-        name="Refer"
-        component={Home}
+        name="More"
+        component={More}
         options={{
           headerShown: false,
           tabBarIcon: ({focused}) => (

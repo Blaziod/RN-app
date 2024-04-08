@@ -77,7 +77,7 @@ const SignIn = () => {
             console.error('Error storing user data:', error);
           });
         console.log('Success signing in:', data);
-        navigation.navigate('Home');
+        navigation.navigate('Tabs', {screen: 'Home'});
       } else {
         const errorData = await response.json();
         console.error('Error signing in:', errorData);
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
   },
   header: {
     marginBottom: 30,
-    alignItems: 'center', // Center horizontally for logo
+    alignItems: 'center',
   },
 
   logo: {

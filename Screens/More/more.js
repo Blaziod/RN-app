@@ -372,7 +372,7 @@ const More = () => {
 
                 <Text style={{color: '#FF3D00', fontSize: 14}}>Sign Out</Text>
               </TouchableOpacity>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={{backgroundColor: '#fff', width: 100, height: 50}}
                 onPress={() => {
                   AsyncStorage.removeItem('userdatafiles1');
@@ -384,7 +384,7 @@ const More = () => {
                   navigation.navigate('SignIn');
                 }}>
                 <Text>Clear Token</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           </View>
         </View>

@@ -10,6 +10,7 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  // Dimensions,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Headers from '../../Components/Headers/Headers';
@@ -23,6 +24,7 @@ export default function Home() {
   const [hasFetchedBalance, setHasFetchedBalance] = useState(false);
   const navigation = useNavigation();
   const isFocused = useIsFocused();
+  // const WIDTH = Dimensions.get('screen').width;
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -108,7 +110,7 @@ export default function Home() {
         contentInsetAdjustmentBehavior="automatic">
         <View style={styles.AppContainer}>
           <Headers />
-          <View style={{paddingBottom: 20, paddingHorizontal: 20}}>
+          <View style={{paddingBottom: 20}}>
             <View style={styles.walletBalanceContainer}>
               <Text style={styles.WalletBalance}>Wallet bal:</Text>
               <Text style={styles.WalletAmount}>₦{userBalance?.balance}</Text>
@@ -211,11 +213,7 @@ export default function Home() {
             </TouchableOpacity>
           </View>
           <Text style={styles.WhatText}>What’s Up</Text>
-          <View
-            style={{
-              paddingHorizontal: 20,
-              paddingBottom: 20,
-            }}>
+          <View style={styles.InstagramContainer}>
             <View style={styles.ProfileSetUp}>
               <View style={styles.ProfileTexting}>
                 <Text style={styles.SetUpText}>
@@ -262,11 +260,7 @@ export default function Home() {
               </View>
             </View>
           </View>
-          <View
-            style={{
-              paddingHorizontal: 20,
-              paddingBottom: 20,
-            }}>
+          <View style={styles.InstagramContainer}>
             <View style={styles.ProfileSetUp}>
               <View style={styles.ProfileTexting}>
                 <Text style={styles.SetUpText}>
@@ -278,6 +272,7 @@ export default function Home() {
                   below to link your Facebook account now.
                 </Text>
                 <View style={{paddingTop: 10}} />
+
                 <TouchableOpacity style={styles.GotoButton2}>
                   <Svg
                     width="20"
@@ -346,6 +341,7 @@ export default function Home() {
                   />
                 </Svg>
               </View>
+              {/* </View> */}
             </View>
           </View>
         </View>
@@ -359,6 +355,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: '#1E1E1E',
+    width: '100%',
   },
 
   walletBalanceContainer: {
@@ -367,16 +364,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 230,
     borderRadius: 4,
+    width: '91%',
+    alignSelf: 'center',
   },
   WalletButtonsContainer: {
     flexDirection: 'row',
     gap: 20,
     paddingTop: 20,
+    display: 'flex',
   },
   fundButton: {
-    width: 109,
+    // width: 'auto',
     backgroundColor: '#FFFFFF',
-    height: 34,
+    height: 35,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
@@ -384,6 +384,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     flexDirection: 'row',
     gap: 10,
+    padding: 7,
   },
   withdrawButton: {
     width: 109,
@@ -425,14 +426,15 @@ const styles = StyleSheet.create({
   },
   TwoContainer: {
     flexDirection: 'row',
-    paddingHorizontal: 20,
     paddingBottom: 10,
     gap: 10,
+    justifyContent: 'center',
+    width: '100%',
   },
   advert: {
     backgroundColor: '#EEFFFF',
     height: 180,
-    width: 180,
+    width: '45%',
     borderRadius: 4,
     position: 'relative',
   },
@@ -468,7 +470,7 @@ const styles = StyleSheet.create({
   task: {
     backgroundColor: '#FFEEEE',
     height: 180,
-    width: 180,
+    width: '45%',
     borderRadius: 4,
     position: 'relative',
   },
@@ -490,6 +492,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#171717',
     flexDirection: 'row',
     paddingVertical: 30,
+    width: '100%',
   },
   SetUpText: {
     color: '#fff',
@@ -501,18 +504,20 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontFamily: 'CamptonBook',
     fontSize: 13,
+    width: '100%',
   },
   IconAA: {
-    paddingLeft: 30,
+    // paddingLeft: 30,
   },
   ProfileTexting: {
-    width: 300,
+    width: '92%',
     paddingBottom: 20,
-    paddingLeft: 20,
+    justifyContent: 'center',
     color: '#000',
+    padding: 10,
   },
   GotoButton: {
-    width: 150,
+    width: '50%',
     height: 40,
     justifyContent: 'center',
     alignItems: 'center',
@@ -523,7 +528,7 @@ const styles = StyleSheet.create({
     gap: 1,
   },
   GotoButton2: {
-    width: 230,
+    width: '70%',
     height: 40,
     justifyContent: 'center',
     alignItems: 'center',
@@ -536,5 +541,11 @@ const styles = StyleSheet.create({
   GotoText: {
     color: '#fff',
     fontFamily: 'CamptonBold',
+  },
+  InstagramContainer: {
+    width: '91%',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    paddingBottom: 20,
   },
 });

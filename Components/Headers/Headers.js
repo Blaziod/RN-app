@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -16,47 +17,54 @@ const Headers = () => {
     });
 
   if (!userData) {
-    return null;
+    return (
+      <View>
+        <Text style={{color: '#000', fontSize: 30}}>HELLO</Text>
+      </View>
+    );
   }
 
   return (
-    <View style={styles.Header}>
-      <View style={styles.HeaderContainer}>
-        <Image
-          source={userData.userdata.profile_picture}
-          style={styles.ProfileImage}
-        />
-        <View style={styles.UsernameContainer}>
-          <Text style={styles.Name}>
-            {userData.userdata.firstname} {userData.userdata.lastname}
-          </Text>
-          <Text style={styles.UserName}>@{userData.userdata.username}</Text>
-        </View>
-        <View style={styles.headerImages}>
-          <Image source={require('../../assets/sun.png')} />
-          <Image source={require('../../assets/alt.png')} />
+    <>
+      <View style={styles.Header}>
+        <View style={styles.HeaderContainer}>
+          <Image
+            source={userData.userdata.profile_picture}
+            style={styles.ProfileImage}
+          />
+          <View style={styles.UsernameContainer}>
+            <Text style={styles.Name}>
+              {userData.userdata.firstname} {userData.userdata.lastname}
+            </Text>
+            <Text style={styles.UserName}>@{userData.userdata.username}</Text>
+          </View>
+          <View style={styles.headerImages}>
+            <Image source={require('../../assets/sun.png')} />
+            <Image source={require('../../assets/alt.png')} />
+          </View>
         </View>
       </View>
-    </View>
+      <View style={{paddingBottom: 10}} />
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   Header: {
-    paddingTop: 20,
+    paddingVertical: 10,
     justifyContent: 'center',
-    paddingBottom: 17,
+    width: '100%',
+    backgroundColor: '#000000',
   },
   HeaderContainer: {
     flexDirection: 'row',
-    paddingHorizontal: 20,
-    backgroundColor: '#000000',
-    height: 66,
     alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
   },
   ProfileImage: {
-    height: 60,
-    width: 60,
+    height: 50,
+    width: 50,
   },
   UsernameContainer: {
     paddingLeft: 20,

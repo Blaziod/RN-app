@@ -10,9 +10,12 @@ import {
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
+  Image,
+  // Dimensions,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
 
 const SignIn = () => {
   const [email_username, setEmail] = useState('');
@@ -21,6 +24,7 @@ const SignIn = () => {
   // const [signInToken, setSignInToken] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  // const WIDTH = Dimensions.get('window').width;
 
   useEffect(() => {
     const checkToken = async () => {
@@ -77,13 +81,79 @@ const SignIn = () => {
             console.error('Error storing user data:', error);
           });
         console.log('Success signing in:', data);
+        Toast.show({
+          type: 'success',
+          text1: 'Success',
+          text2: data.message,
+          style: {
+            borderLeftColor: 'pink',
+            backgroundColor: 'yellow',
+            width: '80%',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          text1Style: {
+            color: 'red',
+            fontSize: 14,
+          },
+          text2Style: {
+            color: 'green',
+            fontSize: 14,
+            fontFamily: 'CamptonBold',
+          },
+        });
         navigation.navigate('Tabs', {screen: 'Home'});
       } else {
         const errorData = await response.json();
         console.error('Error signing in:', errorData);
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: errorData.message,
+          style: {
+            borderLeftColor: 'pink',
+            backgroundColor: 'yellow',
+            width: '80%',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          text1Style: {
+            color: 'red',
+            fontSize: 14,
+          },
+          text2Style: {
+            color: 'green',
+            fontSize: 14,
+            fontFamily: 'CamptonBold',
+          },
+        });
       }
     } catch (error) {
       console.error('Error signing in:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: error.message,
+        style: {
+          borderLeftColor: 'pink',
+          backgroundColor: 'yellow',
+          width: '80%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        text1Style: {
+          color: 'red',
+          fontSize: 20,
+        },
+        text2Style: {
+          color: 'green',
+          fontSize: 20,
+          fontFamily: 'CamptonBold',
+        },
+      });
     } finally {
       setIsLoading(false);
     }
@@ -93,100 +163,110 @@ const SignIn = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollView}>
-        <View style={styles.header}>
-          <Text style={styles.welcomeText}>Welcome to </Text>
-          <Text style={styles.welcomeText2}>Trendit </Text>
-          <Text style={styles.tagline}>Earn money by connecting</Text>
-          <Text style={styles.tagline}>
-            businesses to their potential customers.
-          </Text>
-        </View>
+      <ScrollView
+        scrollEnabled={true}
+        contentInsetAdjustmentBehavior="automatic">
+        {/* <View style={{width: WIDTH - 25, justifyContent: 'center'}}> */}
+        <View>
+          <View style={styles.header}>
+            <Text style={styles.welcomeText}>Welcome to </Text>
+            <Text style={styles.welcomeText2}>Trendit </Text>
+            <Text style={styles.tagline}>Earn money by connecting</Text>
+            <Text style={styles.tagline}>
+              businesses to their potential customers.
+            </Text>
+          </View>
 
-        <View style={styles.formContainer}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Enter a valid email"
-            placeholderTextColor="#888"
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={setEmail}
-            value={email_username}
-          />
-          <View style={styles.passwordContainer}>
+          <View>
             <TextInput
-              style={styles.textInput2}
-              placeholder="Enter a password"
+              style={styles.textInput}
+              placeholder="Enter a valid email"
               placeholderTextColor="#888"
               autoCapitalize="none"
               autoCorrect={false}
-              secureTextEntry={!isPasswordVisible}
-              onChangeText={setPassword}
-              value={password}
+              onChangeText={setEmail}
+              value={email_username}
             />
+            <View>
+              <TextInput
+                style={styles.textInput2}
+                placeholder="Enter a password"
+                placeholderTextColor="#888"
+                autoCapitalize="none"
+                autoCorrect={false}
+                secureTextEntry={!isPasswordVisible}
+                onChangeText={setPassword}
+                value={password}
+              />
+              <TouchableOpacity
+                style={styles.eyeIcon}
+                onPress={() => setIsPasswordVisible(prevState => !prevState)}
+              />
+            </View>
             <TouchableOpacity
-              style={styles.eyeIcon}
-              onPress={() => setIsPasswordVisible(prevState => !prevState)}
-            />
+              style={styles.continueButton}
+              onPress={handleSignUp}
+              disabled={isLoading}>
+              {isLoading ? (
+                <ActivityIndicator size="small" color="#fff" />
+              ) : (
+                <Text style={styles.buttonLabel}>Continue</Text>
+              )}
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            style={styles.continueButton}
-            onPress={handleSignUp}
-            disabled={isLoading}>
-            {isLoading ? (
-              <ActivityIndicator size="small" color="#fff" />
-            ) : (
-              <Text style={styles.buttonLabel}>Continue</Text>
-            )}
-          </TouchableOpacity>
-        </View>
 
-        <View style={styles.socialLogins}>
-          <Text style={styles.orText}>OR SIGN UP WITH</Text>
-          <View style={styles.buttonRow}>
-            <TouchableOpacity style={styles.socialButton}>
-              {/* <Image
-                source={require("../assets/google-icon.png")}
-                style={styles.socialIcon}
-              /> */}
-              <Text style={styles.socialButtonText}>Google</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.socialButton}>
-              {/* <Image
-                source={require("../assets/facebook-icon.png")}
-                style={styles.socialIcon}
-              /> */}
-              <Text style={styles.socialButtonText}>Facebook</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.socialButton}>
-              {/* <Image
-                source={require("../assets/tiktok-icon.png")}
-                style={styles.socialIcon}
-              /> */}
-              <Text style={styles.socialButtonText}>TikTok</Text>
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              gap: 4,
-              paddingTop: 10,
-              alignSelf: 'center',
-            }}>
-            <Text
-              style={{color: '#fff', fontSize: 14, fontFamily: 'CamptonBook'}}>
-              Don&apos;t have an account?
-            </Text>
-            <View onPress={() => navigation.navigate('SignUp')}>
+          <View style={styles.socialLogins}>
+            <Text style={styles.orText}>OR SIGN UP WITH</Text>
+            <View style={styles.buttonRow}>
+              <TouchableOpacity style={styles.socialButton}>
+                <Image
+                  source={require('../../assets/google-icon.png')}
+                  style={styles.socialIcon}
+                />
+                <Text style={styles.socialButtonText}>Google</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.socialButton}>
+                <Image
+                  source={require('../../assets/facebook-icon.png')}
+                  style={styles.socialIcon}
+                />
+                <Text style={styles.socialButtonText}>Facebook</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.socialButton}>
+                <Image
+                  source={require('../../assets/tiktok-icon.png')}
+                  style={styles.socialIcon}
+                />
+                <Text style={styles.socialButtonText}>TikTok</Text>
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                gap: 4,
+                paddingTop: 10,
+                alignSelf: 'center',
+              }}>
               <Text
                 style={{
-                  color: 'red',
+                  color: '#fff',
                   fontSize: 14,
                   fontFamily: 'CamptonBook',
-                }}
-                onPress={() => navigation.navigate('SignUp')}>
-                Sign Up
+                }}>
+                Don&apos;t have an account?
               </Text>
+              <View onPress={() => navigation.navigate('SignUp')}>
+                <Text
+                  style={{
+                    color: 'red',
+                    fontSize: 14,
+                    fontFamily: 'CamptonBook',
+                  }}
+                  onPress={() => navigation.navigate('SignUp')}>
+                  Sign Up
+                </Text>
+              </View>
+              {/* </View> */}
             </View>
           </View>
         </View>
@@ -199,22 +279,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    // alignItems: 'center',
     backgroundColor: '#000000',
-  },
-  scrollView: {
-    paddingHorizontal: 9,
-    paddingVertical: 30,
-    justifyContent: 'center',
+    width: '100%',
   },
   passwordContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    alignSelf: 'center',
     backgroundColor: '#8E60CF3B',
     padding: 5,
     borderRadius: 5,
     marginBottom: 10,
-    width: 380,
+    width: '80%',
   },
   eyeIcon: {
     marginLeft: -40,
@@ -253,29 +330,36 @@ const styles = StyleSheet.create({
     marginTop: 5,
     alignItems: 'center',
     justifyContent: 'center',
+    width: '100%',
   },
   textInput: {
     backgroundColor: '#8E60CF3B',
     padding: 12,
     borderRadius: 5,
     marginBottom: 10,
-    width: 380,
+    width: '94%',
     color: 'white',
+    alignSelf: 'center',
     fontFamily: 'CamptonLight',
   },
   textInput2: {
+    backgroundColor: '#8E60CF3B',
+    padding: 12,
     borderRadius: 5,
-    width: 380,
+    marginBottom: 10,
+    width: '94%',
     color: 'white',
     fontFamily: 'CamptonLight',
+    alignSelf: 'center',
   },
   continueButton: {
     backgroundColor: '#CB29BE',
     padding: 15,
     borderRadius: 70,
     alignItems: 'center',
-    width: 350,
+    width: '80%',
     marginTop: 5,
+    alignSelf: 'center',
   },
   buttonLabel: {
     color: '#fff',
@@ -285,6 +369,8 @@ const styles = StyleSheet.create({
   },
   socialLogins: {
     marginTop: 20,
+    width: '90%',
+    alignSelf: 'center',
   },
   orText: {
     marginBottom: 20,
@@ -294,7 +380,7 @@ const styles = StyleSheet.create({
   },
   buttonRow: {
     flexDirection: 'row',
-    paddingHorizontal: 10,
+    // paddingHorizontal: 10,
   },
   socialButton: {
     flex: 1,
@@ -303,6 +389,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#8E60CF3B',
     padding: 8,
     marginRight: 10,
+    width: '100%',
   },
   socialIcon: {
     width: 20,

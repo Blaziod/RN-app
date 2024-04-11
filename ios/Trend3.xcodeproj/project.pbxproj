@@ -15,6 +15,24 @@
 		7699B88040F8A987B510C191 /* libPods-Trend3-Trend3Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-Trend3-Trend3Tests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		6DF621CFA16C45A5986C528D /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 34ABB1A62C434962896CA81E /* BootSplash.storyboard */; };
+		20013DFE4A2744399138ACE6 /* Campton Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = A54352FE9CAC4D759DBA5D88 /* Campton Bold.otf */; };
+		224E52B528C34D3D83B52AFF /* CamptonBlack.otf in Resources */ = {isa = PBXBuildFile; fileRef = D398816773DB47589E9147C2 /* CamptonBlack.otf */; };
+		CBB321DEDD184DB188071BA3 /* CamptonBlackItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8BC3341B92794ED2854F2139 /* CamptonBlackItalic.otf */; };
+		B93C8D88C56B42B484E8C7B3 /* CamptonBoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3CC46A7699174EC7A5838F26 /* CamptonBoldItalic.otf */; };
+		467CE108543D4A3EA2D5A361 /* CamptonBook.otf in Resources */ = {isa = PBXBuildFile; fileRef = 069FA6E3320C47D3BDC026A4 /* CamptonBook.otf */; };
+		FA01ED10776C4C3CA7861054 /* CamptonBookItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = F27CCF49783049A88E086915 /* CamptonBookItalic.otf */; };
+		9F05F33093184CCC905B553E /* CamptonExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5D9C816FCBBC4DD0A3E2B27D /* CamptonExtraBold.otf */; };
+		933651B8062E4C9DB5812AAC /* CamptonExtraBoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 643C45E437FA4D548EDC4F9A /* CamptonExtraBoldItalic.otf */; };
+		4A4DE33EC47D4537821AFC12 /* CamptonExtraLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = D818E9A2D8EB47658AEBC7AE /* CamptonExtraLight.otf */; };
+		53740DEE875A47ABA11C4AFA /* CamptonExtraLightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 2A74DEFEDBFD47FDBD7A8BBD /* CamptonExtraLightItalic.otf */; };
+		DF82E37BBBD040AAAE354105 /* CamptonLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 62A25474F29449269C9E3BF7 /* CamptonLight.otf */; };
+		EB7C9BA3FE114D44A390BA0D /* CamptonLightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0AE761D1D8474390BA1A2ADD /* CamptonLightItalic.otf */; };
+		2F349CA835184ADAB895C9B8 /* CamptonMedium.otf in Resources */ = {isa = PBXBuildFile; fileRef = BBB3226D820C4670B9ABABCF /* CamptonMedium.otf */; };
+		A07F72C010DE4245870D98BA /* CamptonMediumItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 38D06B937C81481C88B012A9 /* CamptonMediumItalic.otf */; };
+		FCBF15A50B62404BAAE7A3D3 /* CamptonSemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = C101FEF2B64A44E4A2B5D5CA /* CamptonSemiBold.otf */; };
+		4CEAD6977CF8444BB82C9D2D /* CamptonSemiBoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 73F06DC261E445EFBC76A530 /* CamptonSemiBoldItalic.otf */; };
+		891F8DF0C75A49189A2D318C /* CamptonThin.otf in Resources */ = {isa = PBXBuildFile; fileRef = D193BEC7188B404A872B493D /* CamptonThin.otf */; };
+		6ACC13128A174F17B5A0206D /* CamptonThinItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = CB90FC3467E94A84905A4677 /* CamptonThinItalic.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +64,24 @@
 		89C6BE57DB24E9ADA2F236DE /* Pods-Trend3-Trend3Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Trend3-Trend3Tests.release.xcconfig"; path = "Target Support Files/Pods-Trend3-Trend3Tests/Pods-Trend3-Trend3Tests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		34ABB1A62C434962896CA81E /* BootSplash.storyboard */ = {isa = PBXFileReference; name = "BootSplash.storyboard"; path = "Trend3/BootSplash.storyboard"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		A54352FE9CAC4D759DBA5D88 /* Campton Bold.otf */ = {isa = PBXFileReference; name = "Campton Bold.otf"; path = "../assets/fonts/Campton Bold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		D398816773DB47589E9147C2 /* CamptonBlack.otf */ = {isa = PBXFileReference; name = "CamptonBlack.otf"; path = "../assets/fonts/CamptonBlack.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		8BC3341B92794ED2854F2139 /* CamptonBlackItalic.otf */ = {isa = PBXFileReference; name = "CamptonBlackItalic.otf"; path = "../assets/fonts/CamptonBlackItalic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		3CC46A7699174EC7A5838F26 /* CamptonBoldItalic.otf */ = {isa = PBXFileReference; name = "CamptonBoldItalic.otf"; path = "../assets/fonts/CamptonBoldItalic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		069FA6E3320C47D3BDC026A4 /* CamptonBook.otf */ = {isa = PBXFileReference; name = "CamptonBook.otf"; path = "../assets/fonts/CamptonBook.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F27CCF49783049A88E086915 /* CamptonBookItalic.otf */ = {isa = PBXFileReference; name = "CamptonBookItalic.otf"; path = "../assets/fonts/CamptonBookItalic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		5D9C816FCBBC4DD0A3E2B27D /* CamptonExtraBold.otf */ = {isa = PBXFileReference; name = "CamptonExtraBold.otf"; path = "../assets/fonts/CamptonExtraBold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		643C45E437FA4D548EDC4F9A /* CamptonExtraBoldItalic.otf */ = {isa = PBXFileReference; name = "CamptonExtraBoldItalic.otf"; path = "../assets/fonts/CamptonExtraBoldItalic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		D818E9A2D8EB47658AEBC7AE /* CamptonExtraLight.otf */ = {isa = PBXFileReference; name = "CamptonExtraLight.otf"; path = "../assets/fonts/CamptonExtraLight.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		2A74DEFEDBFD47FDBD7A8BBD /* CamptonExtraLightItalic.otf */ = {isa = PBXFileReference; name = "CamptonExtraLightItalic.otf"; path = "../assets/fonts/CamptonExtraLightItalic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		62A25474F29449269C9E3BF7 /* CamptonLight.otf */ = {isa = PBXFileReference; name = "CamptonLight.otf"; path = "../assets/fonts/CamptonLight.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		0AE761D1D8474390BA1A2ADD /* CamptonLightItalic.otf */ = {isa = PBXFileReference; name = "CamptonLightItalic.otf"; path = "../assets/fonts/CamptonLightItalic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		BBB3226D820C4670B9ABABCF /* CamptonMedium.otf */ = {isa = PBXFileReference; name = "CamptonMedium.otf"; path = "../assets/fonts/CamptonMedium.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		38D06B937C81481C88B012A9 /* CamptonMediumItalic.otf */ = {isa = PBXFileReference; name = "CamptonMediumItalic.otf"; path = "../assets/fonts/CamptonMediumItalic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		C101FEF2B64A44E4A2B5D5CA /* CamptonSemiBold.otf */ = {isa = PBXFileReference; name = "CamptonSemiBold.otf"; path = "../assets/fonts/CamptonSemiBold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		73F06DC261E445EFBC76A530 /* CamptonSemiBoldItalic.otf */ = {isa = PBXFileReference; name = "CamptonSemiBoldItalic.otf"; path = "../assets/fonts/CamptonSemiBoldItalic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		D193BEC7188B404A872B493D /* CamptonThin.otf */ = {isa = PBXFileReference; name = "CamptonThin.otf"; path = "../assets/fonts/CamptonThin.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		CB90FC3467E94A84905A4677 /* CamptonThinItalic.otf */ = {isa = PBXFileReference; name = "CamptonThinItalic.otf"; path = "../assets/fonts/CamptonThinItalic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +161,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				F70E24A4FD7D44C6AAF30CA6 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -150,6 +187,32 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
+		};
+		F70E24A4FD7D44C6AAF30CA6 /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				A54352FE9CAC4D759DBA5D88 /* Campton Bold.otf */,
+				D398816773DB47589E9147C2 /* CamptonBlack.otf */,
+				8BC3341B92794ED2854F2139 /* CamptonBlackItalic.otf */,
+				3CC46A7699174EC7A5838F26 /* CamptonBoldItalic.otf */,
+				069FA6E3320C47D3BDC026A4 /* CamptonBook.otf */,
+				F27CCF49783049A88E086915 /* CamptonBookItalic.otf */,
+				5D9C816FCBBC4DD0A3E2B27D /* CamptonExtraBold.otf */,
+				643C45E437FA4D548EDC4F9A /* CamptonExtraBoldItalic.otf */,
+				D818E9A2D8EB47658AEBC7AE /* CamptonExtraLight.otf */,
+				2A74DEFEDBFD47FDBD7A8BBD /* CamptonExtraLightItalic.otf */,
+				62A25474F29449269C9E3BF7 /* CamptonLight.otf */,
+				0AE761D1D8474390BA1A2ADD /* CamptonLightItalic.otf */,
+				BBB3226D820C4670B9ABABCF /* CamptonMedium.otf */,
+				38D06B937C81481C88B012A9 /* CamptonMediumItalic.otf */,
+				C101FEF2B64A44E4A2B5D5CA /* CamptonSemiBold.otf */,
+				73F06DC261E445EFBC76A530 /* CamptonSemiBoldItalic.otf */,
+				D193BEC7188B404A872B493D /* CamptonThin.otf */,
+				CB90FC3467E94A84905A4677 /* CamptonThinItalic.otf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -247,6 +310,24 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				6DF621CFA16C45A5986C528D /* BootSplash.storyboard in Resources */,
+				20013DFE4A2744399138ACE6 /* Campton Bold.otf in Resources */,
+				224E52B528C34D3D83B52AFF /* CamptonBlack.otf in Resources */,
+				CBB321DEDD184DB188071BA3 /* CamptonBlackItalic.otf in Resources */,
+				B93C8D88C56B42B484E8C7B3 /* CamptonBoldItalic.otf in Resources */,
+				467CE108543D4A3EA2D5A361 /* CamptonBook.otf in Resources */,
+				FA01ED10776C4C3CA7861054 /* CamptonBookItalic.otf in Resources */,
+				9F05F33093184CCC905B553E /* CamptonExtraBold.otf in Resources */,
+				933651B8062E4C9DB5812AAC /* CamptonExtraBoldItalic.otf in Resources */,
+				4A4DE33EC47D4537821AFC12 /* CamptonExtraLight.otf in Resources */,
+				53740DEE875A47ABA11C4AFA /* CamptonExtraLightItalic.otf in Resources */,
+				DF82E37BBBD040AAAE354105 /* CamptonLight.otf in Resources */,
+				EB7C9BA3FE114D44A390BA0D /* CamptonLightItalic.otf in Resources */,
+				2F349CA835184ADAB895C9B8 /* CamptonMedium.otf in Resources */,
+				A07F72C010DE4245870D98BA /* CamptonMediumItalic.otf in Resources */,
+				FCBF15A50B62404BAAE7A3D3 /* CamptonSemiBold.otf in Resources */,
+				4CEAD6977CF8444BB82C9D2D /* CamptonSemiBoldItalic.otf in Resources */,
+				891F8DF0C75A49189A2D318C /* CamptonThin.otf in Resources */,
+				6ACC13128A174F17B5A0206D /* CamptonThinItalic.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

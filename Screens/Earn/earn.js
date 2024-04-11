@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
   },
   PostText: {
     color: '#fff',
-    fontFamily: 'CamptonBold',
+    fontFamily: 'Campton Bold',
     fontSize: 14,
   },
   EngText: {

@@ -77,7 +77,7 @@ const PostAdvertMenu = () => {
               <Text
                 style={{
                   color: '#fff',
-                  fontFamily: 'CamptonBold',
+                  fontFamily: 'Campton Bold',
                   fontSize: 12,
                 }}>
                 ₦3 per Page Like and Follow
@@ -198,7 +198,7 @@ const PostAdvertMenu = () => {
               <Text
                 style={{
                   color: '#fff',
-                  fontFamily: 'CamptonBold',
+                  fontFamily: 'Campton Bold',
                   fontSize: 12,
                 }}>
                 ₦3 per Page Like and Follow
@@ -341,7 +341,7 @@ const PostAdvertMenu = () => {
               <Text
                 style={{
                   color: '#fff',
-                  fontFamily: 'CamptonBold',
+                  fontFamily: 'Campton Bold',
                   fontSize: 12,
                 }}>
                 ₦3 per Page Like and Follow
@@ -454,7 +454,7 @@ const PostAdvertMenu = () => {
               <Text
                 style={{
                   color: '#fff',
-                  fontFamily: 'CamptonBold',
+                  fontFamily: 'Campton Bold',
                   fontSize: 12,
                 }}>
                 ₦3 per Page Like and Follow

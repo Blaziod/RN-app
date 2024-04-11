@@ -80,7 +80,7 @@ const More = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'CamptonBold',
+            fontFamily: 'Campton Bold',
           },
         });
 
@@ -110,7 +110,7 @@ const More = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'CamptonBold',
+          fontFamily: 'Campton Bold',
         },
       });
       <ActivityIndicator />;
@@ -342,7 +342,7 @@ const More = () => {
                     text2Style: {
                       color: 'green',
                       fontSize: 20,
-                      fontFamily: 'CamptonBold',
+                      fontFamily: 'Campton Bold',
                     },
                   });
 

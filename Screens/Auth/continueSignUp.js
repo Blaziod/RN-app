@@ -141,7 +141,7 @@ const ContinueSignUp = () => {
             text2Style: {
               color: 'green',
               fontSize: 14,
-              fontFamily: 'CamptonBold',
+              fontFamily: 'Campton Bold',
             },
           });
           navigation.navigate('Tabs', {screen: 'Home'});
@@ -167,7 +167,7 @@ const ContinueSignUp = () => {
             text2Style: {
               color: 'green',
               fontSize: 14,
-              fontFamily: 'CamptonBold',
+              fontFamily: 'Campton Bold',
             },
           });
         });
@@ -476,14 +476,14 @@ const styles = StyleSheet.create({
   },
   goBackText: {
     color: '#fff',
-    fontFamily: 'CamptonBold',
+    fontFamily: 'Campton Bold',
     position: 'absolute',
     top: 50,
     right: 10,
   },
   heading: {
     fontSize: 32,
-    fontFamily: 'CamptonBold',
+    fontFamily: 'Campton Bold',
     marginBottom: 10,
     color: '#fff',
     alignSelf: 'center',

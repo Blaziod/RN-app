@@ -75,11 +75,11 @@ const More = () => {
           },
           text1Style: {
             color: 'red',
-            fontSize: 20,
+            fontSize: 14,
           },
           text2Style: {
             color: 'green',
-            fontSize: 20,
+            fontSize: 14,
             fontFamily: 'CamptonBold',
           },
         });
@@ -105,11 +105,11 @@ const More = () => {
         },
         text1Style: {
           color: 'red',
-          fontSize: 20,
+          fontSize: 14,
         },
         text2Style: {
           color: 'green',
-          fontSize: 20,
+          fontSize: 14,
           fontFamily: 'CamptonBold',
         },
       });
@@ -236,7 +236,8 @@ const More = () => {
                 gap: 5,
                 paddingVertical: 5,
                 alignItems: 'center',
-              }}>
+              }}
+              onPress={() => navigation.navigate('Refer')}>
               <Svg
                 width="24"
                 height="24"
@@ -368,19 +369,19 @@ const More = () => {
 
               <Text style={{color: '#FF3D00', fontSize: 14}}>Sign Out</Text>
             </TouchableOpacity>
-            {/* <TouchableOpacity
-                style={{backgroundColor: '#fff', width: 100, height: 50}}
-                onPress={() => {
-                  AsyncStorage.removeItem('userdatafiles1');
-                  AsyncStorage.removeItem('userdata1');
-                  AsyncStorage.removeItem('userdata');
-                  AsyncStorage.removeItem('userdata2');
-                  AsyncStorage.removeItem('userdatas');
-                  console.log('Token cleared successfully');
-                  navigation.navigate('SignIn');
-                }}>
-                <Text>Clear Token</Text>
-              </TouchableOpacity> */}
+            <TouchableOpacity
+              style={{backgroundColor: '#fff', width: 100, height: 50}}
+              onPress={() => {
+                AsyncStorage.removeItem('userdatafiles1');
+                AsyncStorage.removeItem('userdata1');
+                AsyncStorage.removeItem('userdata');
+                AsyncStorage.removeItem('userdata2');
+                AsyncStorage.removeItem('userdatas');
+                console.log('Token cleared successfully');
+                navigation.navigate('SignIn');
+              }}>
+              <Text>Clear Token</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>

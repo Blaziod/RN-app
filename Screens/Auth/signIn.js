@@ -146,11 +146,11 @@ const SignIn = () => {
         },
         text1Style: {
           color: 'red',
-          fontSize: 20,
+          fontSize: 14,
         },
         text2Style: {
           color: 'green',
-          fontSize: 20,
+          fontSize: 14,
           fontFamily: 'CamptonBold',
         },
       });

@@ -13,9 +13,12 @@ import {
 } from 'react-native';
 import axios from 'axios';
 import {useNavigation, useRoute} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const VerifyEmailScreen = () => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
+  const [userEmail, setUserEmail] = useState('');
+
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
   const route = useRoute();
@@ -25,6 +28,15 @@ const VerifyEmailScreen = () => {
   // Add a new state variable for user data
   // eslint-disable-next-line no-unused-vars
   const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const fetchEmail = async () => {
+      const email = await AsyncStorage.getItem('userEmail');
+      setUserEmail(email);
+    };
+
+    fetchEmail();
+  }, []);
 
   useEffect(() => {
     if (otp.join('').length === 6) {
@@ -60,7 +72,7 @@ const VerifyEmailScreen = () => {
 
     try {
       const response = await axios.post(
-        'https://trendit3-hd9u.onrender.com/api/verify-email',
+        'https://api.trendit3.com/api/verify-email',
         {
           entered_code: otp.join(''),
           signup_token: signupToken,
@@ -109,11 +121,11 @@ const VerifyEmailScreen = () => {
           },
           text1Style: {
             color: 'red',
-            fontSize: 20,
+            fontSize: 14,
           },
           text2Style: {
             color: 'green',
-            fontSize: 20,
+            fontSize: 14,
             fontFamily: 'CamptonBold',
           },
         });
@@ -188,8 +200,8 @@ const VerifyEmailScreen = () => {
                 <View style={styles.header}>
                   <Text style={styles.headerText}>Confirm your email</Text>
                   <Text style={styles.subHeaderText}>
-                    We have sent an email with a code to
-                    adedamolamoses@gmail.com, please enter it
+                    We have sent an email with a code to {userEmail}, please
+                    enter it
                   </Text>
                   <Text style={styles.subHeaderText2}>
                     below to create your Trendit account.

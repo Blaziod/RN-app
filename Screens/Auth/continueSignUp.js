@@ -82,26 +82,25 @@ const ContinueSignUp = () => {
     }
   }, [selectedState]);
 
-  const handleContinue = () => {
-    setIsLoading(true);
-    const url = 'https://api.trendit3.com/api/profile/update';
-    // console.log("starting fetching", userData?.userdata?.id);
-    AsyncStorage.getItem('userdatafiles1')
-      .then(data => {
-        const userData = JSON.parse(data);
-        setUserData(userData);
-      })
-      .catch(error => {
-        console.error('Error retrieving user data:', error);
-      });
+  AsyncStorage.getItem('userdatafiles1')
+    .then(data => {
+      const userData = JSON.parse(data);
+      setUserData(userData);
+    })
+    .catch(error => {
+      console.error('Error retrieving user data:', error);
+    });
 
-    if (!userData) {
-      return (
-        <View>
-          <Text style={{color: '#000', fontSize: 30}}>HELLO</Text>
-        </View>
-      );
-    }
+  if (!userData) {
+    return (
+      <View>
+        <Text style={{color: '#000', fontSize: 30}}>HELLO</Text>
+      </View>
+    );
+  }
+
+  const handleContinue = () => {
+    const url = 'https://api.trendit3.com/api/profile/update';
     const formData = new FormData();
     formData.append('gender', gender);
     formData.append('country', selectedCountry);
@@ -109,6 +108,8 @@ const ContinueSignUp = () => {
     formData.append('local_government', selectedLga);
     formData.append('user_id', userData?.userdata?.id);
     console.log('start', userData?.userdata?.id);
+
+    setIsLoading(true);
     try {
       // setIsLoading(true);
       fetch(url, {
@@ -161,11 +162,11 @@ const ContinueSignUp = () => {
             },
             text1Style: {
               color: 'red',
-              fontSize: 20,
+              fontSize: 14,
             },
             text2Style: {
               color: 'green',
-              fontSize: 20,
+              fontSize: 14,
               fontFamily: 'CamptonBold',
             },
           });

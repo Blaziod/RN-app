@@ -4,14 +4,26 @@
 import * as React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {View, Image, Text} from 'react-native';
+import {createStackNavigator} from '@react-navigation/stack';
 
 //Screens
 import Home from '../Screens/Home/home';
 // import SignIn from '../Screens/Auth/signIn';
 import Earn from '../Screens/Earn/earn';
 import More from '../Screens/More/more';
+import Refer from '../Screens/More/refer';
 
 const Tab = createBottomTabNavigator();
+const MoreStack = createStackNavigator();
+
+function MoreStackScreen() {
+  return (
+    <MoreStack.Navigator screenOptions={{headerShown: false}}>
+      <MoreStack.Screen name="MorePage" component={More} />
+      <MoreStack.Screen name="Refer" component={Refer} />
+    </MoreStack.Navigator>
+  );
+}
 
 const TabNavigation = () => {
   return (
@@ -150,7 +162,7 @@ const TabNavigation = () => {
       />
       <Tab.Screen
         name="More"
-        component={More}
+        component={MoreStackScreen}
         options={{
           headerShown: false,
           tabBarIcon: ({focused}) => (

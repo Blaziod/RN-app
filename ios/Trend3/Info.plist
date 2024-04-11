@@ -32,7 +32,7 @@
 		<true/>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>UILaunchStoryboardName</key>
 	<string>BootSplash.storyboard</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -47,5 +47,26 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Campton Bold.otf</string>
+		<string>CamptonBlack.otf</string>
+		<string>CamptonBlackItalic.otf</string>
+		<string>CamptonBoldItalic.otf</string>
+		<string>CamptonBook.otf</string>
+		<string>CamptonBookItalic.otf</string>
+		<string>CamptonExtraBold.otf</string>
+		<string>CamptonExtraBoldItalic.otf</string>
+		<string>CamptonExtraLight.otf</string>
+		<string>CamptonExtraLightItalic.otf</string>
+		<string>CamptonLight.otf</string>
+		<string>CamptonLightItalic.otf</string>
+		<string>CamptonMedium.otf</string>
+		<string>CamptonMediumItalic.otf</string>
+		<string>CamptonSemiBold.otf</string>
+		<string>CamptonSemiBoldItalic.otf</string>
+		<string>CamptonThin.otf</string>
+		<string>CamptonThinItalic.otf</string>
+	</array>
 </dict>
 </plist>

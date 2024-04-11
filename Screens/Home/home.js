@@ -401,11 +401,11 @@ const styles = StyleSheet.create({
   fundText: {
     fontSize: 12.8,
     color: '#000',
-    fontFamily: 'CamptonBold',
+    fontFamily: 'Campton Bold',
   },
   withdrawText: {
     fontSize: 12.8,
-    fontFamily: 'CamptonBold',
+    fontFamily: 'Campton Bold',
     color: '#000',
   },
   WalletBalance: {
@@ -439,7 +439,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   advertText: {
-    fontFamily: 'CamptonBold',
+    fontFamily: 'Campton Bold',
     fontSize: 16,
     padding: 5,
     paddingTop: 50,
@@ -496,7 +496,7 @@ const styles = StyleSheet.create({
   },
   SetUpText: {
     color: '#fff',
-    fontFamily: 'CamptonBold',
+    fontFamily: 'Campton Bold',
     fontSize: 17,
     paddingBottom: 10,
   },
@@ -540,7 +540,7 @@ const styles = StyleSheet.create({
   },
   GotoText: {
     color: '#fff',
-    fontFamily: 'CamptonBold',
+    fontFamily: 'Campton Bold',
   },
   InstagramContainer: {
     width: '91%',

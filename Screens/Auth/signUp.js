@@ -99,7 +99,7 @@ const SignUp = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'CamptonBold',
+            fontFamily: 'Campton Bold',
           },
         });
       }
@@ -124,7 +124,7 @@ const SignUp = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'CamptonBold',
+          fontFamily: 'Campton Bold',
         },
       });
     } finally {
@@ -339,7 +339,7 @@ const styles = StyleSheet.create({
   socialButtonText: {
     fontSize: 15,
     color: '#fff',
-    fontFamily: 'CamptonBold',
+    fontFamily: 'Campton Bold',
   },
 });
 

@@ -126,7 +126,7 @@ const VerifyEmailScreen = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'CamptonBold',
+            fontFamily: 'Campton Bold',
           },
         });
       } else {
@@ -151,7 +151,7 @@ const VerifyEmailScreen = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'CamptonBold',
+            fontFamily: 'Campton Bold',
           },
         });
       }
@@ -177,7 +177,7 @@ const VerifyEmailScreen = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'CamptonBold',
+          fontFamily: 'Campton Bold',
         },
       });
     }
@@ -359,7 +359,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'white',
     fontSize: 12.83,
-    fontFamily: 'CamptonBold',
+    fontFamily: 'Campton Bold',
   },
 });
 

@@ -38,7 +38,7 @@ const Refer = () => {
               }}>
               <Text
                 style={{
-                  fontFamily: 'CamptonBold',
+                  fontFamily: 'Campton Bold',
                   fontSize: 36,
                   justifyContent: 'center',
                   color: '#000',
@@ -152,6 +152,7 @@ const Refer = () => {
               fontFamily: 'CamptonMedium',
               fontSize: 24,
               paddingVertical: 30,
+              paddingLeft: '5%',
             }}>
             Invited Friends
           </Text>
@@ -215,7 +216,7 @@ const Refer = () => {
                 style={{
                   color: '#fff',
                   paddingTop: 12,
-                  fontFamily: 'CamptonBold',
+                  fontFamily: 'Campton Bold',
                   fontSize: 14,
                 }}>
                 No referral yet!

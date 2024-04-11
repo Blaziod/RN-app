@@ -39,7 +39,7 @@ const EarnCustomSwitch = ({
           style={{
             fontSize: 13,
             color: getSelectionMode === 1 ? '#FF6DFB' : '#B1B1B1',
-            fontFamily: 'CamptonBold',
+            fontFamily: 'Campton Bold',
           }}>
           {option1}
         </Text>
@@ -58,7 +58,7 @@ const EarnCustomSwitch = ({
           style={{
             fontSize: 13,
             color: getSelectionMode === 2 ? '#FF6DFB' : '#B1B1B1',
-            fontFamily: 'CamptonBold',
+            fontFamily: 'Campton Bold',
           }}>
           {option2}
         </Text>
@@ -77,7 +77,7 @@ const EarnCustomSwitch = ({
           style={{
             fontSize: 13,
             color: getSelectionMode === 3 ? '#FF6DFB' : '#B1B1B1',
-            fontFamily: 'CamptonBold',
+            fontFamily: 'Campton Bold',
           }}>
           {option3}
         </Text>

@@ -12,6 +12,7 @@ import Home from '../Screens/Home/home';
 import Earn from '../Screens/Earn/earn';
 import More from '../Screens/More/more';
 import Refer from '../Screens/More/refer';
+import Advertise from '../Screens/Advertise/advertise';
 
 const Tab = createBottomTabNavigator();
 const MoreStack = createStackNavigator();
@@ -98,7 +99,7 @@ const TabNavigation = () => {
       />
       <Tab.Screen
         name="AdvertisePage"
-        component={Home}
+        component={Advertise}
         options={{
           headerShown: false,
           tabBarIcon: ({focused}) => (

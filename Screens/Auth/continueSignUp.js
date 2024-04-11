@@ -100,6 +100,7 @@ const ContinueSignUp = () => {
   }
 
   const handleContinue = () => {
+    setIsLoading(true);
     const url = 'https://api.trendit3.com/api/profile/update';
     const formData = new FormData();
     formData.append('gender', gender);
@@ -109,7 +110,6 @@ const ContinueSignUp = () => {
     formData.append('user_id', userData?.userdata?.id);
     console.log('start', userData?.userdata?.id);
 
-    setIsLoading(true);
     try {
       // setIsLoading(true);
       fetch(url, {
@@ -170,11 +170,12 @@ const ContinueSignUp = () => {
               fontFamily: 'Campton Bold',
             },
           });
+        })
+        .finally(() => {
+          setIsLoading(false); // Move this inside finally block
         });
     } catch (error) {
       console.error('Error Main :', error);
-    } finally {
-      setIsLoading(false);
     }
   };
 

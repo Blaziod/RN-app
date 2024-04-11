@@ -14,6 +14,7 @@ import SignUp from './Screens/Auth/signUp';
 import VerifyEmailScreen from './Screens/Auth/otp';
 import OnboardingSignUp from './Screens/Auth/onBoarding';
 import ContinueSignUp from './Screens/Auth/continueSignUp';
+import BootSplash from 'react-native-bootsplash';
 // import SplashScreen from 'react-native-splash-screen';/
 
 const Stack = createNativeStackNavigator();
@@ -41,6 +42,16 @@ const config = {
   },
 };
 const App = () => {
+  useEffect(() => {
+    const init = async () => {
+      // …do multiple sync or async tasks
+    };
+
+    init().finally(async () => {
+      await BootSplash.hide({fade: true});
+      console.log('BootSplash has been hidden successfully');
+    });
+  }, []);
   return (
     <NavigationContainer
       linking={{

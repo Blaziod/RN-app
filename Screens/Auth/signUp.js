@@ -67,6 +67,7 @@ const SignUp = () => {
         setReferral('');
         navigation.navigate('VerifyEmail', {signupToken: data.signup_token});
         console.log('Success signing up:', data);
+        await AsyncStorage.setItem('userEmail', email); // Store the email
         Toast.show({
           type: 'success',
           text1: 'Success',
@@ -93,11 +94,11 @@ const SignUp = () => {
           },
           text1Style: {
             color: 'red',
-            fontSize: 20,
+            fontSize: 14,
           },
           text2Style: {
             color: 'green',
-            fontSize: 20,
+            fontSize: 14,
             fontFamily: 'CamptonBold',
           },
         });
@@ -118,11 +119,11 @@ const SignUp = () => {
         },
         text1Style: {
           color: 'red',
-          fontSize: 20,
+          fontSize: 14,
         },
         text2Style: {
           color: 'green',
-          fontSize: 20,
+          fontSize: 14,
           fontFamily: 'CamptonBold',
         },
       });

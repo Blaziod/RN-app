@@ -1,0 +1,12 @@
+[
+    {
+        "relation": ["delegate_permission/common.handle_all_urls"],
+        "target": {
+            "namespace" : "android_app",
+            "package_name": "com.trend3",
+            "sha256_cert_fingerprints" : [
+"AC:17:34:EF:EC:EF:CB:EF:F8:93:58:BE:74:01:98:39:46:92:4F:3B:99:19:AB:56:E6:DC:1D:5A:93:51:7F:26"
+            ]
+        }
+    }
+]

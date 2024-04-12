@@ -7,6 +7,7 @@ import {useState} from 'react';
 import Headers from '../../Components/Headers/Headers';
 import AdvertiseMenu from '../../Components/Menus/advertiseMenu';
 import {Svg, Path, Defs, ClipPath, Rect, Mask, G} from 'react-native-svg';
+import EngageAdvertiseMenu from '../../Components/Menus/engageAdvertiseMenu';
 
 const Advertise = () => {
   const [earnMenu, setEarnMenu] = useState(1);
@@ -298,7 +299,7 @@ const Advertise = () => {
               )}
               {earnMenu === 2 && (
                 <View style={{paddingVertical: 15, paddingHorizontal: 10}}>
-                  <AdvertiseMenu />
+                  <EngageAdvertiseMenu />
                 </View>
               )}
               {earnMenu === 3 && (
@@ -382,7 +383,7 @@ const styles = StyleSheet.create({
   },
   PostText: {
     color: '#fff',
-    fontFamily: 'CamptonBold',
+    fontFamily: 'Campton Bold',
     fontSize: 14,
   },
   EngText: {

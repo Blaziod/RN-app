@@ -17,6 +17,7 @@ import Headers from '../../Components/Headers/Headers';
 // import Lock from '../../assets/SVG/opened lock.svg';
 import {useNavigation} from '@react-navigation/native';
 import {Svg, Path, G, Defs, ClipPath, Rect} from 'react-native-svg';
+import EngageAdvertMenu from '../../Components/Menus/engageAdvertMenu';
 
 const Earn = () => {
   const [earnMenu, setEarnMenu] = useState(1);
@@ -150,7 +151,7 @@ const Earn = () => {
               )}
               {earnMenu === 2 && (
                 <View style={{paddingVertical: 15, paddingHorizontal: 10}}>
-                  <PostAdvertMenu />
+                  <EngageAdvertMenu />
                 </View>
               )}
               {earnMenu === 3 && (

@@ -39,6 +39,7 @@ const config = {
   screens: {
     Test1: 'a',
     Test2: 'b',
+    SignIn: 'home',
   },
 };
 const App = () => {
@@ -55,7 +56,7 @@ const App = () => {
   return (
     <NavigationContainer
       linking={{
-        prefixes: ['trendit://app'],
+        prefixes: ['trendit://app, https://app.trendit3.com'],
         config,
       }}>
       <StackNavigator />

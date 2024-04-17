@@ -13,6 +13,7 @@ import Earn from '../Screens/Earn/earn';
 import More from '../Screens/More/more';
 import Refer from '../Screens/More/refer';
 import Advertise from '../Screens/Advertise/advertise';
+import Settings from '../Screens/Settings';
 
 const Tab = createBottomTabNavigator();
 const MoreStack = createStackNavigator();
@@ -22,6 +23,7 @@ function MoreStackScreen() {
     <MoreStack.Navigator screenOptions={{headerShown: false}}>
       <MoreStack.Screen name="MorePage" component={More} />
       <MoreStack.Screen name="Refer" component={Refer} />
+      <MoreStack.Screen name="Settings" component={Settings} />
     </MoreStack.Navigator>
   );
 }

@@ -17,11 +17,7 @@ const Headers = () => {
     });
 
   if (!userData) {
-    return (
-      <View>
-        <Text style={{color: '#000', fontSize: 30}}>HELLO</Text>
-      </View>
-    );
+    return null;
   }
 
   return (
@@ -29,14 +25,14 @@ const Headers = () => {
       <View style={styles.Header}>
         <View style={styles.HeaderContainer}>
           <Image
-            source={userData.userdata.profile_picture}
+            source={{uri: userData?.userdata?.profile_picture}}
             style={styles.ProfileImage}
           />
           <View style={styles.UsernameContainer}>
             <Text style={styles.Name}>
-              {userData.userdata.firstname} {userData.userdata.lastname}
+              {userData?.userdata?.firstname} {userData?.userdata?.lastname}
             </Text>
-            <Text style={styles.UserName}>@{userData.userdata.username}</Text>
+            <Text style={styles.UserName}>@{userData?.userdata.username}</Text>
           </View>
           <View style={styles.headerImages}>
             <Image source={require('../../assets/sun.png')} />

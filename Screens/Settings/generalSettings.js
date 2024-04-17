@@ -156,11 +156,11 @@ const GeneralSettings = () => {
         setFilePath(source);
 
         console.log(response);
-        const url = 'https://api.trendit3.com/api/profile/update';
+        const url = 'https://api.trendit3.com/api/profile/edit';
         // Create a new FormData object
         console.log('starting Image Upload');
         let formData = new FormData();
-        formData.append('user_id', userData?.userdata?.id);
+        formData.append('access_token', userData?.accessToken);
         formData.append('profile_picture', {
           uri: image.uri,
           type: image.type,
@@ -173,13 +173,34 @@ const GeneralSettings = () => {
           fetch(url, {
             method: 'post',
             headers: {
-              Authorization: `Bearer ${userData?.userdata?.id}`,
+              Authorization: `Bearer ${userData?.accessToken}`,
             },
             body: formData,
           })
-            .then(response => response.json())
+            .then(response => {
+              if (response.status === 200 || response.status === 201) {
+                return response.json();
+              } else {
+                throw new Error('Server response was not ok.');
+              }
+            })
             .then(data => {
               console.log(data);
+              AsyncStorage.setItem(
+                'userdatafiles1',
+                JSON.stringify({
+                  accessToken: data.access_token,
+                  userdata: data.user_data,
+                }),
+              )
+                .then(() => {
+                  console.log(data.user_data);
+                  console.log(data.access_token);
+                  console.log('User data stored successfully');
+                })
+                .catch(error => {
+                  console.error('Error storing user data:', error);
+                });
               Toast.show({
                 type: 'success',
                 text1: 'Success',

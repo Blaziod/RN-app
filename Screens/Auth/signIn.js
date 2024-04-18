@@ -26,7 +26,7 @@ const SignIn = () => {
 
   useEffect(() => {
     const checkToken = async () => {
-      const token = await AsyncStorage.getItem('userdatafiles1');
+      const token = await AsyncStorage.getItem('accesstoken');
       if (token) {
         console.log('Token found:', token);
         navigation.reset({
@@ -65,17 +65,31 @@ const SignIn = () => {
         AsyncStorage.setItem(
           'userdatafiles1',
           JSON.stringify({
-            accessToken: data.access_token,
+            // accessToken: data.access_token,
             userdata: data.user_data,
           }),
         )
           .then(() => {
             console.log(data.user_data);
-            console.log(data.access_token);
+            // console.log(data.access_token);
             console.log('User data stored successfully');
           })
           .catch(error => {
             console.error('Error storing user data:', error);
+          });
+        AsyncStorage.setItem(
+          'accesstoken',
+          JSON.stringify({
+            accessToken: data.access_token,
+          }),
+        )
+          .then(() => {
+            // console.log(data.user_data);
+            console.log('access token here', data.access_token);
+            console.log('Access Token stored successfully');
+          })
+          .catch(error => {
+            console.error('Error storing Access Token:', error);
           });
         console.log('Success signing in:', data);
         Toast.show({

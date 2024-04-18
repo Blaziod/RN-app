@@ -23,6 +23,7 @@ import Toast from 'react-native-toast-message';
 
 const GeneralSettings = () => {
   const [userData, setUserData] = useState(null);
+  const [userAccessToken, setUserAccessToken] = useState(null);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
@@ -71,7 +72,23 @@ const GeneralSettings = () => {
         });
     }
   }, [selectedCountry]);
+  useEffect(() => {
+    // Your code to run on screen focus
+    AsyncStorage.getItem('accesstoken')
+      .then(data => {
+        const userAccessToken = JSON.parse(data);
+        setUserAccessToken(userAccessToken);
+        console.log('AccessToken Loading', userAccessToken);
 
+        if (!userAccessToken) {
+          // navigation.navigate('SignIn');
+          console.log('AccessToken Not found', userAccessToken);
+        }
+      })
+      .catch(error => {
+        console.error('Error retrieving user data:', error);
+      });
+  }, []);
   useEffect(() => {
     if (selectedState !== null) {
       // setIsLoading(true);
@@ -160,7 +177,7 @@ const GeneralSettings = () => {
         // Create a new FormData object
         console.log('starting Image Upload');
         let formData = new FormData();
-        formData.append('access_token', userData?.accessToken);
+        formData.append('access_token', userAccessToken?.accessToken);
         formData.append('profile_picture', {
           uri: image.uri,
           type: image.type,
@@ -173,7 +190,7 @@ const GeneralSettings = () => {
           fetch(url, {
             method: 'post',
             headers: {
-              Authorization: `Bearer ${userData?.accessToken}`,
+              Authorization: `Bearer ${userAccessToken?.accessToken}`,
             },
             body: formData,
           })
@@ -189,7 +206,6 @@ const GeneralSettings = () => {
               AsyncStorage.setItem(
                 'userdatafiles1',
                 JSON.stringify({
-                  accessToken: data.access_token,
                   userdata: data.user_data,
                 }),
               )

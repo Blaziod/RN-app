@@ -10,6 +10,7 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  ActivityIndicator,
   // Dimensions,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -20,6 +21,7 @@ import {Svg, Path, Stop, RadialGradient, Defs} from 'react-native-svg';
 
 export default function Home() {
   const [userData, setUserData] = useState(null);
+  const [userAccessToken, setUserAccessToken] = useState(null);
   const [userBalance, setUserBalance] = useState(null);
   const [hasFetchedBalance, setHasFetchedBalance] = useState(false);
   const navigation = useNavigation();
@@ -35,7 +37,7 @@ export default function Home() {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              Authorization: `Bearer ${userData.accessToken}`, // Add the access token to the headers
+              Authorization: `Bearer ${userAccessToken.accessToken}`, // Add the access token to the headers
             },
           },
         );
@@ -66,10 +68,10 @@ export default function Home() {
       }
     };
 
-    if (userData && userData.accessToken && isFocused) {
+    if (userData && userAccessToken?.accessToken && isFocused) {
       fetchBalance();
     }
-  }, [userData, isFocused]);
+  }, [userData, isFocused, userAccessToken]);
   // Inside your component
   useEffect(() => {
     // Your code to run on screen focus
@@ -80,7 +82,25 @@ export default function Home() {
         console.log('Here I am', userData);
 
         if (!userData) {
+          return <ActivityIndicator />;
+        }
+      })
+      .catch(error => {
+        console.error('Error retrieving user data:', error);
+      });
+  }, []);
+
+  useEffect(() => {
+    // Your code to run on screen focus
+    AsyncStorage.getItem('accesstoken')
+      .then(data => {
+        const userAccessToken = JSON.parse(data);
+        setUserAccessToken(userAccessToken);
+        console.log('AccessToken Loading', userAccessToken);
+
+        if (!userAccessToken) {
           navigation.navigate('SignIn');
+          console.log('AccessToken Not found', userAccessToken);
         }
       })
       .catch(error => {

@@ -14,9 +14,11 @@ import More from '../Screens/More/more';
 import Refer from '../Screens/More/refer';
 import Advertise from '../Screens/Advertise/advertise';
 import Settings from '../Screens/Settings';
+import Earn1 from '../Screens/Earn/earn1';
 
 const Tab = createBottomTabNavigator();
 const MoreStack = createStackNavigator();
+const EarnStack = createStackNavigator();
 
 function MoreStackScreen() {
   return (
@@ -25,6 +27,17 @@ function MoreStackScreen() {
       <MoreStack.Screen name="Refer" component={Refer} />
       <MoreStack.Screen name="Settings" component={Settings} />
     </MoreStack.Navigator>
+  );
+}
+
+function EarnStackScreen() {
+  return (
+    <EarnStack.Navigator screenOptions={{headerShown: false}}>
+      <EarnStack.Screen name="Earn" component={Earn} />
+      <EarnStack.Screen name="Earn1" component={Earn1} />
+      {/* <EarnStack.Screen name="Earn2" component={ProtectedEarn2} /> */}
+      {/* <EarnStack.Screen name="Earn3" component={ProtectedEarn3} /> */}
+    </EarnStack.Navigator>
   );
 }
 
@@ -69,7 +82,7 @@ const TabNavigation = () => {
       />
       <Tab.Screen
         name="EarnPage"
-        component={Earn}
+        component={EarnStackScreen}
         options={{
           headerShown: false,
           tabBarIcon: ({focused}) => (

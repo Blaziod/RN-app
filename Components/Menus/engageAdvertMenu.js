@@ -118,7 +118,7 @@ const EngageAdvertMenu = () => {
                   borderTopRightRadius: 4,
                   borderTopLeftRadius: 4,
                 }}
-                onPress={() => navigation.navigate('Earn1')}>
+                onPress={() => navigation.navigate('Earn1Apple')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -238,7 +238,7 @@ const EngageAdvertMenu = () => {
                   borderTopRightRadius: 4,
                   borderTopLeftRadius: 4,
                 }}
-                onPress={() => navigation.navigate('Earn1')}>
+                onPress={() => navigation.navigate('Earn1Youtube')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -352,7 +352,7 @@ const EngageAdvertMenu = () => {
                   borderTopRightRadius: 4,
                   borderTopLeftRadius: 4,
                 }}
-                onPress={() => navigation.navigate('Earn1')}>
+                onPress={() => navigation.navigate('Earn1Follow')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -371,7 +371,7 @@ const EngageAdvertMenu = () => {
                   borderBottomRightRadius: 4,
                   borderBottomLeftRadius: 4,
                 }}
-                onPress={() => navigation.navigate('Earn1')}>
+                onPress={() => navigation.navigate('Earn1Follow')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -476,7 +476,7 @@ const EngageAdvertMenu = () => {
                   borderTopRightRadius: 4,
                   borderTopLeftRadius: 4,
                 }}
-                onPress={() => navigation.navigate('Earn1')}>
+                onPress={() => navigation.navigate('Earn1Spotify')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -495,7 +495,7 @@ const EngageAdvertMenu = () => {
                   borderBottomRightRadius: 4,
                   borderBottomLeftRadius: 4,
                 }}
-                onPress={() => navigation.navigate('Earn1')}>
+                onPress={() => navigation.navigate('Earn1Spotify')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -591,7 +591,7 @@ const EngageAdvertMenu = () => {
                   borderTopRightRadius: 4,
                   borderTopLeftRadius: 4,
                 }}
-                onPress={() => navigation.navigate('Earn1')}>
+                onPress={() => navigation.navigate('Earn1Like')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -610,7 +610,7 @@ const EngageAdvertMenu = () => {
                   borderBottomRightRadius: 4,
                   borderBottomLeftRadius: 4,
                 }}
-                onPress={() => navigation.navigate('Earn1')}>
+                onPress={() => navigation.navigate('Earn1Like')}>
                 <Text
                   style={{
                     color: '#fff',

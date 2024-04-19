@@ -17,10 +17,10 @@ import Headers from '../../Components/Headers/Headers';
 // import Left from '../../assets/SVG/left';
 import Earn1Menu from '../../Components/Menus/earn1Menu';
 import Earn1CustomSwitch from '../../Components/CustomSwitches/earn1CustomSwitch';
-import {Svg, Path, G, Stop, Defs, RadialGradient} from 'react-native-svg';
+import {Svg, Path, Stop, Defs, RadialGradient} from 'react-native-svg';
 import Earn1Image from '../../assets/SVG/earn1Image';
 
-const Earn1 = ({navigation}) => {
+const Earn1IG = ({navigation}) => {
   const [earnMenu, setEarnMenu] = useState(1);
 
   const onSelectSwitch = value => {
@@ -238,4 +238,4 @@ const styles = StyleSheet.create({
     fontFamily: 'Campton Bold',
   },
 });
-export default Earn1;
+export default Earn1IG;

@@ -1,8 +1,15 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   Svg,
   Path,
@@ -14,7 +21,26 @@ import {
 } from 'react-native-svg';
 
 const AdvertiseMenu = () => {
+  const [userData, setUserData] = useState(null);
   const navigation = useNavigation();
+  useEffect(() => {
+    // Your code to run on screen focus
+    AsyncStorage.getItem('userdatafiles1')
+      .then(data => {
+        // eslint-disable-next-line no-shadow
+        const userData = JSON.parse(data);
+        setUserData(userData);
+        console.log('Here I am', userData);
+
+        if (!userData) {
+          return <ActivityIndicator />;
+        }
+      })
+      .catch(error => {
+        console.error('Error retrieving user data:', error);
+      });
+  }, []);
+
   return (
     <View>
       <View style={styles.Container1}>
@@ -86,7 +112,7 @@ const AdvertiseMenu = () => {
                   fontFamily: 'Campton Bold',
                   fontSize: 12,
                 }}>
-                ₦150 per advert post
+                {userData?.userdata?.wallet?.currency_code} 150 per advert post
               </Text>
             </View>
             <View>
@@ -186,7 +212,7 @@ const AdvertiseMenu = () => {
                   fontFamily: 'Campton Bold',
                   fontSize: 12,
                 }}>
-                ₦150 per advert post
+                {userData?.userdata?.wallet?.currency_code} 150 per advert post
               </Text>
             </View>
             <View>
@@ -286,7 +312,7 @@ const AdvertiseMenu = () => {
                   fontFamily: 'Campton Bold',
                   fontSize: 12,
                 }}>
-                ₦150 per advert post
+                {userData?.userdata?.wallet?.currency_code} 150 per advert post
               </Text>
             </View>
             <View>
@@ -378,7 +404,7 @@ const AdvertiseMenu = () => {
                   fontFamily: 'Campton Bold',
                   fontSize: 12,
                 }}>
-                ₦150 per advert post
+                {userData?.userdata?.wallet?.currency_code} 150 per advert post
               </Text>
             </View>
             <View>
@@ -503,7 +529,7 @@ const AdvertiseMenu = () => {
                   fontFamily: 'Campton Bold',
                   fontSize: 12,
                 }}>
-                ₦150 per advert post
+                {userData?.userdata?.wallet?.currency_code} 150 per advert post
               </Text>
             </View>
             <View>
@@ -625,7 +651,7 @@ const AdvertiseMenu = () => {
                   fontFamily: 'Campton Bold',
                   fontSize: 12,
                 }}>
-                ₦100 per advert post
+                {userData?.userdata?.wallet?.currency_code} 100 per advert post
               </Text>
             </View>
             <View>

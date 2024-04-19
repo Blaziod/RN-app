@@ -12,7 +12,7 @@ import {
 import {Path, G, Svg} from 'react-native-svg';
 import {useNavigation} from '@react-navigation/native';
 
-const Earn1Menu = () => {
+const Earn1FBMenu = () => {
   const navigation = useNavigation();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const deviceHeight = Dimensions.get('window').height;
@@ -158,7 +158,7 @@ const Earn1Menu = () => {
                             paddingBottom: 10,
                             paddingTop: 20,
                           }}>
-                          Generate Next Instagram Advert Task?
+                          Generate Next Facebook Advert Task?
                         </Text>
                         <Text
                           style={{
@@ -169,7 +169,7 @@ const Earn1Menu = () => {
                             textAlign: 'center',
                             paddingHorizontal: 20,
                           }}>
-                          Are you sure you want to generate your next Innstagram
+                          Are you sure you want to generate your next Facebook
                           Advert task now. You have 1 hour to perform this task.
                           Please confirm only if you are ready to perform the
                           task.
@@ -185,7 +185,7 @@ const Earn1Menu = () => {
                             width: '100%',
                             borderRadius: 110,
                           }}
-                          onPress={() => navigation.navigate('Earn2IG')}>
+                          onPress={() => navigation.navigate('Earn2FB')}>
                           <Text
                             style={{
                               color: '#fff',
@@ -208,4 +208,4 @@ const Earn1Menu = () => {
   );
 };
 
-export default Earn1Menu;
+export default Earn1FBMenu;

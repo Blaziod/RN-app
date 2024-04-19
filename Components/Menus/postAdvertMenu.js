@@ -101,7 +101,7 @@ const PostAdvertMenu = () => {
                   borderTopRightRadius: 4,
                   borderTopLeftRadius: 4,
                 }}
-                onPress={() => navigation.navigate('Earn1')}>
+                onPress={() => navigation.navigate('Earn1FB')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -223,7 +223,7 @@ const PostAdvertMenu = () => {
                   borderTopRightRadius: 4,
                   borderTopLeftRadius: 4,
                 }}
-                onPress={() => navigation.navigate('Earn1')}>
+                onPress={() => navigation.navigate('Earn1Tiktok')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -242,7 +242,7 @@ const PostAdvertMenu = () => {
                   borderBottomRightRadius: 4,
                   borderBottomLeftRadius: 4,
                 }}
-                onPress={() => navigation.navigate('Earn1')}>
+                onPress={() => navigation.navigate('Earn1Tiktok')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -370,7 +370,7 @@ const PostAdvertMenu = () => {
                   borderTopRightRadius: 4,
                   borderTopLeftRadius: 4,
                 }}
-                onPress={() => navigation.navigate('Earn1')}>
+                onPress={() => navigation.navigate('Earn1IG')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -389,7 +389,7 @@ const PostAdvertMenu = () => {
                   borderBottomRightRadius: 4,
                   borderBottomLeftRadius: 4,
                 }}
-                onPress={() => navigation.navigate('Earn1')}>
+                onPress={() => navigation.navigate('Earn1IG')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -514,7 +514,7 @@ const PostAdvertMenu = () => {
                   borderTopRightRadius: 4,
                   borderTopLeftRadius: 4,
                 }}
-                onPress={() => navigation.navigate('Earn1')}>
+                onPress={() => navigation.navigate('Earn1WB')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -533,7 +533,7 @@ const PostAdvertMenu = () => {
                   borderBottomRightRadius: 4,
                   borderBottomLeftRadius: 4,
                 }}
-                onPress={() => navigation.navigate('Earn1')}>
+                onPress={() => navigation.navigate('Earn1WB')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -628,7 +628,7 @@ const PostAdvertMenu = () => {
                   borderTopRightRadius: 4,
                   borderTopLeftRadius: 4,
                 }}
-                onPress={() => navigation.navigate('Earn1')}>
+                onPress={() => navigation.navigate('Earn1X')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -647,7 +647,7 @@ const PostAdvertMenu = () => {
                   borderBottomRightRadius: 4,
                   borderBottomLeftRadius: 4,
                 }}
-                onPress={() => navigation.navigate('Earn1')}>
+                onPress={() => navigation.navigate('Earn1X')}>
                 <Text
                   style={{
                     color: '#fff',

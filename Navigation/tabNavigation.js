@@ -14,9 +14,18 @@ import More from '../Screens/More/more';
 import Refer from '../Screens/More/refer';
 import Advertise from '../Screens/Advertise/advertise';
 import Settings from '../Screens/Settings';
+import Earn1IG from '../Screens/Earn/earn1';
+import Earn2IG from '../Screens/Earn/earn2';
+import Earn3IG from '../Screens/Earn/earn3';
+import Earn1FB from '../Screens/Earn/earn1FB';
+import Earn2FB from '../Screens/Earn/earn2FB';
+import Earn3FB from '../Screens/Earn/earn3FB';
+import Advertise1 from '../Screens/Advertise/advertise1';
 
 const Tab = createBottomTabNavigator();
 const MoreStack = createStackNavigator();
+const EarnStack = createStackNavigator();
+const AdvertiseStack = createStackNavigator();
 
 function MoreStackScreen() {
   return (
@@ -25,6 +34,29 @@ function MoreStackScreen() {
       <MoreStack.Screen name="Refer" component={Refer} />
       <MoreStack.Screen name="Settings" component={Settings} />
     </MoreStack.Navigator>
+  );
+}
+
+function EarnStackScreen() {
+  return (
+    <EarnStack.Navigator screenOptions={{headerShown: false}}>
+      <EarnStack.Screen name="Earn" component={Earn} />
+      <EarnStack.Screen name="Earn1IG" component={Earn1IG} />
+      <EarnStack.Screen name="Earn2IG" component={Earn2IG} />
+      <EarnStack.Screen name="Earn3IG" component={Earn3IG} />
+      <EarnStack.Screen name="Earn1FB" component={Earn1FB} />
+      <EarnStack.Screen name="Earn2FB" component={Earn2FB} />
+      <EarnStack.Screen name="Earn3FB" component={Earn3FB} />
+    </EarnStack.Navigator>
+  );
+}
+
+function AdvertiseStackScreen() {
+  return (
+    <AdvertiseStack.Navigator screenOptions={{headerShown: false}}>
+      <AdvertiseStack.Screen name="Advertise" component={Advertise} />
+      <AdvertiseStack.Screen name="Advertise1" component={Advertise1} />
+    </AdvertiseStack.Navigator>
   );
 }
 
@@ -69,7 +101,7 @@ const TabNavigation = () => {
       />
       <Tab.Screen
         name="EarnPage"
-        component={Earn}
+        component={EarnStackScreen}
         options={{
           headerShown: false,
           tabBarIcon: ({focused}) => (
@@ -101,7 +133,7 @@ const TabNavigation = () => {
       />
       <Tab.Screen
         name="AdvertisePage"
-        component={Advertise}
+        component={AdvertiseStackScreen}
         options={{
           headerShown: false,
           tabBarIcon: ({focused}) => (

@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
-import {View, Text, Image, StyleSheet} from 'react-native';
+import {View, Text, Image, StyleSheet, ActivityIndicator} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Headers = () => {
@@ -17,7 +17,7 @@ const Headers = () => {
     });
 
   if (!userData) {
-    return null;
+    return <ActivityIndicator />;
   }
 
   return (

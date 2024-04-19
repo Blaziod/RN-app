@@ -27,7 +27,7 @@ const SignUp = () => {
   // const WIDTH = Dimensions.get('window').width;
   useEffect(() => {
     const checkToken = async () => {
-      const token = await AsyncStorage.getItem('userdatafiles1');
+      const token = await AsyncStorage.getItem('accesstoken');
       if (token) {
         console.log('Token found:', token);
         navigation.reset({

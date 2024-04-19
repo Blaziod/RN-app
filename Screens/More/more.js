@@ -21,7 +21,7 @@ const More = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    AsyncStorage.getItem('userdatafiles1')
+    AsyncStorage.getItem('accesstoken')
       .then(data => {
         // eslint-disable-next-line no-shadow
         const userData = JSON.parse(data);
@@ -61,6 +61,7 @@ const More = () => {
         await AsyncStorage.removeItem('userdata2');
         await AsyncStorage.removeItem('userdatas');
         await AsyncStorage.removeItem('userdatafiles1');
+        await AsyncStorage.removeItem('accesstoken');
         Toast.show({
           type: 'success',
           text1: 'Success',
@@ -374,6 +375,7 @@ const More = () => {
               style={{backgroundColor: '#fff', width: 100, height: 50}}
               onPress={() => {
                 AsyncStorage.removeItem('userdatafiles1');
+                AsyncStorage.removeItem('accesstoken');
                 AsyncStorage.removeItem('userdata1');
                 AsyncStorage.removeItem('userdata');
                 AsyncStorage.removeItem('userdata2');

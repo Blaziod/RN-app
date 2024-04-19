@@ -63,7 +63,7 @@ const OnboardingSignUp = ({navigation, route}) => {
         AsyncStorage.setItem(
           'userdatafiles1',
           JSON.stringify({
-            accessToken: data.access_token,
+            // accessToken: data.access_token,
             userdata: data.user_data,
           }),
         )
@@ -74,6 +74,20 @@ const OnboardingSignUp = ({navigation, route}) => {
           })
           .catch(error => {
             console.error('Error storing user data:', error);
+          });
+        AsyncStorage.setItem(
+          'accesstoken',
+          JSON.stringify({
+            accessToken: data.access_token,
+          }),
+        )
+          .then(() => {
+            console.log(data.user_data);
+            console.log(data.access_token);
+            console.log('Access Token stored successfully');
+          })
+          .catch(error => {
+            console.error('Error storing Access Token:', error);
           });
 
         console.log('Successful', data);

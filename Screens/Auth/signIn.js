@@ -23,6 +23,8 @@ const SignIn = () => {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const [isFocused2, setIsFocused2] = useState(false);
 
   useEffect(() => {
     const checkToken = async () => {
@@ -177,25 +179,27 @@ const SignIn = () => {
         contentInsetAdjustmentBehavior="automatic">
         <View>
           <View style={styles.header}>
-            <Text style={styles.welcomeText}>Welcome to </Text>
-            <Text style={styles.welcomeText2}>Trendit </Text>
-            <Text style={styles.tagline}>Earn money by connecting</Text>
+            <Text style={styles.welcomeText}>Welcome Back </Text>
+            {/* <Text style={styles.welcomeText2}>Trendit </Text> */}
             <Text style={styles.tagline}>
-              businesses to their potential customers.
+              Turn Daily Social Tasks into Paychecks!{' '}
             </Text>
+            <Text style={styles.tagline}>Get Paid for your Engagements.</Text>
           </View>
 
           <View>
             <TextInput
-              style={styles.textInput}
+              style={[styles.textInput, isFocused2 && styles.focused]}
               placeholder="Enter a valid email"
               placeholderTextColor="#888"
               autoCapitalize="none"
               autoCorrect={false}
               onChangeText={setEmail}
               value={email_username}
+              onFocus={() => setIsFocused2(true)}
+              onBlur={() => setIsFocused2(false)}
             />
-            <View style={styles.textInput2}>
+            <View style={[styles.textInput2, isFocused && styles.focused]}>
               <TextInput
                 placeholder="Enter a password"
                 placeholderTextColor="#888"
@@ -204,6 +208,9 @@ const SignIn = () => {
                 secureTextEntry={!isPasswordVisible}
                 onChangeText={setPassword}
                 value={password}
+                style={{width: '85%'}}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
               />
               <Svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -222,6 +229,19 @@ const SignIn = () => {
                 />
               </Svg>
             </View>
+            <TouchableOpacity onPress={() => navigation.navigate('Reset')}>
+              <Text
+                style={{
+                  color: '#fff',
+                  fontSize: 14,
+                  fontFamily: 'Campton Bold',
+                  alignSelf: 'flex-end',
+                  paddingRight: 10,
+                  paddingVertical: 10,
+                }}>
+                Forgot password ?
+              </Text>
+            </TouchableOpacity>
             <TouchableOpacity
               style={styles.continueButton}
               onPress={handleSignUp}
@@ -259,36 +279,65 @@ const SignIn = () => {
                 <Text style={styles.socialButtonText}>TikTok</Text>
               </TouchableOpacity>
             </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                gap: 4,
-                paddingTop: 10,
-                alignSelf: 'center',
-              }}>
-              <Text
-                style={{
-                  color: '#fff',
-                  fontSize: 14,
-                  fontFamily: 'CamptonBook',
-                }}>
-                Don&apos;t have an account?
-              </Text>
-              <View onPress={() => navigation.navigate('SignUp')}>
-                <Text
-                  style={{
-                    color: 'red',
-                    fontSize: 14,
-                    fontFamily: 'CamptonBook',
-                  }}
-                  onPress={() => navigation.navigate('SignUp')}>
-                  Sign Up
-                </Text>
-              </View>
-            </View>
           </View>
         </View>
       </ScrollView>
+      <View
+        style={{
+          flexDirection: 'row',
+          gap: 4,
+          alignSelf: 'center',
+          justifyContent: 'flex-end',
+          paddingBottom: 50,
+        }}>
+        <Text
+          style={{
+            color: '#fff',
+            fontSize: 14,
+            fontFamily: 'CamptonBook',
+          }}>
+          Don&apos;t have an account?
+        </Text>
+        <View onPress={() => navigation.navigate('SignUp')}>
+          <Text
+            style={{
+              color: '#CB29BE',
+              fontSize: 14,
+              fontFamily: 'Campton Bold',
+            }}
+            onPress={() => navigation.navigate('SignUp')}>
+            Sign Up
+          </Text>
+        </View>
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          gap: 4,
+          paddingTop: 10,
+          alignSelf: 'center',
+          bottom: 10,
+          position: 'absolute',
+        }}>
+        <Text
+          style={{
+            color: '#b1b1b1',
+            fontSize: 14,
+            fontFamily: 'CamptonBook',
+          }}>
+          By signing up, you agree to our
+        </Text>
+        <View>
+          <Text
+            style={{
+              color: '#fff',
+              fontSize: 14,
+              fontFamily: 'Campton Bold',
+            }}>
+            Terms and Privacy Policy
+          </Text>
+        </View>
+      </View>
     </SafeAreaView>
   );
 };
@@ -317,8 +366,11 @@ const styles = StyleSheet.create({
   header: {
     marginBottom: 30,
     alignItems: 'center',
+    paddingTop: 10,
   },
-
+  focused: {
+    borderColor: '#CB29BE',
+  },
   logo: {
     width: 100,
     height: 100,
@@ -351,7 +403,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   textInput: {
-    backgroundColor: '#8E60CF3B',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
     padding: 12,
     borderRadius: 5,
     marginBottom: 10,
@@ -359,9 +411,10 @@ const styles = StyleSheet.create({
     color: 'white',
     alignSelf: 'center',
     fontFamily: 'CamptonLight',
+    borderWidth: 2,
   },
   textInput2: {
-    backgroundColor: '#8E60CF3B',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
     padding: 5,
     borderRadius: 5,
     marginBottom: 10,
@@ -372,6 +425,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    borderWidth: 2,
   },
   continueButton: {
     backgroundColor: '#CB29BE',

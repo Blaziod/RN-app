@@ -15,6 +15,7 @@ import VerifyEmailScreen from './Screens/Auth/otp';
 import OnboardingSignUp from './Screens/Auth/onBoarding';
 import ContinueSignUp from './Screens/Auth/continueSignUp';
 import BootSplash from 'react-native-bootsplash';
+import ResetPassword from './Screens/Auth/resetPassword';
 // import SplashScreen from 'react-native-splash-screen';/
 
 const Stack = createNativeStackNavigator();
@@ -32,6 +33,7 @@ function StackNavigator() {
       <Stack.Screen name="VerifyEmail" component={VerifyEmailScreen} />
       <Stack.Screen name="Onboard" component={OnboardingSignUp} />
       <Stack.Screen name="Onboard2" component={ContinueSignUp} />
+      <Stack.Screen name="Reset" component={ResetPassword} />
     </Stack.Navigator>
   );
 }
@@ -56,7 +58,7 @@ const App = () => {
   return (
     <NavigationContainer
       linking={{
-        prefixes: ['trendit://app, https://app.trendit3.com'],
+        prefixes: ['trendit://app', 'https://blaziod.github.io'],
         config,
       }}>
       <StackNavigator />

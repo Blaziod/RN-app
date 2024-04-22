@@ -125,7 +125,7 @@ const AdvertiseMenu = () => {
                   alignItems: 'center',
                   width: 90,
                 }}
-                onPress={() => navigation.navigate('Advertise1')}>
+                onPress={() => navigation.navigate('Advertise1FB')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -225,7 +225,7 @@ const AdvertiseMenu = () => {
                   alignItems: 'center',
                   width: 90,
                 }}
-                onPress={() => navigation.navigate('Advertise1')}>
+                onPress={() => navigation.navigate('Advertise1TK')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -325,7 +325,7 @@ const AdvertiseMenu = () => {
                   alignItems: 'center',
                   width: 90,
                 }}
-                onPress={() => navigation.navigate('Advertise1')}>
+                onPress={() => navigation.navigate('Advertise1YT')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -417,7 +417,7 @@ const AdvertiseMenu = () => {
                   alignItems: 'center',
                   width: 90,
                 }}
-                onPress={() => navigation.navigate('Advertise1')}>
+                onPress={() => navigation.navigate('Advertise1X')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -664,7 +664,7 @@ const AdvertiseMenu = () => {
                   alignItems: 'center',
                   width: 90,
                 }}
-                onPress={() => navigation.navigate('Advertise1')}>
+                onPress={() => navigation.navigate('Advertise1WA')}>
                 <Text
                   style={{
                     color: '#fff',

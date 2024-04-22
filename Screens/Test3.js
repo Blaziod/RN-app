@@ -5,7 +5,8 @@ import {View, Text, Button, Linking} from 'react-native';
 
 const Test3 = ({}) => {
   const Url_t1 = 'trendit://app/a';
-  const Url_t2 = 'trendit://app/b';
+  const Url_t2 =
+    'https://ravemodal-dev.herokuapp.com/v3/hosted/pay/10a48d75e3a023fcb180';
 
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>

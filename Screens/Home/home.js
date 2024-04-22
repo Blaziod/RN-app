@@ -35,6 +35,8 @@ const Home = () => {
   const [hasFetchedBalance, setHasFetchedBalance] = useState(false);
   const navigation = useNavigation();
   const isFocused = useIsFocused();
+  const [isLoading, setIsLoading] = useState(true);
+
   // const WIDTH = Dimensions.get('screen').width;
   const [refreshing, setRefreshing] = useState(false);
 
@@ -49,51 +51,58 @@ const Home = () => {
   };
 
   const fetchBalance = async () => {
-    try {
-      const response = await fetch(
-        'https://api.trendit3.com/api/show_balance',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${userAccessToken.accessToken}`, // Add the access token to the headers
+    setIsLoading(true);
+    if (userAccessToken) {
+      try {
+        const response = await fetch(
+          'https://api.trendit3.com/api/show_balance',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${userAccessToken.accessToken}`, // Add the access token to the headers
+            },
           },
-        },
-      );
+        );
 
-      const data = await response.json();
+        const data = await response.json();
 
-      if (response.ok) {
-        console.log('Successful', data);
-        AsyncStorage.setItem(
-          'userbalance',
-          JSON.stringify({
-            balance: data.balance,
-          }),
-        )
-          .then(() => {
-            console.log(data.balance);
-            setUserBalance(data.balance);
-            console.log('Balance Stored');
-          })
-          .catch(error => {
-            console.error('Error storing user balance:', error);
-          });
-        setHasFetchedBalance(true);
-      } else {
-        throw new Error(data.message);
+        if (response.ok) {
+          console.log('Successful', data);
+          AsyncStorage.setItem(
+            'userbalance',
+            JSON.stringify({
+              balance: data.balance,
+            }),
+          )
+            .then(() => {
+              console.log(data.balance);
+              setUserBalance(data.balance);
+              console.log('Balance Stored');
+            })
+            .catch(error => {
+              console.error('Error storing user balance:', error);
+            });
+          setHasFetchedBalance(true);
+          setIsLoading(false);
+        } else {
+          setIsLoading(false);
+          throw new Error(data.message);
+        }
+      } catch (error) {
+        console.error('Error during balance fetch:', error);
       }
-    } catch (error) {
-      console.error('Error during balance fetch:', error);
+    } else {
+      console.log('No access token found');
     }
   };
 
   useEffect(() => {
-    if (isFocused) {
+    if (isFocused && userAccessToken) {
       fetchBalance();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFocused]);
+  }, [isFocused, userAccessToken]);
 
   // Inside your component
   const fetchUserData = () => {
@@ -139,23 +148,21 @@ const Home = () => {
 
   const fetchUserBalance = () => {
     // Yo
-    if (hasFetchedBalance && isFocused) {
-      AsyncStorage.getItem('userbalance')
-        .then(data => {
-          const userBalance = JSON.parse(data);
-          // setUserBalance(userBalance);
-          console.log('Balance', userBalance);
-        })
-        .catch(error => {
-          console.error('Error retrieving user balance:', error);
-        });
-    }
+
+    AsyncStorage.getItem('userbalance')
+      .then(data => {
+        const userBalance = JSON.parse(data);
+        // setUserBalance(userBalance);
+        console.log('Balance', userBalance);
+      })
+      .catch(error => {
+        console.error('Error retrieving user balance:', error);
+      });
   };
   useEffect(() => {
     if (hasFetchedBalance && isFocused) {
       fetchUserBalance();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasFetchedBalance, isFocused]);
 
   return (
@@ -173,7 +180,12 @@ const Home = () => {
             <View style={styles.walletBalanceContainer}>
               <Text style={styles.WalletBalance}>Wallet bal:</Text>
               <Text style={styles.WalletAmount}>
-                {userData?.userdata?.wallet?.currency_code}: {userBalance}
+                {userData?.userdata?.wallet?.currency_code}:
+                {isLoading ? (
+                  <ActivityIndicator size="small" color="#0000ff" />
+                ) : (
+                  userBalance
+                )}
               </Text>
               <View style={styles.WalletButtonsContainer}>
                 <TouchableOpacity

@@ -84,7 +84,7 @@ const EngageAdvertiseMenu = () => {
                   alignItems: 'center',
                   width: 90,
                 }}
-                onPress={() => navigation.navigate('Advertise1')}>
+                onPress={() => navigation.navigate('Advertise1AM')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -194,7 +194,7 @@ const EngageAdvertiseMenu = () => {
                   alignItems: 'center',
                   width: 90,
                 }}
-                onPress={() => navigation.navigate('Advertise1')}>
+                onPress={() => navigation.navigate('Advertise1AP')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -287,7 +287,7 @@ const EngageAdvertiseMenu = () => {
                   alignItems: 'center',
                   width: 90,
                 }}
-                onPress={() => navigation.navigate('Advertise1')}>
+                onPress={() => navigation.navigate('Advertise1LS')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -379,7 +379,7 @@ const EngageAdvertiseMenu = () => {
                   alignItems: 'center',
                   width: 90,
                 }}
-                onPress={() => navigation.navigate('Advertise1')}>
+                onPress={() => navigation.navigate('Advertise1FS')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -481,7 +481,7 @@ const EngageAdvertiseMenu = () => {
                   alignItems: 'center',
                   width: 90,
                 }}
-                onPress={() => navigation.navigate('Advertise1')}>
+                onPress={() => navigation.navigate('Advertise1GP')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -584,7 +584,7 @@ const EngageAdvertiseMenu = () => {
                   alignItems: 'center',
                   width: 90,
                 }}
-                onPress={() => navigation.navigate('Advertise1')}>
+                onPress={() => navigation.navigate('Advertise1SP')}>
                 <Text
                   style={{
                     color: '#fff',

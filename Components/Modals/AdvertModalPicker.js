@@ -14,9 +14,15 @@ const OPTIONS = [
   'Facebook',
   'Instagram',
   'Twitter',
-  'Google',
+  'Youtube',
   'TikTok',
   'WhatsApp',
+  'AudioMack',
+  'Apple',
+  'Social',
+  'Follow',
+  'Google Play Store',
+  'Spotify',
 ];
 const OPTIONS3 = [
   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
@@ -33,6 +39,238 @@ const AdvertiseModalPicker = props => {
   };
 
   const item = OPTIONS[1]; // Access the second item directly
+  return (
+    <TouchableOpacity
+      onPress={() => props.changeModalVisibility(false)}
+      style={styles.ModalPicker}>
+      <View style={styles.modal}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => onPressItem(item)}>
+          <Text style={styles.text}>{item}</Text>
+        </TouchableOpacity>
+      </View>
+    </TouchableOpacity>
+  );
+};
+const FBAdvertiseModalPicker = props => {
+  const onPressItem = option => {
+    props.changeModalVisibility(false);
+    props.setData(option);
+  };
+
+  const item = OPTIONS[0]; // Access the second item directly
+  return (
+    <TouchableOpacity
+      onPress={() => props.changeModalVisibility(false)}
+      style={styles.ModalPicker}>
+      <View style={styles.modal}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => onPressItem(item)}>
+          <Text style={styles.text}>{item}</Text>
+        </TouchableOpacity>
+      </View>
+    </TouchableOpacity>
+  );
+};
+const TKAdvertiseModalPicker = props => {
+  const onPressItem = option => {
+    props.changeModalVisibility(false);
+    props.setData(option);
+  };
+
+  const item = OPTIONS[4]; // Access the second item directly
+  return (
+    <TouchableOpacity
+      onPress={() => props.changeModalVisibility(false)}
+      style={styles.ModalPicker}>
+      <View style={styles.modal}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => onPressItem(item)}>
+          <Text style={styles.text}>{item}</Text>
+        </TouchableOpacity>
+      </View>
+    </TouchableOpacity>
+  );
+};
+const YTAdvertiseModalPicker = props => {
+  const onPressItem = option => {
+    props.changeModalVisibility(false);
+    props.setData(option);
+  };
+
+  const item = OPTIONS[3]; // Access the second item directly
+  return (
+    <TouchableOpacity
+      onPress={() => props.changeModalVisibility(false)}
+      style={styles.ModalPicker}>
+      <View style={styles.modal}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => onPressItem(item)}>
+          <Text style={styles.text}>{item}</Text>
+        </TouchableOpacity>
+      </View>
+    </TouchableOpacity>
+  );
+};
+const WAAdvertiseModalPicker = props => {
+  const onPressItem = option => {
+    props.changeModalVisibility(false);
+    props.setData(option);
+  };
+
+  const item = OPTIONS[5]; // Access the second item directly
+  return (
+    <TouchableOpacity
+      onPress={() => props.changeModalVisibility(false)}
+      style={styles.ModalPicker}>
+      <View style={styles.modal}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => onPressItem(item)}>
+          <Text style={styles.text}>{item}</Text>
+        </TouchableOpacity>
+      </View>
+    </TouchableOpacity>
+  );
+};
+const XAdvertiseModalPicker = props => {
+  const onPressItem = option => {
+    props.changeModalVisibility(false);
+    props.setData(option);
+  };
+
+  const item = OPTIONS[2]; // Access the second item directly
+  return (
+    <TouchableOpacity
+      onPress={() => props.changeModalVisibility(false)}
+      style={styles.ModalPicker}>
+      <View style={styles.modal}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => onPressItem(item)}>
+          <Text style={styles.text}>{item}</Text>
+        </TouchableOpacity>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+const AMAdvertiseModalPicker = props => {
+  const onPressItem = option => {
+    props.changeModalVisibility(false);
+    props.setData(option);
+  };
+
+  const item = OPTIONS[6]; // Access the second item directly
+  return (
+    <TouchableOpacity
+      onPress={() => props.changeModalVisibility(false)}
+      style={styles.ModalPicker}>
+      <View style={styles.modal}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => onPressItem(item)}>
+          <Text style={styles.text}>{item}</Text>
+        </TouchableOpacity>
+      </View>
+    </TouchableOpacity>
+  );
+};
+const APAdvertiseModalPicker = props => {
+  const onPressItem = option => {
+    props.changeModalVisibility(false);
+    props.setData(option);
+  };
+
+  const item = OPTIONS[7]; // Access the second item directly
+  return (
+    <TouchableOpacity
+      onPress={() => props.changeModalVisibility(false)}
+      style={styles.ModalPicker}>
+      <View style={styles.modal}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => onPressItem(item)}>
+          <Text style={styles.text}>{item}</Text>
+        </TouchableOpacity>
+      </View>
+    </TouchableOpacity>
+  );
+};
+const LSAdvertiseModalPicker = props => {
+  const onPressItem = option => {
+    props.changeModalVisibility(false);
+    props.setData(option);
+  };
+
+  const item = OPTIONS[8]; // Access the second item directly
+  return (
+    <TouchableOpacity
+      onPress={() => props.changeModalVisibility(false)}
+      style={styles.ModalPicker}>
+      <View style={styles.modal}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => onPressItem(item)}>
+          <Text style={styles.text}>{item}</Text>
+        </TouchableOpacity>
+      </View>
+    </TouchableOpacity>
+  );
+};
+const FSAdvertiseModalPicker = props => {
+  const onPressItem = option => {
+    props.changeModalVisibility(false);
+    props.setData(option);
+  };
+
+  const item = OPTIONS[9]; // Access the second item directly
+  return (
+    <TouchableOpacity
+      onPress={() => props.changeModalVisibility(false)}
+      style={styles.ModalPicker}>
+      <View style={styles.modal}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => onPressItem(item)}>
+          <Text style={styles.text}>{item}</Text>
+        </TouchableOpacity>
+      </View>
+    </TouchableOpacity>
+  );
+};
+const GPAdvertiseModalPicker = props => {
+  const onPressItem = option => {
+    props.changeModalVisibility(false);
+    props.setData(option);
+  };
+
+  const item = OPTIONS[10]; // Access the second item directly
+  return (
+    <TouchableOpacity
+      onPress={() => props.changeModalVisibility(false)}
+      style={styles.ModalPicker}>
+      <View style={styles.modal}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => onPressItem(item)}>
+          <Text style={styles.text}>{item}</Text>
+        </TouchableOpacity>
+      </View>
+    </TouchableOpacity>
+  );
+};
+const SPAdvertiseModalPicker = props => {
+  const onPressItem = option => {
+    props.changeModalVisibility(false);
+    props.setData(option);
+  };
+
+  const item = OPTIONS[11]; // Access the second item directly
   return (
     <TouchableOpacity
       onPress={() => props.changeModalVisibility(false)}
@@ -246,4 +484,15 @@ export {
   AdvertiseModalPicker3,
   AdvertiseModalPicker4,
   AdvertiseModalPicker5,
+  FBAdvertiseModalPicker,
+  TKAdvertiseModalPicker,
+  YTAdvertiseModalPicker,
+  WAAdvertiseModalPicker,
+  XAdvertiseModalPicker,
+  AMAdvertiseModalPicker,
+  APAdvertiseModalPicker,
+  LSAdvertiseModalPicker,
+  FSAdvertiseModalPicker,
+  GPAdvertiseModalPicker,
+  SPAdvertiseModalPicker,
 };

@@ -2,12 +2,9 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {View, Text, TouchableOpacity, SafeAreaView} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
 import {Svg, Path, G} from 'react-native-svg';
 
 const EarnModalContent = () => {
-  const navigation = useNavigation();
-
   return (
     <>
       <SafeAreaView>

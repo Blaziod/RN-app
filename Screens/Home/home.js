@@ -190,7 +190,9 @@ const Home = () => {
               <View style={styles.WalletButtonsContainer}>
                 <TouchableOpacity
                   style={styles.fundButton}
-                  onPress={() => navigation.navigate('Credit')}>
+                  onPress={() =>
+                    navigation.navigate('More', {screen: 'Credit'})
+                  }>
                   <Svg
                     width="18"
                     height="18"
@@ -206,7 +208,11 @@ const Home = () => {
 
                   <Text style={styles.fundText}>Fund</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.withdrawButton}>
+                <TouchableOpacity
+                  style={styles.withdrawButton}
+                  onPress={() =>
+                    navigation.navigate('More', {screen: 'Withdraw'})
+                  }>
                   <Svg
                     width="19"
                     height="18"
@@ -298,7 +304,11 @@ const Home = () => {
                   below to link your Facebook account now.
                 </Text>
                 <View style={{paddingTop: 10}} />
-                <TouchableOpacity style={styles.GotoButton}>
+                <TouchableOpacity
+                  style={styles.GotoButton}
+                  onPress={() =>
+                    navigation.navigate('More', {screen: 'Settings'})
+                  }>
                   <Svg
                     width="20"
                     height="20"

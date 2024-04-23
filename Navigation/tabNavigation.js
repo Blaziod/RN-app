@@ -35,6 +35,7 @@ import Advertise1LS from '../Screens/Advertise/advertise1LS';
 import Advertise1FS from '../Screens/Advertise/advertise1FS';
 import Advertise1GP from '../Screens/Advertise/advertise1GP';
 import Advertise1SP from '../Screens/Advertise/advertise1SP';
+import ComingSoon from '../Screens/ComingSoon/comingSoon';
 
 const Tab = createBottomTabNavigator();
 const MoreStack = createStackNavigator();
@@ -50,6 +51,7 @@ function MoreStackScreen() {
       <MoreStack.Screen name="Transact" component={Transactions} />
       <MoreStack.Screen name="Credit" component={FundWallet} />
       <MoreStack.Screen name="Withdraw" component={WithdrawWallet} />
+      <MoreStack.Screen name="ComingSoon" component={ComingSoon} />
     </MoreStack.Navigator>
   );
 }
@@ -193,7 +195,7 @@ const TabNavigation = () => {
       />
       <Tab.Screen
         name="Resell"
-        component={Home}
+        component={ComingSoon}
         options={{
           headerShown: false,
           tabBarIcon: ({focused}) => (

@@ -12,6 +12,7 @@ import {
   Image,
   Dimensions,
   SafeAreaView,
+  Platform,
 } from 'react-native';
 // import {AdvertiseModal1} from './Modals/AdvertiseModal1';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -47,12 +48,13 @@ const Advertise1Menu = () => {
   const [targetState, setTargetState] = useState('');
   const [userData, setUserData] = useState(null);
   const [userData1, setUserData1] = useState(null);
-  const [image, setImage] = useState(null);
+  const [image1, setImage] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModal2Visible, setIsModal2Visible] = useState(false);
   const [isModal3Visible, setIsModal3Visible] = useState(false);
   const deviceHeight = Dimensions.get('window').height;
   const [userBalance, setUserBalance] = useState(null);
+  const [imageData, setImageData] = useState(null);
   const result =
     userBalance?.balance -
     (isNaN(Number(chooseNumber)) ? 0 : Number(chooseNumber) * 150);
@@ -143,6 +145,9 @@ const Advertise1Menu = () => {
   const setData5 = option5 => {
     setReligion(option5);
   };
+
+  let image; // Declare image in the outer scope
+
   const chooseImage = () => {
     // requestMediaLibraryPermission();
     let options = {
@@ -156,7 +161,7 @@ const Advertise1Menu = () => {
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else {
-        let image = response.assets[0];
+        image = response.assets[0]; // Now image is accessible in the outer scope
         let source = {uri: image.uri};
         setFilePath(source);
 
@@ -168,6 +173,9 @@ const Advertise1Menu = () => {
           await AsyncStorage.setItem('profile_picture', base64Image);
           console.log('Image stored successfully');
           setImage(base64Image);
+
+          // Save the image data in the state variable
+          setImageData(base64Image);
         } catch (error) {
           console.error('Error storing image:', error);
         }
@@ -188,7 +196,14 @@ const Advertise1Menu = () => {
     // taskData.append('hashtags', hashtag);
     taskData.append('amount', chooseNumber * 150);
     taskData.append('target_state', 'Lagos');
-
+    if (image) {
+      taskData.append('media', {
+        uri: Platform.OS === 'android' ? 'file://' + image.uri : image.uri,
+        type: image.type,
+        name: 'test.jpg',
+      });
+    }
+    // taskData.append('media_path', imageData);
     const Token = userData?.accessToken;
     console.log('Testing', Token);
 
@@ -213,7 +228,7 @@ const Advertise1Menu = () => {
       //   Alert.alert('Success', data.message);
       setIsModal2Visible(false);
       setIsModal3Visible(true);
-      //   AsyncStorage.clear('profile_picture');
+      AsyncStorage.removeItem('profile_picture');
       Toast.show({
         type: 'success',
         text1: 'Success',
@@ -550,8 +565,8 @@ const Advertise1Menu = () => {
             width: '50%',
           }}
           onPress={() => chooseImage()}>
-          {image ? (
-            <Image source={{uri: image}} style={{width: 100, height: 100}} />
+          {image1 ? (
+            <Image source={{uri: image1}} style={{width: 100, height: 100}} />
           ) : (
             <Svg
               xmlns="http://www.w3.org/2000/svg"

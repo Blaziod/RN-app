@@ -24,6 +24,7 @@ const ResetPassword = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const navigation = useNavigation();
+  const [resetToken, setResetToken] = useState(null);
 
   const handleResetPassword = async () => {
     setIsLoading(true);
@@ -44,7 +45,8 @@ const ResetPassword = () => {
         setEmail('');
         setIsModalVisible(true);
         // navigation.navigate('V', {signupToken: data.signup_token});
-        console.log('Success signing up:', data);
+        console.log('resetting password successful:', data);
+        setResetToken(data.reset_token);
         Toast.show({
           type: 'success',
           text1: 'Success',
@@ -195,11 +197,12 @@ const ResetPassword = () => {
           alignSelf: 'center',
           bottom: 10,
           position: 'absolute',
+          width: '90%',
         }}>
         <Text
           style={{
             color: '#b1b1b1',
-            fontSize: 14,
+            fontSize: 12,
             fontFamily: 'CamptonBook',
           }}>
           By signing up, you agree to our
@@ -208,7 +211,7 @@ const ResetPassword = () => {
           <Text
             style={{
               color: '#fff',
-              fontSize: 14,
+              fontSize: 12,
               fontFamily: 'Campton Bold',
             }}>
             Terms and Privacy Policy
@@ -330,11 +333,10 @@ const ResetPassword = () => {
                       borderRadius: 110,
                     }}
                     onPress={() => {
-                      Linking.openURL('mailto:');
-                      navigation.reset({
-                        index: 0,
-                        routes: [{name: 'SignIn'}],
+                      navigation.navigate('ResetOtp', {
+                        ResetToken: resetToken,
                       });
+                      Linking.openURL('mailto:');
                     }}>
                     <Text
                       style={{

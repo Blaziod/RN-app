@@ -23,6 +23,7 @@ const SignUp = () => {
   const [referral, setReferral] = useState('');
   const [signupToken, setSignupToken] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const navigation = useNavigation();
   // const WIDTH = Dimensions.get('window').width;
   useEffect(() => {
@@ -148,22 +149,26 @@ const SignUp = () => {
 
           <View style={styles.formContainer}>
             <TextInput
-              style={styles.textInput}
+              style={[styles.textInput, isFocused && styles.focused]}
               placeholder="Enter a valid email"
               placeholderTextColor="#888"
               autoCapitalize="none"
               autoCorrect={false}
               onChangeText={setEmail}
               value={email}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
             />
             <TextInput
-              style={styles.textInput}
+              style={[styles.textInput, isFocused && styles.focused]}
               placeholder="Referral code/Username(Optional)"
               placeholderTextColor="#888"
               autoCapitalize="none"
               autoCorrect={false}
               onChangeText={setReferral}
               value={referral}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
             />
             <TouchableOpacity
               style={styles.continueButton}
@@ -234,6 +239,34 @@ const SignUp = () => {
         </View>
         {/* </View> */}
       </ScrollView>
+      <View
+        style={{
+          flexDirection: 'row',
+          gap: 4,
+          paddingTop: 10,
+          alignSelf: 'center',
+          bottom: 10,
+          position: 'absolute',
+        }}>
+        <Text
+          style={{
+            color: '#b1b1b1',
+            fontSize: 14,
+            fontFamily: 'CamptonBook',
+          }}>
+          By signing up, you agree to our
+        </Text>
+        <View>
+          <Text
+            style={{
+              color: '#fff',
+              fontSize: 14,
+              fontFamily: 'Campton Bold',
+            }}>
+            Terms and Privacy Policy
+          </Text>
+        </View>
+      </View>
     </SafeAreaView>
   );
 };
@@ -274,6 +307,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'CamptonSemiBold',
   },
+  focused: {
+    borderColor: '#CB29BE',
+  },
   tagline: {
     fontSize: 16,
     color: '#B1B1B1',
@@ -286,13 +322,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textInput: {
-    backgroundColor: '#8E60CF3B',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
     padding: 12,
     borderRadius: 5,
     marginBottom: 10,
     width: '92%',
     color: 'white',
     fontFamily: 'CamptonLight',
+    borderWidth: 2,
   },
   continueButton: {
     backgroundColor: '#CB29BE',

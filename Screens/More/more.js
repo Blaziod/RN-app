@@ -140,7 +140,8 @@ const More = () => {
                 gap: 5,
                 paddingVertical: 5,
                 alignItems: 'center',
-              }}>
+              }}
+              onPress={() => navigation.navigate('ComingSoon')}>
               <Svg
                 width="20"
                 height="20"
@@ -164,7 +165,8 @@ const More = () => {
                 gap: 5,
                 paddingVertical: 5,
                 alignItems: 'center',
-              }}>
+              }}
+              onPress={() => navigation.navigate('ComingSoon')}>
               <Svg
                 width="20"
                 height="20"
@@ -185,7 +187,8 @@ const More = () => {
                 gap: 5,
                 paddingVertical: 5,
                 alignItems: 'center',
-              }}>
+              }}
+              onPress={() => navigation.navigate('ComingSoon')}>
               <Svg
                 width="24"
                 height="24"
@@ -211,7 +214,8 @@ const More = () => {
                 gap: 5,
                 paddingVertical: 5,
                 alignItems: 'center',
-              }}>
+              }}
+              onPress={() => navigation.navigate('Transact')}>
               <Svg
                 width="24"
                 height="24"

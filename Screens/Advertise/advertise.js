@@ -23,15 +23,6 @@ const Advertise = () => {
         <View style={styles.AppContainer}>
           <Headers />
           <View style={styles.AppContainer1}>
-            <View style={{paddingVertical: 30}}>
-              <View style={styles.Box1}>
-                <Text style={styles.Box1Text}>
-                  You must NOT UNLIKE or UNFOLLOW the Facebook page after you
-                  have like and followed the page. Your Trendit account will be
-                  suspended once you UNLIKE or UNFOLLOW the Facebook Page.
-                </Text>
-              </View>
-            </View>
             <View style={styles.earnImage1}>
               {earnMenu === 1 && (
                 <View style={{paddingVertical: 15, paddingHorizontal: 10}}>

@@ -21,6 +21,21 @@ import Earn1FB from '../Screens/Earn/earn1FB';
 import Earn2FB from '../Screens/Earn/earn2FB';
 import Earn3FB from '../Screens/Earn/earn3FB';
 import Advertise1 from '../Screens/Advertise/advertise1';
+import Transactions from '../Screens/Transactions';
+import FundWallet from '../Screens/Transactions/fundWallet';
+import WithdrawWallet from '../Screens/Transactions/withdrawWallet';
+import Advertise1FB from '../Screens/Advertise/advertise1FB';
+import Advertise1TK from '../Screens/Advertise/advertise1TK';
+import Advertise1YT from '../Screens/Advertise/advertise1YT';
+import Advertise1X from '../Screens/Advertise/advertise1X';
+import Advertise1WA from '../Screens/Advertise/advertise1WA';
+import Advertise1AM from '../Screens/Advertise/advertise1AM';
+import Advertise1AP from '../Screens/Advertise/advertise1AP';
+import Advertise1LS from '../Screens/Advertise/advertise1LS';
+import Advertise1FS from '../Screens/Advertise/advertise1FS';
+import Advertise1GP from '../Screens/Advertise/advertise1GP';
+import Advertise1SP from '../Screens/Advertise/advertise1SP';
+import ComingSoon from '../Screens/ComingSoon/comingSoon';
 
 const Tab = createBottomTabNavigator();
 const MoreStack = createStackNavigator();
@@ -33,6 +48,10 @@ function MoreStackScreen() {
       <MoreStack.Screen name="MorePage" component={More} />
       <MoreStack.Screen name="Refer" component={Refer} />
       <MoreStack.Screen name="Settings" component={Settings} />
+      <MoreStack.Screen name="Transact" component={Transactions} />
+      <MoreStack.Screen name="Credit" component={FundWallet} />
+      <MoreStack.Screen name="Withdraw" component={WithdrawWallet} />
+      <MoreStack.Screen name="ComingSoon" component={ComingSoon} />
     </MoreStack.Navigator>
   );
 }
@@ -56,6 +75,17 @@ function AdvertiseStackScreen() {
     <AdvertiseStack.Navigator screenOptions={{headerShown: false}}>
       <AdvertiseStack.Screen name="Advertise" component={Advertise} />
       <AdvertiseStack.Screen name="Advertise1" component={Advertise1} />
+      <AdvertiseStack.Screen name="Advertise1FB" component={Advertise1FB} />
+      <AdvertiseStack.Screen name="Advertise1TK" component={Advertise1TK} />
+      <AdvertiseStack.Screen name="Advertise1YT" component={Advertise1YT} />
+      <AdvertiseStack.Screen name="Advertise1X" component={Advertise1X} />
+      <AdvertiseStack.Screen name="Advertise1WA" component={Advertise1WA} />
+      <AdvertiseStack.Screen name="Advertise1AM" component={Advertise1AM} />
+      <AdvertiseStack.Screen name="Advertise1AP" component={Advertise1AP} />
+      <AdvertiseStack.Screen name="Advertise1LS" component={Advertise1LS} />
+      <AdvertiseStack.Screen name="Advertise1FS" component={Advertise1FS} />
+      <AdvertiseStack.Screen name="Advertise1GP" component={Advertise1GP} />
+      <AdvertiseStack.Screen name="Advertise1SP" component={Advertise1SP} />
     </AdvertiseStack.Navigator>
   );
 }
@@ -165,7 +195,7 @@ const TabNavigation = () => {
       />
       <Tab.Screen
         name="Resell"
-        component={Home}
+        component={ComingSoon}
         options={{
           headerShown: false,
           tabBarIcon: ({focused}) => (

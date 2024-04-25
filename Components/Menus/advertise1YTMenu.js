@@ -29,7 +29,7 @@ import {
 } from '../Modals/AdvertModalPicker';
 
 const Advertise1YTMenu = () => {
-  const [filePath, setFilePath] = useState(null);
+  const [base64Image, setBase64Image] = useState();
   const [religion, setReligion] = useState('Select');
   const [gender, setGender] = useState('Select');
   const [choosePlatform, setChoosePlatform] = useState('Select');
@@ -143,31 +143,33 @@ const Advertise1YTMenu = () => {
   const setData5 = option5 => {
     setReligion(option5);
   };
+
   const chooseImage = () => {
     // requestMediaLibraryPermission();
     let options = {
       mediaType: 'photo',
       includeBase64: true, // Change this to true
     };
-
+    console.log('chooseImage called');
     launchImageLibrary(options, async response => {
+      console.log('Response:', response);
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else {
-        let image = response.assets[0];
-        let source = {uri: image.uri};
-        setFilePath(source);
+        let selectedImage = response.assets[0];
+        setImage(selectedImage); // Store the selected image in the state variable
+        console.log('Image selected:', selectedImage);
 
         // Convert the image to a base64 string
-        let base64Image = `data:${image.type};base64,${image.base64}`;
+        let base64Str = `data:${selectedImage.type};base64,${selectedImage.base64}`;
+        setBase64Image(base64Str); // Store the base64 string in a separate state variable
 
         // Store the base64 string in AsyncStorage
         try {
-          await AsyncStorage.setItem('profile_picture', base64Image);
+          await AsyncStorage.setItem('profile_picture', base64Str);
           console.log('Image stored successfully');
-          setImage(base64Image);
         } catch (error) {
           console.error('Error storing image:', error);
         }
@@ -176,97 +178,108 @@ const Advertise1YTMenu = () => {
   };
 
   const createTask = async (paymentMethod = 'trendit_wallet') => {
-    setTaskType('advert');
-    setAmount(chooseNumber * 150);
-    const taskData = new FormData();
-    taskData.append('platform', choosePlatform);
-    taskData.append('target_country', chooseLocation);
-    taskData.append('posts_count', chooseNumber);
-    taskData.append('task_type', 'advert');
-    taskData.append('caption', caption);
-    taskData.append('gender', gender);
-    // taskData.append('hashtags', hashtag);
-    taskData.append('amount', chooseNumber * 150);
-    taskData.append('target_state', 'Lagos');
+    console.log('Image at start of createTask:', image);
+    if (chooseImage) {
+      setTaskType('advert');
+      setAmount(chooseNumber * 150);
+      const taskData = new FormData();
+      taskData.append('platform', choosePlatform);
+      taskData.append('target_country', chooseLocation);
+      taskData.append('posts_count', chooseNumber);
+      taskData.append('task_type', 'advert');
+      taskData.append('caption', caption);
+      taskData.append('gender', gender);
+      // taskData.append('hashtags', hashtag);
+      taskData.append('amount', chooseNumber * 150);
+      taskData.append('target_state', 'Lagos');
+      console.log('Task Data:', image?.uri);
+      taskData.append('media', {
+        uri: image?.uri,
+        type: image?.type,
+        name: image?.fileName,
+      });
+      // taskData.append('media_path', imageData);
+      const Token = userData?.accessToken;
+      console.log('Testing', Token);
 
-    const Token = userData?.accessToken;
-    console.log('Testing', Token);
-
-    try {
-      const response = await fetch(
-        `https://api.trendit3.com/api/tasks/new?payment_method=${paymentMethod}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${Token}`,
+      try {
+        const response = await fetch(
+          `https://api.trendit3.com/api/tasks/new?payment_method=${paymentMethod}`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              Authorization: `Bearer ${Token}`,
+            },
+            body: taskData,
           },
-          body: taskData,
-        },
-      );
+        );
 
-      if (!response.ok) {
-        throw new Error('HTTP error ' + response);
-      }
+        if (!response.ok) {
+          throw new Error('HTTP error ' + response);
+        }
 
-      const data = await response.json();
-      //   Alert.alert('Success', data.message);
-      setIsModal2Visible(false);
-      setIsModal3Visible(true);
-      //   AsyncStorage.clear('profile_picture');
-      Toast.show({
-        type: 'success',
-        text1: 'Success',
-        text2: data.message,
-        style: {
-          borderLeftColor: 'pink',
-          backgroundColor: 'yellow',
-          width: '80%',
-          alignSelf: 'center',
-          justifyContent: 'center',
-          alignItems: 'center',
-        },
-        text1Style: {
-          color: 'red',
-          fontSize: 14,
-        },
-        text2Style: {
-          color: 'green',
-          fontSize: 14,
-          fontFamily: 'Campton Bold',
-        },
-      });
-      console.log(data);
-    } catch (error) {
-      console.error('Error:', error);
-      Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: error.message,
-        style: {
-          borderLeftColor: 'pink',
-          backgroundColor: 'yellow',
-          width: '80%',
-          alignSelf: 'center',
-          justifyContent: 'center',
-          alignItems: 'center',
-        },
-        text1Style: {
-          color: 'red',
-          fontSize: 14,
-        },
-        text2Style: {
-          color: 'green',
-          fontSize: 14,
-          fontFamily: 'Campton Bold',
-        },
-      });
-      if (error) {
-        console.error('Response data:', error);
-        console.error('Response status:', error);
+        const data = await response.json();
+        //   Alert.alert('Success', data.message);
+        setIsModal2Visible(false);
+        setIsModal3Visible(true);
+        AsyncStorage.removeItem('profile_picture');
+        Toast.show({
+          type: 'success',
+          text1: 'Success',
+          text2: data.message,
+          style: {
+            borderLeftColor: 'pink',
+            backgroundColor: 'yellow',
+            width: '80%',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          text1Style: {
+            color: 'red',
+            fontSize: 14,
+          },
+          text2Style: {
+            color: 'green',
+            fontSize: 14,
+            fontFamily: 'Campton Bold',
+          },
+        });
+        console.log(data);
+      } catch (error) {
+        console.error('Error:', error);
+        console.error('Error message:', error.message);
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: error.message,
+          style: {
+            borderLeftColor: 'pink',
+            backgroundColor: 'yellow',
+            width: '80%',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          text1Style: {
+            color: 'red',
+            fontSize: 14,
+          },
+          text2Style: {
+            color: 'green',
+            fontSize: 14,
+            fontFamily: 'Campton Bold',
+          },
+        });
+        if (error) {
+          console.error('Response data:', error);
+          console.error('Response status:', error);
+        }
       }
     }
   };
+
   return (
     <View>
       <View
@@ -551,7 +564,10 @@ const Advertise1YTMenu = () => {
           }}
           onPress={() => chooseImage()}>
           {image ? (
-            <Image source={{uri: image}} style={{width: 100, height: 100}} />
+            <Image
+              source={{uri: image.uri}}
+              style={{width: 100, height: 100}}
+            />
           ) : (
             <Svg
               xmlns="http://www.w3.org/2000/svg"

@@ -22,8 +22,6 @@ import Earn2FB from '../Screens/Earn/earn2FB';
 import Earn3FB from '../Screens/Earn/earn3FB';
 import Advertise1 from '../Screens/Advertise/advertise1';
 import Transactions from '../Screens/Transactions';
-import FundWallet from '../Screens/Transactions/fundWallet';
-import WithdrawWallet from '../Screens/Transactions/withdrawWallet';
 import Advertise1FB from '../Screens/Advertise/advertise1FB';
 import Advertise1TK from '../Screens/Advertise/advertise1TK';
 import Advertise1YT from '../Screens/Advertise/advertise1YT';
@@ -49,8 +47,6 @@ function MoreStackScreen() {
       <MoreStack.Screen name="Refer" component={Refer} />
       <MoreStack.Screen name="Settings" component={Settings} />
       <MoreStack.Screen name="Transact" component={Transactions} />
-      <MoreStack.Screen name="Credit" component={FundWallet} />
-      <MoreStack.Screen name="Withdraw" component={WithdrawWallet} />
       <MoreStack.Screen name="ComingSoon" component={ComingSoon} />
     </MoreStack.Navigator>
   );

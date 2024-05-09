@@ -266,7 +266,7 @@ const Advertise = () => {
                   Advertise to reach wider audience
                 </Text>
                 <Text style={styles.EarnOnTText1}>
-                  Get people with atleast 1000 active followers to repost your
+                  Get people with at least 500 active followers to repost your
                   adverts and perform certain social tasks for you on their
                   social media accounts. Select the type of task you want people
                   to perform below:
@@ -366,7 +366,7 @@ const styles = StyleSheet.create({
     fontFamily: 'CamptonMedium',
     paddingHorizontal: 10,
     paddingVertical: 20,
-    paddingTop: 120,
+    paddingTop: 50,
   },
   EarnMenu: {
     flexDirection: 'row',

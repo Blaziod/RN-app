@@ -323,6 +323,7 @@ const Advertise1FSMenu = () => {
             onChangeText={setChooseNumber}
             placeholder="Select"
             placeholderTextColor="#fff"
+            keyboardType="numeric"
           />
         </TouchableOpacity>
         <Text

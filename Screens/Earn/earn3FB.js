@@ -105,7 +105,7 @@ const Earn3FB = () => {
                       fontFamily: 'Campton Bold',
                       fontSize: 12,
                     }}>
-                    ₦150 per advert post
+                    ₦140 Per Advert Post
                   </Text>
                 </View>
                 <View

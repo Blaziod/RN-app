@@ -188,7 +188,7 @@ const Home = () => {
             <View style={styles.walletBalanceContainer}>
               <Text style={styles.WalletBalance}>Wallet bal:</Text>
               <Text style={styles.WalletAmount}>
-                {userData?.userdata?.wallet?.currency_code}:
+                {userData?.userdata?.wallet?.currency_code}{' '}
                 {isLoading ? (
                   <ActivityIndicator size="small" color="#0000ff" />
                 ) : (

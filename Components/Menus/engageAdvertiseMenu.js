@@ -62,7 +62,7 @@ const EngageAdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 12,
                   }}>
-                  Earning:
+                  Pricing:
                 </Text>
               </View>
               <Text
@@ -71,7 +71,7 @@ const EngageAdvertiseMenu = () => {
                   fontFamily: 'Campton Bold',
                   fontSize: 12,
                 }}>
-                ₦30 per Follow
+                ₦20 per Follow
               </Text>
             </View>
             <View>
@@ -91,7 +91,7 @@ const EngageAdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 10,
                   }}>
-                  Generate Task
+                  Create Advert
                 </Text>
               </TouchableOpacity>
             </View>
@@ -172,7 +172,7 @@ const EngageAdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 12,
                   }}>
-                  Earning:
+                  Pricing:
                 </Text>
               </View>
               <Text
@@ -181,7 +181,7 @@ const EngageAdvertiseMenu = () => {
                   fontFamily: 'Campton Bold',
                   fontSize: 12,
                 }}>
-                ₦50 per Download and Review
+                ₦120 per Download and Review
               </Text>
             </View>
             <View>
@@ -201,7 +201,7 @@ const EngageAdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 10,
                   }}>
-                  Generate Task
+                  Create Advert
                 </Text>
               </TouchableOpacity>
             </View>
@@ -265,7 +265,7 @@ const EngageAdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 12,
                   }}>
-                  Earning:
+                  Pricing:
                 </Text>
               </View>
               <Text
@@ -294,7 +294,7 @@ const EngageAdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 10,
                   }}>
-                  Generate Task
+                  Create Advert
                 </Text>
               </TouchableOpacity>
             </View>
@@ -357,7 +357,7 @@ const EngageAdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 12,
                   }}>
-                  Earning:
+                  Pricing:
                 </Text>
               </View>
               <Text
@@ -386,7 +386,7 @@ const EngageAdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 10,
                   }}>
-                  Generate Task
+                  Create Advert
                 </Text>
               </TouchableOpacity>
             </View>
@@ -459,7 +459,7 @@ const EngageAdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 12,
                   }}>
-                  Earning:
+                  Pricing:
                 </Text>
               </View>
               <Text
@@ -468,7 +468,7 @@ const EngageAdvertiseMenu = () => {
                   fontFamily: 'Campton Bold',
                   fontSize: 12,
                 }}>
-                ₦50 per Download and Review
+                ₦100 per Download and Review
               </Text>
             </View>
             <View>
@@ -488,7 +488,7 @@ const EngageAdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 10,
                   }}>
-                  Generate Task
+                  Create Advert
                 </Text>
               </TouchableOpacity>
             </View>
@@ -562,7 +562,7 @@ const EngageAdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 12,
                   }}>
-                  Earning:
+                  Pricing:
                 </Text>
               </View>
               <Text
@@ -571,7 +571,7 @@ const EngageAdvertiseMenu = () => {
                   fontFamily: 'Campton Bold',
                   fontSize: 12,
                 }}>
-                ₦30 per Follow
+                ₦10 per Follow
               </Text>
             </View>
             <View>
@@ -591,7 +591,7 @@ const EngageAdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 10,
                   }}>
-                  Generate Task
+                  Create Advert
                 </Text>
               </TouchableOpacity>
             </View>

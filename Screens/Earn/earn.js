@@ -8,25 +8,46 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import EarnCustomSwitch from '../../Components/CustomSwitches/earnCustomSwitch';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import PostAdvertMenu from '../../Components/Menus/postAdvertMenu';
 import Headers from '../../Components/Headers/Headers';
-// import EngagementImage from '../../assets/SVG/Enag.svg';
-// import Lock from '../../assets/SVG/opened lock.svg';
 import {useNavigation} from '@react-navigation/native';
 import {Svg, Path, G, Defs, ClipPath, Rect} from 'react-native-svg';
 import EngageAdvertMenu from '../../Components/Menus/engageAdvertMenu';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import PaidPostAdvertMenu from '../../Components/Menus/paidPostAdvertMenu';
+import PaidEngageAdvertMenu from '../../Components/Menus/paidEngageAdvertMenu';
 
 const Earn = () => {
   const [earnMenu, setEarnMenu] = useState(1);
+  const [userData, setUserData] = useState(null);
   const navigation = useNavigation();
 
   const onSelectSwitch = value => {
     setEarnMenu(value);
   };
 
+  const fetchUserData = () => {
+    AsyncStorage.getItem('userdatafiles1')
+      .then(data => {
+        const userData = JSON.parse(data);
+        setUserData(userData);
+        console.log('Here I am', userData);
+
+        if (!userData) {
+          return <ActivityIndicator />;
+        }
+      })
+      .catch(error => {
+        console.error('Error retrieving user data:', error);
+      });
+  };
+  useEffect(() => {
+    fetchUserData();
+  }, []);
   return (
     <SafeAreaView>
       <ScrollView
@@ -35,15 +56,6 @@ const Earn = () => {
         <View style={styles.AppContainer}>
           <Headers />
           <View style={styles.AppContainer1}>
-            <View style={{paddingVertical: 30}}>
-              <View style={styles.Box1}>
-                <Text style={styles.Box1Text}>
-                  You must NOT UNLIKE or UNFOLLOW the Facebook page after you
-                  have like and followed the page. Your Trendit account will be
-                  suspended once you UNLIKE or UNFOLLOW the Facebook Page.
-                </Text>
-              </View>
-            </View>
             <View style={styles.earnImage1}>
               {earnMenu === 1 && (
                 <View style={{paddingVertical: 15, paddingHorizontal: 10}}>
@@ -104,14 +116,15 @@ const Earn = () => {
             <View style={styles.EarnonTContainer}>
               <View style={styles.EarnOnT}>
                 <Text style={styles.EarnOnTText}>
-                  Earn on Trendit just got easier
+                  Earn on Trendit³ just got easier
                 </Text>
                 <Text style={styles.EarnOnTText1}>
-                  Get people with atleast 1000 active followers to repost your
-                  adverts and perform certain social tasks for you on their
-                  social media accounts. Select the type of task you want people
-                  to perform below:
+                  Earn steady income by posting advertisements for individuals,
+                  businesses, and top brands on your social media pages. To post
+                  ads on WhatsApp, Facebook, Instagram, Twitter, or TikTok, you
+                  MUST have at least 500 followers on your social media account.
                 </Text>
+                <View style={{paddingVertical: 5}} />
                 <TouchableOpacity
                   style={styles.PayButton}
                   onPress={() => navigation.navigate('Membership')}>
@@ -128,10 +141,17 @@ const Earn = () => {
                     />
                   </Svg>
 
-                  <Text style={styles.PayButtonLabel}>
-                    Pay N1,000 for activation
-                  </Text>
+                  <Text style={styles.PayButtonLabel}>Become A Member</Text>
                 </TouchableOpacity>
+                <Text
+                  style={{
+                    color: '#1877F2',
+                    fontSize: 12,
+                    fontFamily: 'CamptonBook',
+                    paddingVertical: 10,
+                  }}>
+                  Membership fee: ₦1000 for Activation
+                </Text>
               </View>
               <Text style={styles.EarnText}>Earn</Text>
               <View>
@@ -146,12 +166,22 @@ const Earn = () => {
 
               {earnMenu === 1 && (
                 <View style={{paddingVertical: 15, paddingHorizontal: 10}}>
-                  <PostAdvertMenu />
+                  {userData?.userdata?.membership_fee ? (
+                    <PaidPostAdvertMenu />
+                  ) : (
+                    <PostAdvertMenu />
+                  )}
                 </View>
               )}
               {earnMenu === 2 && (
                 <View style={{paddingVertical: 15, paddingHorizontal: 10}}>
-                  <EngageAdvertMenu />
+                  {userData?.userdata?.membership_fee ? (
+                    <PaidEngageAdvertMenu />
+                  ) : (
+                    <Text style={{color: '#fff'}}>
+                      <EngageAdvertMenu />
+                    </Text>
+                  )}
                 </View>
               )}
               {earnMenu === 3 && (
@@ -220,9 +250,9 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   PayButtonLabel: {
-    color: '#000000',
+    color: '#FF6DFB',
     fontSize: 13,
-    fontFamily: 'CamptonMedium',
+    fontFamily: 'Campton Bold',
   },
   EarnText: {
     color: '#fff',

@@ -303,7 +303,7 @@ const WithdrawWallet = () => {
               </Text>
               <View style={{justifyContent: 'center'}}>
                 <Text style={styles.WalletAmount}>
-                  {userData?.userdata?.wallet?.currency_code}:{' '}
+                  {userData?.userdata?.wallet?.currency_code}{' '}
                   {isLoading ? (
                     <ActivityIndicator
                       size="medium"

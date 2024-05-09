@@ -72,11 +72,10 @@ const AdvertiseMenu = () => {
                 paddingTop: 10,
                 fontSize: 12,
               }}>
-              Get Genuine people with more than a 1000 followers 0r friends on
-              their facebook account to post your advert to their audience to
-              post your ads on their social media account. Get real people to
-              post your ads on their social media account. Get real people to
-              post your ads on their social media account.
+              Get Genuine people with more than a 500 followers or friends on
+              their Facebook account to post your advert to their audience to
+              post your ads on their social media account. Expand your audience
+              reach today through Trendit3
             </Text>
             <View
               style={{
@@ -103,7 +102,7 @@ const AdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 12,
                   }}>
-                  Earning:
+                  Pricing:
                 </Text>
               </View>
               <Text
@@ -112,7 +111,7 @@ const AdvertiseMenu = () => {
                   fontFamily: 'Campton Bold',
                   fontSize: 12,
                 }}>
-                {userData?.userdata?.wallet?.currency_code} 150 per advert post
+                ₦140 per Advert post
               </Text>
             </View>
             <View>
@@ -132,7 +131,7 @@ const AdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 10,
                   }}>
-                  Generate Task
+                  Create Advert
                 </Text>
               </TouchableOpacity>
             </View>
@@ -173,7 +172,7 @@ const AdvertiseMenu = () => {
                 fontSize: 12,
               }}>
               Get real people to post your adverts on their Tiktok account
-              having atleast 1000 active followers each on their account to post
+              having at least 500 active followers each on their account to post
               your advert to their followers. This will give your advert massive
               views within a short period of time. You can indicate any number
               of people you want to post your advert.
@@ -203,7 +202,7 @@ const AdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 12,
                   }}>
-                  Earning:
+                  Pricing:
                 </Text>
               </View>
               <Text
@@ -212,7 +211,7 @@ const AdvertiseMenu = () => {
                   fontFamily: 'Campton Bold',
                   fontSize: 12,
                 }}>
-                {userData?.userdata?.wallet?.currency_code} 150 per advert post
+                ₦140 per Advert post
               </Text>
             </View>
             <View>
@@ -232,7 +231,7 @@ const AdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 10,
                   }}>
-                  Generate Task
+                  Create Advert
                 </Text>
               </TouchableOpacity>
             </View>
@@ -272,11 +271,10 @@ const AdvertiseMenu = () => {
                 paddingTop: 10,
                 fontSize: 12,
               }}>
-              Get Genuine people with more than a 1000 followers 0r friends on
-              their Youtube account to post your advert to their audience to
-              post your ads on their social media account. Get real people to
-              post your ads on their social media account. Get real people to
-              post your ads on their social media account.
+              Get Genuine people with more than a 500 subscribers on their
+              Youtube account to post your advert to their audience to post your
+              ads on their social media account. Spark high user engagement on
+              your page .
             </Text>
             <View
               style={{
@@ -303,7 +301,7 @@ const AdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 12,
                   }}>
-                  Earning:
+                  Pricing:
                 </Text>
               </View>
               <Text
@@ -312,7 +310,7 @@ const AdvertiseMenu = () => {
                   fontFamily: 'Campton Bold',
                   fontSize: 12,
                 }}>
-                {userData?.userdata?.wallet?.currency_code} 150 per advert post
+                ₦140 per Advert post
               </Text>
             </View>
             <View>
@@ -332,7 +330,7 @@ const AdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 10,
                   }}>
-                  Generate Task
+                  Create Advert
                 </Text>
               </TouchableOpacity>
             </View>
@@ -364,11 +362,10 @@ const AdvertiseMenu = () => {
                 paddingTop: 10,
                 fontSize: 12,
               }}>
-              Get Genuine people with more than a 1000 followers 0r friends on
+              Get Genuine people with more than a 500 followers 0r friends on
               their Twitter account to post your advert to their audience to
-              post your ads on their social media account. Get real people to
-              post your ads on their social media account. Get real people to
-              post your ads on their social media account.{' '}
+              post your ads on their social media account. Expand your audience
+              reach today through Trendit3
             </Text>
             <View
               style={{
@@ -395,7 +392,7 @@ const AdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 12,
                   }}>
-                  Earning:
+                  Pricing:
                 </Text>
               </View>
               <Text
@@ -404,7 +401,7 @@ const AdvertiseMenu = () => {
                   fontFamily: 'Campton Bold',
                   fontSize: 12,
                 }}>
-                {userData?.userdata?.wallet?.currency_code} 150 per advert post
+                ₦140 per Advert post
               </Text>
             </View>
             <View>
@@ -424,7 +421,7 @@ const AdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 10,
                   }}>
-                  Generate Task
+                  Create Advert
                 </Text>
               </TouchableOpacity>
             </View>
@@ -490,7 +487,7 @@ const AdvertiseMenu = () => {
                 fontSize: 12,
               }}>
               Get real people to post your advert on their Instagram account
-              having atleast 1000 active followers each on their account to post
+              having at least 500 active followers each on their account to post
               your advert to their followers. This will give your advert massive
               views within a short period of time. You can indicate any number
               of people you want to post your advert.
@@ -520,7 +517,7 @@ const AdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 12,
                   }}>
-                  Earning:
+                  Pricing:
                 </Text>
               </View>
               <Text
@@ -529,7 +526,7 @@ const AdvertiseMenu = () => {
                   fontFamily: 'Campton Bold',
                   fontSize: 12,
                 }}>
-                {userData?.userdata?.wallet?.currency_code} 150 per advert post
+                ₦140 per Advert post
               </Text>
             </View>
             <View>
@@ -549,7 +546,7 @@ const AdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 10,
                   }}>
-                  Generate Task
+                  Create Advert
                 </Text>
               </TouchableOpacity>
             </View>
@@ -642,7 +639,7 @@ const AdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 12,
                   }}>
-                  Earning:
+                  Pricing:
                 </Text>
               </View>
               <Text
@@ -651,7 +648,7 @@ const AdvertiseMenu = () => {
                   fontFamily: 'Campton Bold',
                   fontSize: 12,
                 }}>
-                {userData?.userdata?.wallet?.currency_code} 100 per advert post
+                ₦80 per Advert post
               </Text>
             </View>
             <View>
@@ -671,7 +668,7 @@ const AdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 10,
                   }}>
-                  Generate Task
+                  Create Advert
                 </Text>
               </TouchableOpacity>
             </View>

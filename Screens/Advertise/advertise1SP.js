@@ -78,7 +78,7 @@ const Advertise1SP = ({navigation}) => {
                         fontFamily: 'CamptonMedium',
                         fontSize: 12,
                       }}>
-                      Earning:
+                      Pricing:
                     </Text>
                   </View>
                   <Text
@@ -87,7 +87,7 @@ const Advertise1SP = ({navigation}) => {
                       fontFamily: 'Campton Bold',
                       fontSize: 12,
                     }}>
-                    ₦30 per Follow
+                    ₦10 per Follow
                   </Text>
                 </View>
                 <View

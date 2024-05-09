@@ -52,7 +52,7 @@ const Advertise1LSMenu = () => {
   const [userBalance, setUserBalance] = useState(null);
   const result =
     userBalance?.balance -
-    (isNaN(Number(chooseNumber)) ? 0 : Number(chooseNumber) * 3);
+    (isNaN(Number(chooseNumber)) ? 0 : Number(chooseNumber) * 5);
 
   useEffect(() => {
     AsyncStorage.getItem('userbalance')
@@ -132,7 +132,7 @@ const Advertise1LSMenu = () => {
 
   const createTask = async (paymentMethod = 'trendit_wallet') => {
     setTaskType('engagement');
-    setAmount(chooseNumber * 3);
+    setAmount(chooseNumber * 5);
     const taskData = new FormData();
     taskData.append('goal', choosePlatform);
     taskData.append('target_country', chooseLocation);
@@ -141,7 +141,7 @@ const Advertise1LSMenu = () => {
     taskData.append('caption', caption);
     taskData.append('gender', gender);
     // taskData.append('hashtags', hashtag);
-    taskData.append('amount', chooseNumber * 3);
+    taskData.append('amount', chooseNumber * 5);
     taskData.append('target_state', 'Lagos');
 
     const Token = userData?.accessToken;
@@ -323,6 +323,7 @@ const Advertise1LSMenu = () => {
             onChangeText={setChooseNumber}
             placeholder="Select"
             placeholderTextColor="#fff"
+            keyboardType="numeric"
           />
         </TouchableOpacity>
         <Text
@@ -451,7 +452,7 @@ const Advertise1LSMenu = () => {
               fontSize: 30,
             }}>
             {userData1?.userdata?.wallet?.currency_code}:{' '}
-            {isNaN(Number(chooseNumber)) ? 0 : Number(chooseNumber) * 3}
+            {isNaN(Number(chooseNumber)) ? 0 : Number(chooseNumber) * 5}
           </Text>
         </View>
         <TouchableOpacity
@@ -889,7 +890,7 @@ const Advertise1LSMenu = () => {
                           {/* {userData1?.userdata?.wallet?.currency_code}:{' '} */}
                           {isNaN(Number(chooseNumber))
                             ? 0
-                            : Number(chooseNumber) * 3}
+                            : Number(chooseNumber) * 5}
                         </Text>
                       </View>
                       <View
@@ -914,7 +915,7 @@ const Advertise1LSMenu = () => {
                           {/* {userData1?.userdata?.wallet?.currency_code}:{' '} */}
                           {isNaN(Number(chooseNumber))
                             ? 0
-                            : Number(chooseNumber) * 3}
+                            : Number(chooseNumber) * 5}
                         </Text>
                       </View>
                       <View

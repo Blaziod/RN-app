@@ -2,7 +2,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Modal} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
 import {
   Svg,
   Path,
@@ -11,14 +10,37 @@ import {
   LinearGradient,
   RadialGradient,
 } from 'react-native-svg';
+import {useTheme} from '../../Components/Contexts/colorTheme';
 
 const PostAdvertMenu = () => {
-  const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
+
+  const {theme} = useTheme();
+  const dynamicStyles = StyleSheet.create({
+    AppContainer: {
+      flex: 1,
+      backgroundColor: theme === 'dark' ? '#1E1E1E' : '#FFFFFF', // Dynamic background color
+      width: '100%',
+    },
+    DivContainer: {
+      backgroundColor:
+        theme === 'dark' ? '#1E1E1E' : 'rgba(177, 177, 177, 0.20)', // Dynamic background color
+    },
+    TextColor: {
+      color: theme === 'dark' ? '#FFFFFF' : '#000000', // Dynamic text color
+    },
+    Button: {
+      backgroundColor: theme === 'dark' ? '#FFF' : '#CB29BE', // Dynamic background color
+    },
+    Btext: {
+      color: theme === 'dark' ? '#FF6DFB' : '#FFF', // Dynamic text color
+    },
+  });
+
   return (
     <View>
       <View style={styles.Container}>
-        <View style={styles.Advert1}>
+        <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
           <Svg
             width="47"
             height="48"
@@ -36,16 +58,24 @@ const PostAdvertMenu = () => {
           </Svg>
 
           <View style={styles.Check}>
-            <Text style={{color: '#fff', fontFamily: 'CamptonMedium'}}>
+            <Text
+              style={[
+                {color: '#fff', fontFamily: 'CamptonMedium'},
+                dynamicStyles.TextColor,
+              ]}>
+              {' '}
               Post Adverts on Your FaceBook Page
             </Text>
             <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'CamptonBook',
-                paddingTop: 10,
-                fontSize: 12,
-              }}>
+              style={[
+                {
+                  color: '#fff',
+                  fontFamily: 'CamptonBook',
+                  paddingTop: 10,
+                  fontSize: 12,
+                },
+                dynamicStyles.TextColor,
+              ]}>
               Post adverts of various businesses and top brands on your Facebook
               Page and earn ₦110 per advert past. The more you post, the more
               you earn. Note that your Facebook account must have at least 500
@@ -83,11 +113,14 @@ const PostAdvertMenu = () => {
                 </Text>
               </View>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'Campton Bold',
-                  fontSize: 12,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'Campton Bold',
+                    fontSize: 12,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 ₦110 per Advert Post
               </Text>
             </View>
@@ -136,7 +169,7 @@ const PostAdvertMenu = () => {
       </View>
 
       <View style={styles.Container1}>
-        <View style={styles.Advert1}>
+        <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
           <Svg
             width="47"
             height="48"
@@ -158,16 +191,24 @@ const PostAdvertMenu = () => {
           </Svg>
 
           <View style={styles.Check}>
-            <Text style={{color: '#fff', fontFamily: 'CamptonMedium'}}>
+            <Text
+              style={[
+                {color: '#fff', fontFamily: 'CamptonMedium'},
+                dynamicStyles.TextColor,
+              ]}>
+              {' '}
               Post Adverts on Your Tiktok Account
             </Text>
             <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'CamptonBook',
-                paddingTop: 10,
-                fontSize: 12,
-              }}>
+              style={[
+                {
+                  color: '#fff',
+                  fontFamily: 'CamptonBook',
+                  paddingTop: 10,
+                  fontSize: 12,
+                },
+                dynamicStyles.TextColor,
+              ]}>
               Post adverts of various businesses and top brands on your Tiktok
               Page and earn ₦110 per advert past. The more you post, the more
               you earn. Note that your Tiktok account must have at least 500
@@ -205,11 +246,14 @@ const PostAdvertMenu = () => {
                 </Text>
               </View>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'Campton Bold',
-                  fontSize: 12,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'Campton Bold',
+                    fontSize: 12,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 ₦110 per Advert Post
               </Text>
             </View>
@@ -258,7 +302,7 @@ const PostAdvertMenu = () => {
         </View>
       </View>
       <View style={styles.Container1}>
-        <View style={styles.Advert1}>
+        <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
           <Svg
             width="47"
             height="47"
@@ -305,16 +349,24 @@ const PostAdvertMenu = () => {
           </Svg>
 
           <View style={styles.Check}>
-            <Text style={{color: '#fff', fontFamily: 'CamptonMedium'}}>
+            <Text
+              style={[
+                {color: '#fff', fontFamily: 'CamptonMedium'},
+                dynamicStyles.TextColor,
+              ]}>
+              {' '}
               Post Adverts on Your Instagram Page
             </Text>
             <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'CamptonBook',
-                paddingTop: 10,
-                fontSize: 12,
-              }}>
+              style={[
+                {
+                  color: '#fff',
+                  fontFamily: 'CamptonBook',
+                  paddingTop: 10,
+                  fontSize: 12,
+                },
+                dynamicStyles.TextColor,
+              ]}>
               Post adverts of various businesses and top brands on your
               Instagram Page and earn ₦110 per advert . The more you post, the
               more you earn. Note that your Instagram account must have at least
@@ -352,11 +404,14 @@ const PostAdvertMenu = () => {
                 </Text>
               </View>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'Campton Bold',
-                  fontSize: 12,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'Campton Bold',
+                    fontSize: 12,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 ₦110 per Advert Post
               </Text>
             </View>
@@ -405,7 +460,7 @@ const PostAdvertMenu = () => {
         </View>
       </View>
       <View style={styles.Container1}>
-        <View style={styles.Advert1}>
+        <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
           <Svg
             width="47"
             height="48"
@@ -449,16 +504,24 @@ const PostAdvertMenu = () => {
           </Svg>
 
           <View style={styles.Check}>
-            <Text style={{color: '#fff', fontFamily: 'CamptonMedium'}}>
+            <Text
+              style={[
+                {color: '#fff', fontFamily: 'CamptonMedium'},
+                dynamicStyles.TextColor,
+              ]}>
+              {' '}
               Post Adverts on Your Whatsapp Status
             </Text>
             <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'CamptonBook',
-                paddingTop: 10,
-                fontSize: 12,
-              }}>
+              style={[
+                {
+                  color: '#fff',
+                  fontFamily: 'CamptonBook',
+                  paddingTop: 10,
+                  fontSize: 12,
+                },
+                dynamicStyles.TextColor,
+              ]}>
               Post adverts of various businesses and top brands on your WhatsApp
               status and earn ₦60 per advert past. The more you post, the more
               you earn. Note that your WhatsApp Status must have at least 500
@@ -496,11 +559,14 @@ const PostAdvertMenu = () => {
                 </Text>
               </View>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'Campton Bold',
-                  fontSize: 12,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'Campton Bold',
+                    fontSize: 12,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 ₦60 per Advert Post
               </Text>
             </View>
@@ -549,7 +615,7 @@ const PostAdvertMenu = () => {
         </View>
       </View>
       <View style={styles.Container1}>
-        <View style={styles.Advert1}>
+        <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
           <Svg
             width="47"
             height="47"
@@ -563,16 +629,24 @@ const PostAdvertMenu = () => {
           </Svg>
 
           <View style={styles.Check}>
-            <Text style={{color: '#fff', fontFamily: 'CamptonMedium'}}>
+            <Text
+              style={[
+                {color: '#fff', fontFamily: 'CamptonMedium'},
+                dynamicStyles.TextColor,
+              ]}>
+              {' '}
               Post Adverts on Your X account
             </Text>
             <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'CamptonBook',
-                paddingTop: 10,
-                fontSize: 12,
-              }}>
+              style={[
+                {
+                  color: '#fff',
+                  fontFamily: 'CamptonBook',
+                  paddingTop: 10,
+                  fontSize: 12,
+                },
+                dynamicStyles.TextColor,
+              ]}>
               Post adverts of various businesses and top brands on your Twitter
               page and earn ₦110 per advert past. The more you post, the more
               you earn. Note that your Twitter page must have at least 500
@@ -610,11 +684,14 @@ const PostAdvertMenu = () => {
                 </Text>
               </View>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'Campton Bold',
-                  fontSize: 12,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'Campton Bold',
+                    fontSize: 12,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 ₦110 per Advert Post
               </Text>
             </View>
@@ -692,6 +769,7 @@ const styles = StyleSheet.create({
     paddingVertical: 30,
     backgroundColor: '#1E1E1E',
     paddingHorizontal: 100,
+    borderRadius: 10,
   },
 
   Container1: {

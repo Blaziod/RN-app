@@ -5,6 +5,7 @@ import * as React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {View, Image, Text} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
+import {useTheme} from '../Components/Contexts/colorTheme';
 
 //Screens
 import Home from '../Screens/Home/home';
@@ -87,11 +88,19 @@ function AdvertiseStackScreen() {
 }
 
 const TabNavigation = () => {
+  const {theme} = useTheme();
+  const tabBarStyle = {
+    backgroundColor: theme === 'dark' ? '#000000' : '#FFFFFF', // Dark or light background
+    height: 75,
+  };
+
+  const iconTintColor = focused =>
+    focused ? '#FF6DFB' : theme === 'dark' ? '#B1B1B1' : '#000000';
   return (
     <Tab.Navigator
       screenOptions={{
         tabBarShowLabel: false,
-        tabBarStyle: {backgroundColor: '#000000', height: 75},
+        tabBarStyle: tabBarStyle,
       }}>
       <Tab.Screen
         name="Home"
@@ -111,12 +120,12 @@ const TabNavigation = () => {
                 style={{
                   width: 25,
                   height: 25,
-                  tintColor: focused ? '#FF6DFB' : '#B1B1B1',
+                  tintColor: iconTintColor(focused),
                 }}
               />
               <Text
                 style={{
-                  color: focused ? '#FF6DFB' : '#B1B1B1',
+                  color: iconTintColor(focused),
                   fontFamily: 'CamptonLight',
                 }}>
                 Home
@@ -143,12 +152,12 @@ const TabNavigation = () => {
                 style={{
                   width: 25,
                   height: 25,
-                  tintColor: focused ? '#FF6DFB' : '#B1B1B1',
+                  tintColor: iconTintColor(focused),
                 }}
               />
               <Text
                 style={{
-                  color: focused ? '#FF6DFB' : '#B1B1B1',
+                  color: iconTintColor(focused),
                   fontFamily: 'CamptonLight',
                 }}>
                 Earn
@@ -175,13 +184,13 @@ const TabNavigation = () => {
                 style={{
                   width: 25,
                   height: 25,
-                  tintColor: focused ? '#FF6DFB' : '#B1B1B1',
+                  tintColor: iconTintColor(focused),
                 }}
               />
               <Text
                 style={{
                   fontFamily: 'CamptonLight',
-                  color: focused ? '#FF6DFB' : '#B1B1B1',
+                  color: iconTintColor(focused),
                 }}>
                 Advertise
               </Text>
@@ -207,12 +216,12 @@ const TabNavigation = () => {
                 style={{
                   width: 25,
                   height: 25,
-                  tintColor: focused ? '#FF6DFB' : '#B1B1B1',
+                  tintColor: iconTintColor(focused),
                 }}
               />
               <Text
                 style={{
-                  color: focused ? '#FF6DFB' : '#B1B1B1',
+                  color: iconTintColor(focused),
                   fontFamily: 'CamptonLight',
                 }}>
                 Resell
@@ -239,12 +248,12 @@ const TabNavigation = () => {
                 style={{
                   width: 25,
                   height: 25,
-                  tintColor: focused ? '#FF6DFB' : '#B1B1B1',
+                  tintColor: iconTintColor(focused),
                 }}
               />
               <Text
                 style={{
-                  color: focused ? '#FF6DFB' : '#B1B1B1',
+                  color: iconTintColor(focused),
                   fontFamily: 'CamptonLight',
                 }}>
                 More

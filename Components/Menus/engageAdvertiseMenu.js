@@ -13,26 +13,59 @@ import {
   ClipPath,
   Rect,
 } from 'react-native-svg';
+import {useTheme} from '../../Components/Contexts/colorTheme';
 
 const EngageAdvertiseMenu = () => {
   const navigation = useNavigation();
+
+  const {theme} = useTheme();
+
+  const dynamicStyles = StyleSheet.create({
+    AppContainer: {
+      flex: 1,
+      backgroundColor: theme === 'dark' ? '#1E1E1E' : '#FFFFFF', // Dynamic background color
+      width: '100%',
+    },
+    DivContainer: {
+      backgroundColor:
+        theme === 'dark' ? '#1E1E1E' : 'rgba(177, 177, 177, 0.20)', // Dynamic background color
+    },
+    TextColor: {
+      color: theme === 'dark' ? '#FFFFFF' : '#000000', // Dynamic text color
+    },
+    Button: {
+      backgroundColor: theme === 'dark' ? '#FFF' : '#CB29BE', // Dynamic background color
+    },
+    Btext: {
+      color: theme === 'dark' ? '#FF6DFB' : '#FFF', // Dynamic text color
+    },
+  });
+
   return (
     <View>
       <View style={styles.Container1}>
-        <View style={styles.Advert1}>
+        <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
           <Image source={require('../../assets/EngageSVGs/audiomack.png')} />
 
           <View style={styles.Check}>
-            <Text style={{color: '#fff', fontFamily: 'CamptonMedium'}}>
+            <Text
+              style={[
+                {color: '#fff', fontFamily: 'CamptonMedium'},
+                dynamicStyles.TextColor,
+              ]}>
+              {' '}
               Get Real People to Follow Your Audiomack Channel
             </Text>
             <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'CamptonBook',
-                paddingTop: 10,
-                fontSize: 12,
-              }}>
+              style={[
+                {
+                  color: '#fff',
+                  fontFamily: 'CamptonBook',
+                  paddingTop: 10,
+                  fontSize: 12,
+                },
+                dynamicStyles.TextColor,
+              ]}>
               Get real people to follow your Audiomack channel. you can get any
               number of people to follow your Audiomack channel without
               disclosing your Login details
@@ -66,11 +99,14 @@ const EngageAdvertiseMenu = () => {
                 </Text>
               </View>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'Campton Bold',
-                  fontSize: 12,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'Campton Bold',
+                    fontSize: 12,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 ₦20 per Follow
               </Text>
             </View>
@@ -99,7 +135,7 @@ const EngageAdvertiseMenu = () => {
         </View>
       </View>
       <View style={styles.Container1}>
-        <View style={styles.Advert1}>
+        <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
           <Svg
             width="47"
             height="48"
@@ -133,16 +169,23 @@ const EngageAdvertiseMenu = () => {
           </Svg>
 
           <View style={styles.Check}>
-            <Text style={{color: '#fff', fontFamily: 'CamptonMedium'}}>
+            <Text
+              style={[
+                {color: '#fff', fontFamily: 'CamptonMedium'},
+                dynamicStyles.TextColor,
+              ]}>
               Get People to Download and Review Your App on Apple Store
             </Text>
             <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'CamptonBook',
-                paddingTop: 10,
-                fontSize: 12,
-              }}>
+              style={[
+                {
+                  color: '#fff',
+                  fontFamily: 'CamptonBook',
+                  paddingTop: 10,
+                  fontSize: 12,
+                },
+                dynamicStyles.TextColor,
+              ]}>
               Get people to download and review your apps on Apple store. You
               can get any number of people you want to download and review your
               app. simply by entering the download link to your app.
@@ -176,11 +219,14 @@ const EngageAdvertiseMenu = () => {
                 </Text>
               </View>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'Campton Bold',
-                  fontSize: 12,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'Campton Bold',
+                    fontSize: 12,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 ₦120 per Download and Review
               </Text>
             </View>
@@ -209,7 +255,7 @@ const EngageAdvertiseMenu = () => {
         </View>
       </View>
       <View style={styles.Container1}>
-        <View style={styles.Advert1}>
+        <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
           <Svg
             width="47"
             height="48"
@@ -226,16 +272,23 @@ const EngageAdvertiseMenu = () => {
           </Svg>
 
           <View style={styles.Check}>
-            <Text style={{color: '#fff', fontFamily: 'CamptonMedium'}}>
+            <Text
+              style={[
+                {color: '#fff', fontFamily: 'CamptonMedium'},
+                dynamicStyles.TextColor,
+              ]}>
               Get Genuine People to Like Your Social Media Posts
             </Text>
             <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'CamptonBook',
-                paddingTop: 10,
-                fontSize: 12,
-              }}>
+              style={[
+                {
+                  color: '#fff',
+                  fontFamily: 'CamptonBook',
+                  paddingTop: 10,
+                  fontSize: 12,
+                },
+                dynamicStyles.TextColor,
+              ]}>
               Get Genuine people to like your social media post. You can get as
               many likes as you desire simply by entering the link to your post
               either on Instagram, Facebook, Twitter or any platform.
@@ -269,11 +322,14 @@ const EngageAdvertiseMenu = () => {
                 </Text>
               </View>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'Campton Bold',
-                  fontSize: 12,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'Campton Bold',
+                    fontSize: 12,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 ₦5 per Like
               </Text>
             </View>
@@ -302,7 +358,7 @@ const EngageAdvertiseMenu = () => {
         </View>
       </View>
       <View style={styles.Container1}>
-        <View style={styles.Advert1}>
+        <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
           <Svg
             width="44"
             height="45"
@@ -317,16 +373,23 @@ const EngageAdvertiseMenu = () => {
           </Svg>
 
           <View style={styles.Check}>
-            <Text style={{color: '#fff', fontFamily: 'CamptonMedium'}}>
+            <Text
+              style={[
+                {color: '#fff', fontFamily: 'CamptonMedium'},
+                dynamicStyles.TextColor,
+              ]}>
               Get Genuine People to Follow Your Social Media Accounts
             </Text>
             <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'CamptonBook',
-                paddingTop: 10,
-                fontSize: 12,
-              }}>
+              style={[
+                {
+                  color: '#fff',
+                  fontFamily: 'CamptonBook',
+                  paddingTop: 10,
+                  fontSize: 12,
+                },
+                dynamicStyles.TextColor,
+              ]}>
               Get real people to follow your social media pages. you can get any
               numbers of people to follow your social media pages with no need
               for your login Details, on any social platform like Facebook,
@@ -361,11 +424,14 @@ const EngageAdvertiseMenu = () => {
                 </Text>
               </View>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'Campton Bold',
-                  fontSize: 12,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'Campton Bold',
+                    fontSize: 12,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 ₦5 per Follow
               </Text>
             </View>
@@ -394,7 +460,7 @@ const EngageAdvertiseMenu = () => {
         </View>
       </View>
       <View style={styles.Container1}>
-        <View style={styles.Advert1}>
+        <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
           <Svg
             width="47"
             height="47"
@@ -420,16 +486,23 @@ const EngageAdvertiseMenu = () => {
           </Svg>
 
           <View style={styles.Check}>
-            <Text style={{color: '#fff', fontFamily: 'CamptonMedium'}}>
+            <Text
+              style={[
+                {color: '#fff', fontFamily: 'CamptonMedium'},
+                dynamicStyles.TextColor,
+              ]}>
               Get People to Download and Review Your App on Google Play Store
             </Text>
             <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'CamptonBook',
-                paddingTop: 10,
-                fontSize: 12,
-              }}>
+              style={[
+                {
+                  color: '#fff',
+                  fontFamily: 'CamptonBook',
+                  paddingTop: 10,
+                  fontSize: 12,
+                },
+                dynamicStyles.TextColor,
+              ]}>
               Get people to download and review your app on Google play store.
               You can get as many download and reviews you desire simply by
               entering the link to download your app and get started.
@@ -463,11 +536,14 @@ const EngageAdvertiseMenu = () => {
                 </Text>
               </View>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'Campton Bold',
-                  fontSize: 12,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'Campton Bold',
+                    fontSize: 12,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 ₦100 per Download and Review
               </Text>
             </View>
@@ -496,7 +572,7 @@ const EngageAdvertiseMenu = () => {
         </View>
       </View>
       <View style={styles.Container1}>
-        <View style={styles.Advert1}>
+        <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
           <Svg
             width="47"
             height="48"
@@ -523,16 +599,23 @@ const EngageAdvertiseMenu = () => {
           </Svg>
 
           <View style={styles.Check}>
-            <Text style={{color: '#fff', fontFamily: 'CamptonMedium'}}>
+            <Text
+              style={[
+                {color: '#fff', fontFamily: 'CamptonMedium'},
+                dynamicStyles.TextColor,
+              ]}>
               Get Real People to Follow Your Spotify Channel
             </Text>
             <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'CamptonBook',
-                paddingTop: 10,
-                fontSize: 12,
-              }}>
+              style={[
+                {
+                  color: '#fff',
+                  fontFamily: 'CamptonBook',
+                  paddingTop: 10,
+                  fontSize: 12,
+                },
+                dynamicStyles.TextColor,
+              ]}>
               Get real people to follow your Audiomack channel. you can get any
               number of people to follow your Audiomack channel without
               disclosing your Login details
@@ -566,11 +649,14 @@ const EngageAdvertiseMenu = () => {
                 </Text>
               </View>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'Campton Bold',
-                  fontSize: 12,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'Campton Bold',
+                    fontSize: 12,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 ₦10 per Follow
               </Text>
             </View>
@@ -611,6 +697,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1E1E1E',
     width: '100%',
     paddingHorizontal: 5,
+    borderRadius: 10,
   },
 
   Container1: {

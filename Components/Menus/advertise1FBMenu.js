@@ -12,6 +12,7 @@ import {
   Image,
   Dimensions,
   SafeAreaView,
+  Alert,
 } from 'react-native';
 // import {AdvertiseModal1} from './Modals/AdvertiseModal1';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -177,6 +178,13 @@ const Advertise1FBMenu = () => {
   };
 
   const createTask = async (paymentMethod = 'trendit_wallet') => {
+    if (!image) {
+      Alert.alert(
+        'Image Required',
+        'Please choose an image before proceeding.',
+      );
+      return;
+    }
     console.log('Image at start of createTask:', image);
     if (chooseImage) {
       setTaskType('advert');
@@ -215,7 +223,16 @@ const Advertise1FBMenu = () => {
         );
 
         if (!response.ok) {
-          throw new Error('HTTP error ' + response);
+          if (response.status === 401) {
+            Toast.show({
+              type: 'error',
+              text1: 'Error',
+              text2: 'AccessToken expired',
+              // Styling omitted for brevity
+            });
+          } else {
+            throw new Error('HTTP error ' + response.status);
+          }
         }
 
         const data = await response.json();

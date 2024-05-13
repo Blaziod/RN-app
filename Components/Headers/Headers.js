@@ -1,10 +1,19 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
-import {View, Text, Image, StyleSheet, ActivityIndicator} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
+import {useTheme} from '../Contexts/colorTheme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Headers = () => {
+  const {theme, toggleTheme} = useTheme();
   const [userData, setUserData] = useState(null);
   AsyncStorage.getItem('userdatafiles1')
     .then(data => {
@@ -19,23 +28,41 @@ const Headers = () => {
   if (!userData) {
     return <ActivityIndicator />;
   }
-
   return (
     <>
-      <View style={styles.Header}>
+      <View
+        style={[
+          styles.Header,
+          {
+            backgroundColor:
+              theme === 'dark' ? '#000000' : 'rgba(177, 177, 177, 0.20)#FFFFFF',
+          },
+        ]}>
         <View style={styles.HeaderContainer}>
           <Image
             source={{uri: userData?.userdata?.profile_picture}}
             style={styles.ProfileImage}
           />
           <View style={styles.UsernameContainer}>
-            <Text style={styles.Name}>
+            <Text
+              style={[
+                styles.Name,
+                {color: theme === 'dark' ? '#FFFFFF' : '#000000'},
+              ]}>
               {userData?.userdata?.firstname} {userData?.userdata?.lastname}
             </Text>
-            <Text style={styles.UserName}>@{userData?.userdata.username}</Text>
+            <Text
+              style={[
+                styles.UserName,
+                {color: theme === 'dark' ? '#FFFFFF' : '#000000'},
+              ]}>
+              @{userData?.userdata.username}
+            </Text>
           </View>
           <View style={styles.headerImages}>
-            <Image source={require('../../assets/sun.png')} />
+            <TouchableOpacity onPress={toggleTheme}>
+              <Image source={require('../../assets/sun.png')} />
+            </TouchableOpacity>
             <Image source={require('../../assets/alt.png')} />
           </View>
         </View>

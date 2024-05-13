@@ -13,9 +13,32 @@ import {
   ClipPath,
   Rect,
 } from 'react-native-svg';
+import {useTheme} from '../../Components/Contexts/colorTheme';
 
 const EngageAdvertMenu = () => {
   const navigation = useNavigation();
+  const {theme} = useTheme();
+
+  const dynamicStyles = StyleSheet.create({
+    AppContainer: {
+      flex: 1,
+      backgroundColor: theme === 'dark' ? '#1E1E1E' : '#FFFFFF', // Dynamic background color
+      width: '100%',
+    },
+    DivContainer: {
+      backgroundColor:
+        theme === 'dark' ? '#1E1E1E' : 'rgba(177, 177, 177, 0.20)', // Dynamic background color
+    },
+    TextColor: {
+      color: theme === 'dark' ? '#FFFFFF' : '#000000', // Dynamic text color
+    },
+    Button: {
+      backgroundColor: theme === 'dark' ? '#FFF' : '#CB29BE', // Dynamic background color
+    },
+    Btext: {
+      color: theme === 'dark' ? '#FF6DFB' : '#FFF', // Dynamic text color
+    },
+  });
   return (
     <View>
       <View style={styles.Container}>
@@ -637,11 +660,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#1E1E1E',
     width: '100%',
     paddingHorizontal: 5,
+    borderRadius: 10,
   },
 
   Container1: {
     paddingVertical: 10,
     width: '100%',
+    borderRadius: 10,
   },
   Check: {
     width: '80%',

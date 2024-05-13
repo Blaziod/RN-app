@@ -20,11 +20,34 @@ import EngageAdvertMenu from '../../Components/Menus/engageAdvertMenu';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PaidPostAdvertMenu from '../../Components/Menus/paidPostAdvertMenu';
 import PaidEngageAdvertMenu from '../../Components/Menus/paidEngageAdvertMenu';
+import {useTheme} from '../../Components/Contexts/colorTheme';
 
 const Earn = () => {
   const [earnMenu, setEarnMenu] = useState(1);
   const [userData, setUserData] = useState(null);
   const navigation = useNavigation();
+  const {theme} = useTheme();
+
+  const dynamicStyles = StyleSheet.create({
+    AppContainer: {
+      flex: 1,
+      backgroundColor: theme === 'dark' ? '#121212' : '#FFFFFF', // Dynamic background color
+      width: '100%',
+    },
+    DivContainer: {
+      backgroundColor:
+        theme === 'dark' ? '#171717' : 'rgba(177, 177, 177, 0.20)', // Dynamic background color
+    },
+    TextColor: {
+      color: theme === 'dark' ? '#FFFFFF' : '#000000', // Dynamic text color
+    },
+    Button: {
+      backgroundColor: theme === 'dark' ? '#FFF' : '#CB29BE', // Dynamic background color
+    },
+    Btext: {
+      color: theme === 'dark' ? '#FF6DFB' : '#FFF', // Dynamic text color
+    },
+  });
 
   const onSelectSwitch = value => {
     setEarnMenu(value);
@@ -53,7 +76,7 @@ const Earn = () => {
       <ScrollView
         scrollEnabled={true}
         contentInsetAdjustmentBehavior="automatic">
-        <View style={styles.AppContainer}>
+        <View style={[styles.AppContainer, dynamicStyles.AppContainer]}>
           <Headers />
           <View style={styles.AppContainer1}>
             <View style={styles.earnImage1}>
@@ -115,10 +138,10 @@ const Earn = () => {
             </View>
             <View style={styles.EarnonTContainer}>
               <View style={styles.EarnOnT}>
-                <Text style={styles.EarnOnTText}>
+                <Text style={[styles.EarnOnTText, dynamicStyles.TextColor]}>
                   Earn on Trendit³ just got easier
                 </Text>
-                <Text style={styles.EarnOnTText1}>
+                <Text style={[styles.EarnOnTText1, dynamicStyles.TextColor]}>
                   Earn steady income by posting advertisements for individuals,
                   businesses, and top brands on your social media pages. To post
                   ads on WhatsApp, Facebook, Instagram, Twitter, or TikTok, you
@@ -126,7 +149,7 @@ const Earn = () => {
                 </Text>
                 <View style={{paddingVertical: 5}} />
                 <TouchableOpacity
-                  style={styles.PayButton}
+                  style={[styles.PayButton, dynamicStyles.Button]}
                   onPress={() => navigation.navigate('Membership')}>
                   <Svg
                     width="17"
@@ -141,7 +164,9 @@ const Earn = () => {
                     />
                   </Svg>
 
-                  <Text style={styles.PayButtonLabel}>Become A Member</Text>
+                  <Text style={[styles.PayButtonLabel, dynamicStyles.Btext]}>
+                    Become A Member
+                  </Text>
                 </TouchableOpacity>
                 <Text
                   style={{
@@ -153,7 +178,9 @@ const Earn = () => {
                   Membership fee: ₦1000 for Activation
                 </Text>
               </View>
-              <Text style={styles.EarnText}>Earn</Text>
+              <Text style={[styles.EarnText, dynamicStyles.TextColor]}>
+                Earn
+              </Text>
               <View>
                 <EarnCustomSwitch
                   selectionMode={1}

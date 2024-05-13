@@ -13,13 +13,37 @@ import {
   ClipPath,
   Rect,
 } from 'react-native-svg';
+import {useTheme} from '../../Components/Contexts/colorTheme';
 
 const PaidEngageAdvertMenu = () => {
   const navigation = useNavigation();
+
+  const {theme} = useTheme();
+  const dynamicStyles = StyleSheet.create({
+    AppContainer: {
+      flex: 1,
+      backgroundColor: theme === 'dark' ? '#1E1E1E' : '#FFFFFF', // Dynamic background color
+      width: '100%',
+    },
+    DivContainer: {
+      backgroundColor:
+        theme === 'dark' ? '#1E1E1E' : 'rgba(177, 177, 177, 0.20)', // Dynamic background color
+    },
+    TextColor: {
+      color: theme === 'dark' ? '#FFFFFF' : '#000000', // Dynamic text color
+    },
+    Button: {
+      backgroundColor: theme === 'dark' ? '#FFF' : '#CB29BE', // Dynamic background color
+    },
+    Btext: {
+      color: theme === 'dark' ? '#FF6DFB' : '#FFF', // Dynamic text color
+    },
+  });
+
   return (
     <View>
       <View style={styles.Container}>
-        <View style={styles.Advert1}>
+        <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
           <Svg
             width="47"
             height="48"
@@ -53,16 +77,24 @@ const PaidEngageAdvertMenu = () => {
           </Svg>
 
           <View style={styles.Check}>
-            <Text style={{color: '#fff', fontFamily: 'CamptonMedium'}}>
+            <Text
+              style={[
+                {color: '#fff', fontFamily: 'CamptonMedium'},
+                dynamicStyles.TextColor,
+              ]}>
+              {' '}
               Download and Review App on Apple Store
             </Text>
             <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'CamptonBook',
-                paddingTop: 10,
-                fontSize: 12,
-              }}>
+              style={[
+                {
+                  color: '#fff',
+                  fontFamily: 'CamptonBook',
+                  paddingTop: 10,
+                  fontSize: 12,
+                },
+                dynamicStyles.TextColor,
+              ]}>
               Download and review selected app on the Apple store and earn ₦60
               per review, Increased productivity translates to increased
               earnings.
@@ -99,11 +131,14 @@ const PaidEngageAdvertMenu = () => {
                 </Text>
               </View>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'Campton Bold',
-                  fontSize: 12,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'Campton Bold',
+                    fontSize: 12,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 ₦60 per Download and Review
               </Text>
             </View>
@@ -152,7 +187,7 @@ const PaidEngageAdvertMenu = () => {
       </View>
 
       <View style={styles.Container1}>
-        <View style={styles.Advert1}>
+        <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
           <Svg
             width="47"
             height="48"
@@ -174,16 +209,24 @@ const PaidEngageAdvertMenu = () => {
           </Svg>
 
           <View style={styles.Check}>
-            <Text style={{color: '#fff', fontFamily: 'CamptonMedium'}}>
+            <Text
+              style={[
+                {color: '#fff', fontFamily: 'CamptonMedium'},
+                dynamicStyles.TextColor,
+              ]}>
+              {' '}
               Subscribe, View and Like on YouTube
             </Text>
             <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'CamptonBook',
-                paddingTop: 10,
-                fontSize: 12,
-              }}>
+              style={[
+                {
+                  color: '#fff',
+                  fontFamily: 'CamptonBook',
+                  paddingTop: 10,
+                  fontSize: 12,
+                },
+                dynamicStyles.TextColor,
+              ]}>
               Subscribe on Youtube channels and earn per view, like and comments
               and earn ₦ 35 per subscription, Engage and earn more.
             </Text>
@@ -219,11 +262,14 @@ const PaidEngageAdvertMenu = () => {
                 </Text>
               </View>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'Campton Bold',
-                  fontSize: 12,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'Campton Bold',
+                    fontSize: 12,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 ₦35 per Subscription
               </Text>
             </View>
@@ -272,7 +318,7 @@ const PaidEngageAdvertMenu = () => {
         </View>
       </View>
       <View style={styles.Container1}>
-        <View style={styles.Advert1}>
+        <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
           <Svg
             width="44"
             height="45"
@@ -287,16 +333,24 @@ const PaidEngageAdvertMenu = () => {
           </Svg>
 
           <View style={styles.Check}>
-            <Text style={{color: '#fff', fontFamily: 'CamptonMedium'}}>
+            <Text
+              style={[
+                {color: '#fff', fontFamily: 'CamptonMedium'},
+                dynamicStyles.TextColor,
+              ]}>
+              {' '}
               Follow peoples and Business pages
             </Text>
             <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'CamptonBook',
-                paddingTop: 10,
-                fontSize: 12,
-              }}>
+              style={[
+                {
+                  color: '#fff',
+                  fontFamily: 'CamptonBook',
+                  paddingTop: 10,
+                  fontSize: 12,
+                },
+                dynamicStyles.TextColor,
+              ]}>
               Follow people and pages on selected social media account like
               Facebook, Instagram, Tiktok, and others and earn ₦3.5 per follow
               the more people you follow the more you earn.
@@ -333,11 +387,14 @@ const PaidEngageAdvertMenu = () => {
                 </Text>
               </View>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'Campton Bold',
-                  fontSize: 12,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'Campton Bold',
+                    fontSize: 12,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 ₦3.5 per Follow
               </Text>
             </View>
@@ -386,7 +443,7 @@ const PaidEngageAdvertMenu = () => {
         </View>
       </View>
       <View style={styles.Container1}>
-        <View style={styles.Advert1}>
+        <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
           <Svg
             width="47"
             height="48"
@@ -412,16 +469,24 @@ const PaidEngageAdvertMenu = () => {
             </Defs>
           </Svg>
           <View style={styles.Check}>
-            <Text style={{color: '#fff', fontFamily: 'CamptonMedium'}}>
+            <Text
+              style={[
+                {color: '#fff', fontFamily: 'CamptonMedium'},
+                dynamicStyles.TextColor,
+              ]}>
+              {' '}
               Follow an Account on Spotify
             </Text>
             <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'CamptonBook',
-                paddingTop: 10,
-                fontSize: 12,
-              }}>
+              style={[
+                {
+                  color: '#fff',
+                  fontFamily: 'CamptonBook',
+                  paddingTop: 10,
+                  fontSize: 12,
+                },
+                dynamicStyles.TextColor,
+              ]}>
               Follow selected and given profiles on Spotify and earn ₦5 per
               follower. The more you hustle, the more you gain.
             </Text>
@@ -457,11 +522,14 @@ const PaidEngageAdvertMenu = () => {
                 </Text>
               </View>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'Campton Bold',
-                  fontSize: 12,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'Campton Bold',
+                    fontSize: 12,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 ₦5 per Follow
               </Text>
             </View>
@@ -510,7 +578,7 @@ const PaidEngageAdvertMenu = () => {
         </View>
       </View>
       <View style={styles.Container1}>
-        <View style={styles.Advert1}>
+        <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
           <Svg
             width="47"
             height="48"
@@ -527,16 +595,24 @@ const PaidEngageAdvertMenu = () => {
           </Svg>
 
           <View style={styles.Check}>
-            <Text style={{color: '#fff', fontFamily: 'CamptonMedium'}}>
+            <Text
+              style={[
+                {color: '#fff', fontFamily: 'CamptonMedium'},
+                dynamicStyles.TextColor,
+              ]}>
+              {' '}
               Like Social Media Posts
             </Text>
             <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'CamptonBook',
-                paddingTop: 10,
-                fontSize: 12,
-              }}>
+              style={[
+                {
+                  color: '#fff',
+                  fontFamily: 'CamptonBook',
+                  paddingTop: 10,
+                  fontSize: 12,
+                },
+                dynamicStyles.TextColor,
+              ]}>
               Like and follow people on different social media platform and earn
               ₦3.5 per likes. the more you like post the more you earn
             </Text>
@@ -572,11 +648,14 @@ const PaidEngageAdvertMenu = () => {
                 </Text>
               </View>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'Campton Bold',
-                  fontSize: 12,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'Campton Bold',
+                    fontSize: 12,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 ₦3.5 per Page Like
               </Text>
             </View>
@@ -637,6 +716,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1E1E1E',
     width: '100%',
     paddingHorizontal: 5,
+    borderRadius: 10,
   },
 
   Container1: {

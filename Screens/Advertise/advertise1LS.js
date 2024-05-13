@@ -79,7 +79,7 @@ const Advertise1LS = ({navigation}) => {
                         fontFamily: 'CamptonMedium',
                         fontSize: 12,
                       }}>
-                      Earning:
+                      Pricing:
                     </Text>
                   </View>
                   <Text
@@ -88,7 +88,7 @@ const Advertise1LS = ({navigation}) => {
                       fontFamily: 'Campton Bold',
                       fontSize: 12,
                     }}>
-                    ₦3 per like
+                    ₦5 per like
                   </Text>
                 </View>
                 <View

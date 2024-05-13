@@ -78,7 +78,7 @@ const Advertise1AP = ({navigation}) => {
                         fontFamily: 'CamptonMedium',
                         fontSize: 12,
                       }}>
-                      Earning:
+                      Pricing:
                     </Text>
                   </View>
                   <Text
@@ -87,7 +87,7 @@ const Advertise1AP = ({navigation}) => {
                       fontFamily: 'Campton Bold',
                       fontSize: 12,
                     }}>
-                    ₦50 per Download and Review
+                    ₦120 per Download and Review
                   </Text>
                 </View>
                 <View

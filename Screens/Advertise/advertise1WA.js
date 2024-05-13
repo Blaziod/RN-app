@@ -78,7 +78,7 @@ const Advertise1WA = ({navigation}) => {
                         fontFamily: 'CamptonMedium',
                         fontSize: 12,
                       }}>
-                      Earning:
+                      Pricing:
                     </Text>
                   </View>
                   <Text
@@ -87,7 +87,7 @@ const Advertise1WA = ({navigation}) => {
                       fontFamily: 'Campton Bold',
                       fontSize: 12,
                     }}>
-                    ₦100 per Advert Post
+                    ₦80 per advert post
                   </Text>
                 </View>
                 <View

@@ -12,13 +12,13 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   RefreshControl,
-  // Dimensions,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Headers from '../../Components/Headers/Headers';
 import {useNavigation} from '@react-navigation/native';
 import {useIsFocused} from '@react-navigation/native';
 import {Svg, Path, Stop, RadialGradient, Defs} from 'react-native-svg';
+import {useTheme} from '../../Components/Contexts/colorTheme';
 
 const wait = timeout => {
   return new Promise(resolve => {
@@ -41,6 +41,26 @@ const Home = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [showSection, setShowSection] = useState(true);
   const [showSection1, setShowSection1] = useState(true);
+  const {theme} = useTheme();
+  const strokeColor = theme === 'dark' ? '#fff' : '#000'; // Choosing color based on theme
+
+  const dynamicStyles = StyleSheet.create({
+    AppContainer: {
+      flex: 1,
+      backgroundColor: theme === 'dark' ? '#1E1E1E' : '#FFFFFF', // Dynamic background color
+      width: '100%',
+    },
+    DivContainer: {
+      backgroundColor:
+        theme === 'dark' ? '#171717' : 'rgba(177, 177, 177, 0.20)', // Dynamic background color
+    },
+    TextColor: {
+      color: theme === 'dark' ? '#FFFFFF' : '#000000', // Dynamic text color
+    },
+    Button: {
+      backgroundColor: theme === 'dark' ? '#1E1E1E' : '#FFFFFF', // Dynamic background color
+    },
+  });
 
   const toggleSection = () => {
     setShowSection(!showSection);
@@ -94,6 +114,17 @@ const Home = () => {
           setHasFetchedBalance(true);
           setIsLoading(false);
         } else {
+          if (response.status === 401) {
+            console.log('401 Unauthorized: Access token is invalid or expired');
+            await AsyncStorage.removeItem('userbalance');
+            await AsyncStorage.removeItem('userdata1');
+            await AsyncStorage.removeItem('userdata');
+            await AsyncStorage.removeItem('userdata2');
+            await AsyncStorage.removeItem('userdatas');
+            await AsyncStorage.removeItem('userdatafiles1');
+            await AsyncStorage.removeItem('accesstoken');
+            navigation.navigate('SignIn');
+          }
           setIsLoading(false);
           throw new Error(data.message);
         }
@@ -176,7 +207,7 @@ const Home = () => {
   return (
     <SafeAreaView>
       <ScrollView
-        contentContainerStyle={styles.AppContainer}
+        contentContainerStyle={dynamicStyles.AppContainer}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
@@ -188,7 +219,7 @@ const Home = () => {
             <View style={styles.walletBalanceContainer}>
               <Text style={styles.WalletBalance}>Wallet bal:</Text>
               <Text style={styles.WalletAmount}>
-                {userData?.userdata?.wallet?.currency_code}:
+                {userData?.userdata?.wallet?.currency_code}{' '}
                 {isLoading ? (
                   <ActivityIndicator size="small" color="#0000ff" />
                 ) : (
@@ -299,22 +330,24 @@ const Home = () => {
               />
             </TouchableOpacity>
           </View>
-          <Text style={styles.WhatText}>What’s Up</Text>
+          <Text style={[styles.WhatText, dynamicStyles.TextColor]}>
+            What’s Up
+          </Text>
           {showSection ? (
-            <View style={styles.InstagramContainer}>
-              <View style={styles.ProfileSetUp}>
+            <View style={[styles.InstagramContainer]}>
+              <View style={[styles.ProfileSetUp, dynamicStyles.DivContainer]}>
                 <View style={styles.ProfileTexting}>
-                  <Text style={styles.SetUpText}>
+                  <Text style={[styles.SetUpText, dynamicStyles.TextColor]}>
                     Complete your profile set up
                   </Text>
-                  <Text style={styles.SetUpSubText}>
+                  <Text style={[styles.SetUpSubText, dynamicStyles.TextColor]}>
                     You need to link your Facebook Account to Hawkit before you
                     can start earning with your Facebook Account. Click the
                     button below to link your Facebook account now.
                   </Text>
                   <View style={{paddingTop: 10}} />
                   <TouchableOpacity
-                    style={styles.GotoButton}
+                    style={[styles.GotoButton, dynamicStyles.Button]}
                     onPress={() =>
                       navigation.navigate('More', {screen: 'Settings'})
                     }>
@@ -326,13 +359,16 @@ const Home = () => {
                       xmlns="http://www.w3.org/2000/svg">
                       <Path
                         d="M3.33331 4.16667H13.3333M13.3333 4.16667C13.3333 5.08714 14.0795 5.83333 15 5.83333C15.9205 5.83333 16.6666 5.08714 16.6666 4.16667C16.6666 3.24619 15.9205 2.5 15 2.5C14.0795 2.5 13.3333 3.24619 13.3333 4.16667ZM6.66665 10H16.6666M6.66665 10C6.66665 10.9205 5.92045 11.6667 4.99998 11.6667C4.07951 11.6667 3.33331 10.9205 3.33331 10C3.33331 9.07953 4.07951 8.33333 4.99998 8.33333C5.92045 8.33333 6.66665 9.07953 6.66665 10ZM3.33331 15.8333H13.3333M13.3333 15.8333C13.3333 16.7538 14.0795 17.5 15 17.5C15.9205 17.5 16.6666 16.7538 16.6666 15.8333C16.6666 14.9129 15.9205 14.1667 15 14.1667C14.0795 14.1667 13.3333 14.9129 13.3333 15.8333Z"
-                        stroke="#FFD0FE"
+                        stroke="#FF6DFB"
                         stroke-width="2"
                         stroke-linecap="round"
                       />
                     </Svg>
 
-                    <Text style={styles.GotoText}> Go to settings</Text>
+                    <Text style={[styles.GotoText, dynamicStyles.TextColor]}>
+                      {' '}
+                      Go to settings
+                    </Text>
                   </TouchableOpacity>
                 </View>
                 <TouchableOpacity style={styles.IconAA} onPress={toggleSection}>
@@ -344,7 +380,7 @@ const Home = () => {
                     xmlns="http://www.w3.org/2000/svg">
                     <Path
                       d="M18 6L6 18M18 18L6 6.00001"
-                      stroke="white"
+                      stroke={strokeColor}
                       stroke-width="2"
                       stroke-linecap="round"
                     />
@@ -355,19 +391,20 @@ const Home = () => {
           ) : null}
           {showSection1 ? (
             <View style={styles.InstagramContainer}>
-              <View style={styles.ProfileSetUp}>
+              <View style={[styles.ProfileSetUp, dynamicStyles.DivContainer]}>
                 <View style={styles.ProfileTexting}>
-                  <Text style={styles.SetUpText}>
+                  <Text style={[styles.SetUpText, dynamicStyles.TextColor]}>
                     Link Your Instagram Account
                   </Text>
-                  <Text style={styles.SetUpSubText}>
+                  <Text style={[styles.SetUpSubText, dynamicStyles.TextColor]}>
                     You need to link your Facebook Account to Hawkit before you
                     can start earning with your Facebook Account. Click the
                     button below to link your Facebook account now.
                   </Text>
                   <View style={{paddingTop: 10}} />
 
-                  <TouchableOpacity style={styles.GotoButton2}>
+                  <TouchableOpacity
+                    style={[styles.GotoButton2, dynamicStyles.Button]}>
                     <Svg
                       width="20"
                       height="20"
@@ -417,7 +454,10 @@ const Home = () => {
                       </Defs>
                     </Svg>
 
-                    <Text style={styles.GotoText}> Link Instagram account</Text>
+                    <Text style={[styles.GotoText, dynamicStyles.TextColor]}>
+                      {' '}
+                      Link Instagram account
+                    </Text>
                   </TouchableOpacity>
                 </View>
                 <TouchableOpacity
@@ -431,7 +471,7 @@ const Home = () => {
                     xmlns="http://www.w3.org/2000/svg">
                     <Path
                       d="M18 6L6 18M18 18L6 6.00001"
-                      stroke="white"
+                      stroke={strokeColor}
                       stroke-width="2"
                       stroke-linecap="round"
                     />
@@ -501,7 +541,7 @@ const styles = StyleSheet.create({
   fundText: {
     fontSize: 12.8,
     color: '#000',
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-Bold',
   },
   withdrawText: {
     fontSize: 12.8,

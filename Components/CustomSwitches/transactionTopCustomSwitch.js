@@ -67,10 +67,7 @@ const TransactionsTopCustomSwitch = ({
               color: getSelectionMode === 2 ? '#FF6DFB' : '#B1B1B1',
               fontFamily: 'Campton Bold',
             }}>
-            <Text>
-              {option2}
-              {/* <Text style={{color: '#fff', fontSize: 10}}> 23+</Text> */}
-            </Text>
+            <Text>{option2}</Text>
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -90,10 +87,7 @@ const TransactionsTopCustomSwitch = ({
               color: getSelectionMode === 3 ? '#FF6DFB' : '#B1B1B1',
               fontFamily: 'Campton Bold',
             }}>
-            <Text>
-              {option3}
-              {/* <Text style={{color: '#fff', fontSize: 10}}> 23+</Text> */}
-            </Text>
+            <Text>{option3}</Text>
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -113,10 +107,7 @@ const TransactionsTopCustomSwitch = ({
               color: getSelectionMode === 4 ? '#FF6DFB' : '#B1B1B1',
               fontFamily: 'Campton Bold',
             }}>
-            <Text>
-              {option4}
-              {/* <Text style={{color: '#fff', fontSize: 10}}> 23+</Text> */}
-            </Text>
+            <Text>{option4}</Text>
           </Text>
         </TouchableOpacity>
       </View>

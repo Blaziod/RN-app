@@ -72,10 +72,7 @@ const TransactionsCustomSwitch = ({
               color: getSelectionMode === 2 ? '#FF6DFB' : '#B1B1B1',
               fontFamily: 'Campton Bold',
             }}>
-            <Text>
-              {option2}
-              {/* <Text style={{color: '#fff', fontSize: 10}}> 23+</Text> */}
-            </Text>
+            <Text>{option2}</Text>
           </Text>
         </TouchableOpacity>
         <TouchableOpacity

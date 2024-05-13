@@ -1,19 +1,22 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Modal} from 'react-native';
+import React from 'react';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import {
   Svg,
   Path,
   Stop,
   Defs,
   LinearGradient,
-  RadialGradient,
+  G,
+  ClipPath,
+  Rect,
 } from 'react-native-svg';
 import {useTheme} from '../../Components/Contexts/colorTheme';
 
-const PostAdvertMenu = () => {
-  const [modalVisible, setModalVisible] = useState(false);
+const PaidEngageAdvertMenu = () => {
+  const navigation = useNavigation();
 
   const {theme} = useTheme();
   const dynamicStyles = StyleSheet.create({
@@ -47,14 +50,30 @@ const PostAdvertMenu = () => {
             viewBox="0 0 47 48"
             fill="none"
             xmlns="http://www.w3.org/2000/svg">
-            <Path
-              d="M47 24.0898C47 11.1112 36.4786 0.589844 23.5 0.589844C10.5214 0.589844 0 11.1112 0 24.0898C0 35.8193 8.59366 45.5415 19.8281 47.3044V30.8828H13.8613V24.0898H19.8281V18.9125C19.8281 13.0228 23.3366 9.76953 28.7045 9.76953C31.2756 9.76953 33.9648 10.2285 33.9648 10.2285V16.0117H31.0016C28.0823 16.0117 27.1719 17.8232 27.1719 19.6818V24.0898H33.6895L32.6476 30.8828H27.1719V47.3044C38.4063 45.5415 47 35.8195 47 24.0898Z"
-              fill="#1877F2"
-            />
-            <Path
-              d="M32.6476 30.8828L33.6895 24.0898H27.1719V19.6818C27.1719 17.8231 28.0823 16.0117 31.0016 16.0117H33.9648V10.2285C33.9648 10.2285 31.2756 9.76953 28.7043 9.76953C23.3366 9.76953 19.8281 13.0228 19.8281 18.9125V24.0898H13.8613V30.8828H19.8281V47.3044C21.0428 47.4947 22.2705 47.5902 23.5 47.5898C24.7295 47.5902 25.9572 47.4948 27.1719 47.3044V30.8828H32.6476Z"
-              fill="white"
-            />
+            <G id="logos:apple-app-store">
+              <Path
+                id="Vector"
+                d="M10.293 0.589844H36.707C42.3918 0.589844 47 5.19805 47 10.8828V37.2968C47 42.9816 42.3918 47.5898 36.707 47.5898H10.293C4.6082 47.5898 0 42.9816 0 37.2968V10.8828C0 5.19805 4.6082 0.589844 10.293 0.589844Z"
+                fill="blue"
+              />
+              <Path
+                id="Vector_2"
+                d="M15.0642 34.7034L15.0686 34.7048L13.4616 37.4881C12.875 38.5041 11.5759 38.8522 10.5599 38.2656C9.54411 37.679 9.19583 36.3799 9.78241 35.3639L10.9662 33.3136L11.0799 33.1167C11.2827 32.8252 11.7834 32.3218 12.7849 32.4165C12.7849 32.4165 15.1417 32.6723 15.3123 33.8972C15.3123 33.8972 15.3354 34.3002 15.0642 34.7034ZM37.8561 27.5946H32.8451C32.5038 27.5717 32.3549 27.4498 32.2961 27.3789L32.2925 27.3725L26.9284 18.0815L26.9214 18.0861L26.5998 17.6249C26.0725 16.8186 25.2353 18.8807 25.2353 18.8807C24.2356 21.1786 25.3772 23.7909 25.7751 24.5806L33.2257 37.4854C33.8121 38.5012 35.1112 38.8495 36.1274 38.2627C37.1432 37.6761 37.4915 36.377 36.9047 35.361L35.0418 32.1341C35.0056 32.0559 34.9428 31.8437 35.3249 31.8428H37.8561C39.0293 31.8428 39.9803 30.8918 39.9803 29.7186C39.9803 28.5454 39.0293 27.5946 37.8561 27.5946ZM28.1231 30.482C28.1231 30.482 28.3906 31.8426 27.3556 31.8426H8.83121C7.65805 31.8426 6.70703 30.8916 6.70703 29.7184C6.70703 28.5453 7.65805 27.5942 8.83121 27.5942H13.5936C14.3625 27.5498 14.5446 27.1059 14.5446 27.1059L14.5491 27.1081L20.7655 16.3407L20.7637 16.3403C20.877 16.1323 20.7826 15.9357 20.7663 15.9046L18.7131 12.3486C18.1266 11.3328 18.4747 10.0335 19.4907 9.4471C20.5067 8.86052 21.8058 9.20843 22.3924 10.2244L23.3445 11.8737L24.2949 10.2274C24.8815 9.21155 26.1806 8.86327 27.1966 9.45004C28.2127 10.0366 28.5607 11.3355 27.9742 12.3516L19.3236 27.3346C19.2858 27.4259 19.2742 27.5691 19.5557 27.5942H24.7264L24.7275 27.6447C24.7275 27.6447 27.716 27.6912 28.1231 30.482Z"
+                fill="white"
+              />
+            </G>
+            <Defs>
+              <LinearGradient
+                id="paint0_linear_5579_30535"
+                x1="2350"
+                y1="0.589844"
+                x2="2350"
+                y2="4700.59"
+                gradientUnits="userSpaceOnUse">
+                <Stop stop-color="#17C9FB" />
+                <Stop offset="1" stop-color="#1A74E8" />
+              </LinearGradient>
+            </Defs>
           </Svg>
 
           <View style={styles.Check}>
@@ -64,7 +83,7 @@ const PostAdvertMenu = () => {
                 dynamicStyles.TextColor,
               ]}>
               {' '}
-              Post Adverts on Your FaceBook Page
+              Download and Review App on Apple Store
             </Text>
             <Text
               style={[
@@ -76,10 +95,9 @@ const PostAdvertMenu = () => {
                 },
                 dynamicStyles.TextColor,
               ]}>
-              Post adverts of various businesses and top brands on your Facebook
-              Page and earn ₦110 per advert past. The more you post, the more
-              you earn. Note that your Facebook account must have at least 500
-              Active Followers to be eligible for this task.
+              Download and review selected app on the Apple store and earn ₦60
+              per review, Increased productivity translates to increased
+              earnings.
             </Text>
             <View
               style={{
@@ -121,7 +139,7 @@ const PostAdvertMenu = () => {
                   },
                   dynamicStyles.TextColor,
                 ]}>
-                ₦110 per Advert Post
+                ₦60 per Download and Review
               </Text>
             </View>
             <View>
@@ -135,7 +153,7 @@ const PostAdvertMenu = () => {
                   borderTopRightRadius: 4,
                   borderTopLeftRadius: 4,
                 }}
-                onPress={() => setModalVisible(true)}>
+                onPress={() => navigation.navigate('Earn1Apple')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -176,18 +194,18 @@ const PostAdvertMenu = () => {
             viewBox="0 0 47 48"
             fill="none"
             xmlns="http://www.w3.org/2000/svg">
-            <Path
-              d="M34.8307 17.5134C38.2597 19.6762 42.4604 20.9488 46.9973 20.9488V13.2457C46.1386 13.2458 45.2822 13.1667 44.4422 13.0097V19.0732C39.9057 19.0732 35.7055 17.8008 32.2758 15.6381V31.3582C32.2758 39.2222 25.0507 45.5967 16.1389 45.5967C12.8137 45.5967 9.72286 44.7097 7.15546 43.1884C10.0858 45.8322 14.1723 47.4722 18.6933 47.4722C27.6058 47.4722 34.8311 41.0977 34.8311 33.2333V17.5134H34.8307ZM37.9828 9.7419C36.2303 8.05266 35.0796 5.86959 34.8307 3.45606V2.46533H32.4094C33.0189 5.53281 35.098 8.15347 37.9828 9.7419ZM12.7922 37.1539C11.8131 36.0213 11.2839 34.6355 11.2862 33.2108C11.2862 29.6142 14.5909 26.6979 18.6681 26.6979C19.4278 26.6975 20.183 26.8005 20.9073 27.0031V19.1276C20.0609 19.0254 19.2069 18.9818 18.3533 18.9978V25.1276C17.6287 24.9249 16.8731 24.822 16.113 24.8226C12.036 24.8226 8.73151 27.7385 8.73151 31.3356C8.73151 33.8792 10.3832 36.0812 12.7922 37.1539Z"
-              fill="#FF004F"
-            />
-            <Path
-              d="M32.2758 15.638C35.7057 17.8006 39.9055 19.073 44.4422 19.073V13.0095C41.9098 12.5335 39.6681 11.366 37.9826 9.7419C35.0976 8.1533 33.0189 5.53265 32.4094 2.46533H26.0496V33.233C26.0351 36.8199 22.7361 39.7242 18.6677 39.7242C16.2705 39.7242 14.1406 38.7159 12.7918 37.1538C10.3832 36.0812 8.73132 33.879 8.73132 31.3358C8.73132 27.739 12.0358 24.8227 16.1128 24.8227C16.894 24.8227 17.6468 24.93 18.3531 25.1278V18.998C9.59764 19.1576 2.55634 25.4699 2.55634 33.2331C2.55634 37.1085 4.30973 40.6217 7.15563 43.1887C9.72303 44.7097 12.8136 45.5971 16.1391 45.5971C25.0511 45.5971 32.276 39.2221 32.276 31.3582L32.2758 15.638Z"
-              fill="black"
-            />
-            <Path
-              d="M44.4423 13.0092V11.37C42.1587 11.3731 39.9203 10.8088 37.9828 9.74172C39.6978 11.3984 41.9561 12.5409 44.4423 13.0095M32.4094 2.46498C32.3513 2.1719 32.3067 1.87685 32.2758 1.58057V0.589844H23.4943V31.3578C23.4803 34.9444 20.1813 37.8487 16.1128 37.8487C14.9594 37.8502 13.8218 37.6122 12.7918 37.1539C14.1406 38.7158 16.2705 39.7238 18.6677 39.7238C22.7359 39.7238 26.0352 36.8199 26.0496 33.233V2.46514L32.4094 2.46498ZM18.3536 18.9976V17.2523C17.6198 17.1638 16.88 17.1195 16.1394 17.1197C7.22648 17.1197 0.00158691 23.4946 0.00158691 31.3578C0.00158691 36.2878 2.84106 40.6325 7.15598 43.1882C4.31009 40.6214 2.55669 37.108 2.55669 33.2328C2.55669 25.4697 9.59781 19.1573 18.3536 18.9976Z"
-              fill="#00F2EA"
-            />
+            <G id="logos:youtube-icon">
+              <Path
+                id="Vector"
+                d="M45.9569 7.92054C45.6874 6.50363 45.1616 5.21189 44.432 4.17393C43.7024 3.13597 42.7943 2.38801 41.7982 2.00454C38.1517 0.589844 23.4755 0.589844 23.4755 0.589844C23.4755 0.589844 8.79857 0.632666 5.15201 2.04737C4.15593 2.43086 3.24786 3.17885 2.51821 4.21686C1.78857 5.25487 1.26282 6.54667 0.993319 7.96362C-0.109681 17.1803 -0.537554 31.2244 1.02361 40.0725C1.29314 41.4894 1.8189 42.7811 2.54854 43.8191C3.27818 44.857 4.18624 45.605 5.18229 45.9885C8.82885 47.4032 23.5054 47.4032 23.5054 47.4032C23.5054 47.4032 38.1818 47.4032 41.8282 45.9885C42.8242 45.605 43.7323 44.8571 44.462 43.8191C45.1917 42.7812 45.7175 41.4894 45.987 40.0725C47.1504 30.8427 47.5089 16.8072 45.9569 7.92054Z"
+                fill="#FF0000"
+              />
+              <Path
+                id="Vector_2"
+                d="M18.8047 34.0277L30.9797 23.9963L18.8047 13.965V34.0277Z"
+                fill="white"
+              />
+            </G>
           </Svg>
 
           <View style={styles.Check}>
@@ -197,7 +215,7 @@ const PostAdvertMenu = () => {
                 dynamicStyles.TextColor,
               ]}>
               {' '}
-              Post Adverts on Your Tiktok Account
+              Subscribe, View and Like on YouTube
             </Text>
             <Text
               style={[
@@ -209,17 +227,15 @@ const PostAdvertMenu = () => {
                 },
                 dynamicStyles.TextColor,
               ]}>
-              Post adverts of various businesses and top brands on your Tiktok
-              Page and earn ₦110 per advert past. The more you post, the more
-              you earn. Note that your Tiktok account must have at least 500
-              Active Followers to be eligible for this task.
+              Subscribe on Youtube channels and earn per view, like and comments
+              and earn ₦ 35 per subscription, Engage and earn more.
             </Text>
             <View
               style={{
                 flexDirection: 'row',
                 paddingVertical: 10,
                 gap: 7,
-                paddingRight: 50,
+                // paddingRight: 50,
               }}>
               <View style={{flexDirection: 'row', gap: 3}}>
                 <View style={styles.wallet}>
@@ -254,7 +270,7 @@ const PostAdvertMenu = () => {
                   },
                   dynamicStyles.TextColor,
                 ]}>
-                ₦110 per Advert Post
+                ₦35 per Subscription
               </Text>
             </View>
             <View>
@@ -268,7 +284,7 @@ const PostAdvertMenu = () => {
                   borderTopRightRadius: 4,
                   borderTopLeftRadius: 4,
                 }}
-                onPress={() => setModalVisible(true)}>
+                onPress={() => navigation.navigate('Earn1Youtube')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -287,7 +303,7 @@ const PostAdvertMenu = () => {
                   borderBottomRightRadius: 4,
                   borderBottomLeftRadius: 4,
                 }}
-                onPress={() => setModalVisible(true)}>
+                onPress={() => navigation.navigate('Earn1')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -304,48 +320,16 @@ const PostAdvertMenu = () => {
       <View style={styles.Container1}>
         <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
           <Svg
-            width="47"
-            height="47"
-            viewBox="0 0 47 47"
+            width="44"
+            height="45"
+            viewBox="0 0 44 45"
             fill="none"
             xmlns="http://www.w3.org/2000/svg">
             <Path
-              d="M35.9844 0H11.0156C4.93186 0 0 4.93186 0 11.0156V35.9844C0 42.0681 4.93186 47 11.0156 47H35.9844C42.0681 47 47 42.0681 47 35.9844V11.0156C47 4.93186 42.0681 0 35.9844 0Z"
-              fill="url(#paint0_radial_3204_7466)"
+              id="Vector"
+              d="M28.4231 26.9898C31.3225 26.9898 34.1031 28.1488 36.1532 30.2117C38.2033 32.2746 39.3551 35.0725 39.3551 37.9898V40.1898C39.3551 41.3568 38.8944 42.476 38.0743 43.3011C37.2543 44.1263 36.142 44.5898 34.9823 44.5898H4.37279C3.21305 44.5898 2.10082 44.1263 1.28076 43.3011C0.460703 42.476 0 41.3568 0 40.1898V37.9898C0 35.0725 1.15176 32.2746 3.2019 30.2117C5.25204 28.1488 8.03263 26.9898 10.932 26.9898H28.4231ZM40.2603 16.168C40.6528 15.7693 41.182 15.5366 41.7395 15.5175C42.2969 15.4985 42.8406 15.6946 43.2591 16.0657C43.6776 16.4367 43.9393 16.9547 43.9907 17.5136C44.0421 18.0725 43.8792 18.63 43.5355 19.072L43.3518 19.281L37.1687 25.5026C36.7922 25.8814 36.2913 26.109 35.76 26.1426C35.2286 26.1762 34.7033 26.0136 34.2827 25.6852L34.0771 25.5026L30.9856 22.3918C30.5893 21.9969 30.358 21.4644 30.3391 20.9034C30.3202 20.3425 30.5151 19.7955 30.8838 19.3744C31.2526 18.9533 31.7674 18.6899 32.3228 18.6382C32.8783 18.5865 33.4323 18.7504 33.8716 19.0962L34.0771 19.281L35.6229 20.8364L40.2603 16.168ZM19.6775 0.589844C22.5769 0.589844 25.3575 1.74877 27.4076 3.81167C29.4578 5.87457 30.6095 8.67246 30.6095 11.5898C30.6095 14.5072 29.4578 17.3051 27.4076 19.368C25.3575 21.4309 22.5769 22.5898 19.6775 22.5898C16.7782 22.5898 13.9976 21.4309 11.9475 19.368C9.89734 17.3051 8.74558 14.5072 8.74558 11.5898C8.74558 8.67246 9.89734 5.87457 11.9475 3.81167C13.9976 1.74877 16.7782 0.589844 19.6775 0.589844Z"
+              fill="#FC11F5"
             />
-            <Path
-              d="M35.9844 0H11.0156C4.93186 0 0 4.93186 0 11.0156V35.9844C0 42.0681 4.93186 47 11.0156 47H35.9844C42.0681 47 47 42.0681 47 35.9844V11.0156C47 4.93186 42.0681 0 35.9844 0Z"
-              fill="url(#paint1_radial_3204_7466)"
-            />
-            <Path
-              d="M23.5017 5.14062C18.5156 5.14062 17.8897 5.16247 15.9315 5.25152C13.977 5.34111 12.6428 5.65046 11.4755 6.10449C10.2678 6.57339 9.24358 7.20073 8.22316 8.22151C7.20183 9.24211 6.57449 10.2664 6.10413 11.4735C5.64881 12.6412 5.33909 13.9759 5.25115 15.9295C5.16357 17.8879 5.14062 18.514 5.14062 23.5002C5.14062 28.4864 5.16266 29.1103 5.25152 31.0685C5.34148 33.023 5.65083 34.3572 6.10449 35.5245C6.57376 36.7322 7.2011 37.7564 8.22188 38.7768C9.24211 39.7982 10.2664 40.427 11.4731 40.8959C12.6413 41.3499 13.9757 41.6593 15.9299 41.7489C17.8883 41.8379 18.5136 41.8597 23.4994 41.8597C28.486 41.8597 29.1099 41.8379 31.0681 41.7489C33.0226 41.6593 34.3583 41.3499 35.5265 40.8959C36.7336 40.427 37.7564 39.7982 38.7765 38.7768C39.7978 37.7564 40.425 36.7322 40.8955 35.525C41.3468 34.3572 41.6567 33.0226 41.7485 31.0688C41.8364 29.1106 41.8594 28.4864 41.8594 23.5002C41.8594 18.514 41.8364 17.8883 41.7485 15.9299C41.6567 13.9753 41.3468 12.6413 40.8955 11.4741C40.425 10.2664 39.7978 9.24211 38.7765 8.22151C37.7553 7.20036 36.734 6.57302 35.5254 6.10468C34.355 5.65046 33.0201 5.34093 31.0655 5.25152C29.1071 5.16247 28.4837 5.14062 23.496 5.14062H23.5017ZM21.8546 8.44917C22.3435 8.44843 22.889 8.44917 23.5017 8.44917C28.4038 8.44917 28.9847 8.46679 30.9205 8.55473C32.7105 8.63662 33.6821 8.93569 34.3293 9.18703C35.1861 9.5197 35.7969 9.91755 36.4391 10.5603C37.0817 11.2029 37.4794 11.8148 37.813 12.6716C38.0643 13.3179 38.3638 14.2895 38.4453 16.0795C38.5332 18.015 38.5523 18.5962 38.5523 23.496C38.5523 28.3957 38.5332 28.9772 38.4453 30.9124C38.3634 32.7025 38.0643 33.674 37.813 34.3205C37.4803 35.1773 37.0817 35.7874 36.4391 36.4296C35.7966 37.0722 35.1865 37.4698 34.3293 37.8027C33.6828 38.0551 32.7105 38.3535 30.9205 38.4354C28.985 38.5233 28.4038 38.5424 23.5017 38.5424C18.5993 38.5424 18.0183 38.5233 16.083 38.4354C14.293 38.3527 13.3214 38.0537 12.6737 37.8023C11.817 37.4695 11.2049 37.0718 10.5623 36.4292C9.91975 35.7866 9.52209 35.1762 9.1885 34.319C8.93716 33.6726 8.63772 32.701 8.5562 30.9109C8.46826 28.9755 8.45064 28.3942 8.45064 23.4914C8.45064 18.5887 8.46826 18.0104 8.5562 16.0749C8.63809 14.2849 8.93716 13.3133 9.1885 12.6661C9.52136 11.8093 9.91975 11.1974 10.5625 10.5548C11.2051 9.91223 11.817 9.51438 12.6738 9.18097C13.321 8.92853 14.293 8.63019 16.083 8.54794C17.7766 8.47138 18.433 8.44843 21.8546 8.44458V8.44917ZM33.3019 11.4976C32.0856 11.4976 31.0988 12.4835 31.0988 13.6999C31.0988 14.9163 32.0856 15.9031 33.3019 15.9031C34.5182 15.9031 35.505 14.9163 35.505 13.6999C35.505 12.4836 34.5182 11.4968 33.3019 11.4968V11.4976ZM23.5017 14.0717C18.2949 14.0717 14.0734 18.2933 14.0734 23.5002C14.0734 28.7071 18.2949 32.9266 23.5017 32.9266C28.7086 32.9266 32.9286 28.7071 32.9286 23.5002C32.9286 18.2935 28.7082 14.0717 23.5013 14.0717H23.5017ZM23.5017 17.3803C26.8814 17.3803 29.6216 20.12 29.6216 23.5002C29.6216 26.88 26.8814 29.6201 23.5017 29.6201C20.1217 29.6201 17.3819 26.88 17.3819 23.5002C17.3819 20.12 20.1217 17.3803 23.5017 17.3803Z"
-              fill="white"
-            />
-            <Defs>
-              <RadialGradient
-                id="paint0_radial_3204_7466"
-                cx="0"
-                cy="0"
-                r="1"
-                gradientUnits="userSpaceOnUse"
-                gradientTransform="translate(12.4844 50.6199) rotate(-90) scale(46.5805 43.3235)">
-                <Stop stop-color="#FFDD55" />
-                <Stop offset="0.1" stop-color="#FFDD55" />
-                <Stop offset="0.5" stop-color="#FF543E" />
-                <Stop offset="1" stop-color="#C837AB" />
-              </RadialGradient>
-              <RadialGradient
-                id="paint1_radial_3204_7466"
-                cx="0"
-                cy="0"
-                r="1"
-                gradientUnits="userSpaceOnUse"
-                gradientTransform="translate(-7.87268 3.38565) rotate(78.681) scale(20.8217 85.8279)">
-                <Stop stop-color="#3771C8" />
-                <Stop offset="0.128" stop-color="#3771C8" />
-                <Stop offset="1" stop-color="#6600FF" stop-opacity="0" />
-              </RadialGradient>
-            </Defs>
           </Svg>
 
           <View style={styles.Check}>
@@ -355,7 +339,7 @@ const PostAdvertMenu = () => {
                 dynamicStyles.TextColor,
               ]}>
               {' '}
-              Post Adverts on Your Instagram Page
+              Follow peoples and Business pages
             </Text>
             <Text
               style={[
@@ -367,10 +351,9 @@ const PostAdvertMenu = () => {
                 },
                 dynamicStyles.TextColor,
               ]}>
-              Post adverts of various businesses and top brands on your
-              Instagram Page and earn ₦110 per advert . The more you post, the
-              more you earn. Note that your Instagram account must have at least
-              500 Active Followers to be eligible for this task.
+              Follow people and pages on selected social media account like
+              Facebook, Instagram, Tiktok, and others and earn ₦3.5 per follow
+              the more people you follow the more you earn.
             </Text>
             <View
               style={{
@@ -412,7 +395,7 @@ const PostAdvertMenu = () => {
                   },
                   dynamicStyles.TextColor,
                 ]}>
-                ₦110 per Advert Post
+                ₦3.5 per Follow
               </Text>
             </View>
             <View>
@@ -426,7 +409,7 @@ const PostAdvertMenu = () => {
                   borderTopRightRadius: 4,
                   borderTopLeftRadius: 4,
                 }}
-                onPress={() => setModalVisible(true)}>
+                onPress={() => navigation.navigate('Earn1Follow')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -445,7 +428,7 @@ const PostAdvertMenu = () => {
                   borderBottomRightRadius: 4,
                   borderBottomLeftRadius: 4,
                 }}
-                onPress={() => setModalVisible(true)}>
+                onPress={() => navigation.navigate('Earn1Follow')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -465,44 +448,26 @@ const PostAdvertMenu = () => {
             width="47"
             height="48"
             viewBox="0 0 47 48"
-            fill="green"
+            fill="none"
             xmlns="http://www.w3.org/2000/svg">
-            <Path
-              d="M1.00869 23.8086C1.00759 27.7575 2.0472 31.6133 4.02401 35.0119L0.819641 46.6238L12.7928 43.508C16.1044 45.2973 19.8148 46.2348 23.5854 46.2351H23.5953C36.0425 46.2351 46.1749 36.1823 46.1802 23.8263C46.1826 17.8389 43.8354 12.2087 39.5709 7.97286C35.3071 3.7374 29.6364 1.40361 23.5944 1.40088C11.1456 1.40088 1.01402 11.453 1.00888 23.8086"
-              fill="green"
-            />
-            <Path
-              d="M0.202377 23.8013C0.201092 27.8923 1.27796 31.886 3.32525 35.4063L0.00598145 47.4345L12.4084 44.2069C15.8257 46.0561 19.6732 47.0311 23.5883 47.0326H23.5984C36.4922 47.0326 46.9885 36.6183 46.994 23.8199C46.9963 17.6173 44.5646 11.7848 40.1477 7.39719C35.7303 3.01016 29.8568 0.592394 23.5984 0.589844C10.7024 0.589844 0.207516 11.0027 0.202377 23.8013ZM7.5885 34.8L7.12541 34.0704C5.17871 30.9983 4.15121 27.4482 4.15268 23.8027C4.15672 13.1649 12.8796 4.51015 23.6057 4.51015C28.8001 4.51234 33.6817 6.52205 37.3534 10.1684C41.0249 13.8151 43.0452 18.6626 43.0439 23.8184C43.0392 34.4563 34.3161 43.1121 23.5984 43.1121H23.5907C20.1009 43.1103 16.6783 42.1801 13.6935 40.4223L12.9831 40.0043L5.62326 41.9194L7.5885 34.8Z"
-              fill="green"
-            />
-            <Path
-              d="M17.7509 14.0975C17.313 13.1315 16.8521 13.112 16.4356 13.095C16.0946 13.0805 15.7047 13.0816 15.3153 13.0816C14.9254 13.0816 14.292 13.2271 13.7566 13.8073C13.2206 14.3881 11.7104 15.7915 11.7104 18.646C11.7104 21.5006 13.8052 24.2592 14.0972 24.6467C14.3896 25.0334 18.1413 31.0786 24.0831 33.4041C29.0213 35.3368 30.0262 34.9524 31.0979 34.8555C32.1698 34.7589 34.5567 33.4524 35.0436 32.0976C35.531 30.743 35.531 29.5818 35.3849 29.3392C35.2387 29.0974 34.8489 28.9523 34.2643 28.6622C33.6795 28.372 30.8055 26.9684 30.2698 26.7748C29.7338 26.5813 29.3441 26.4848 28.9543 27.0657C28.5644 27.6457 27.445 28.9523 27.1038 29.3392C26.7629 29.727 26.4217 29.7753 25.8373 29.4851C25.2523 29.194 23.3697 28.5821 21.1361 26.6057C19.3983 25.0678 18.225 23.1687 17.884 22.5878C17.543 22.0077 17.8475 21.6933 18.1406 21.4042C18.4033 21.1442 18.7254 20.7267 19.018 20.3881C19.3094 20.0492 19.4067 19.8075 19.6016 19.4205C19.7967 19.0333 19.6991 18.6944 19.5532 18.4042C19.4067 18.114 18.2707 15.2447 17.7509 14.0975Z"
-              fill="white"
-            />
+            <G id="logos:spotify-icon" clip-path="url(#clip0_5579_17671)">
+              <Path
+                id="Vector"
+                d="M23.5 0.589844C10.5214 0.589844 0 11.1114 0 24.0898C0 37.0692 10.5216 47.5898 23.5 47.5898C36.4795 47.5898 47 37.0692 47 24.0898C47 11.1123 36.4795 0.591129 23.4996 0.591129L23.5 0.589844ZM34.2768 34.4838C33.8558 35.1741 32.9521 35.393 32.2618 34.9692C26.7443 31.599 19.7986 30.8356 11.6185 32.7046C11.2398 32.7908 10.8422 32.7231 10.5134 32.5163C10.1845 32.3094 9.95126 31.9805 9.86486 31.6018C9.82181 31.4143 9.81616 31.2201 9.84824 31.0304C9.88033 30.8407 9.94951 30.6592 10.0518 30.4963C10.1542 30.3334 10.2876 30.1923 10.4445 30.081C10.6015 29.9698 10.7788 29.8905 10.9664 29.8479C19.9185 27.8027 27.5969 28.6832 33.7913 32.4689C34.4817 32.8926 34.7005 33.7935 34.2768 34.4838ZM37.1531 28.085C36.6225 28.947 35.4945 29.2193 34.6331 28.6889C28.3164 24.8062 18.6875 23.6817 11.2161 25.9496C10.2471 26.2423 9.22375 25.6963 8.92963 24.7289C8.63772 23.7599 9.18409 22.7384 10.1514 22.4439C18.6858 19.8542 29.2957 21.1087 36.5498 25.5663C37.4113 26.0969 37.6835 27.2247 37.1531 28.085ZM37.4001 21.4219C29.8261 16.9231 17.3301 16.5093 10.0989 18.7043C8.93771 19.0564 7.70965 18.4008 7.35789 17.2396C7.00594 16.0778 7.66082 14.8507 8.82296 14.4976C17.1238 11.9776 30.9234 12.4647 39.6432 17.6413C40.6901 18.2611 41.0323 19.6102 40.4121 20.6532C39.7949 21.6978 38.4421 22.042 37.4012 21.4219H37.4001Z"
+                fill="#1ED760"
+              />
+            </G>
             <Defs>
-              <LinearGradient
-                id="paint0_linear_3189_16665"
-                x1="2268.85"
-                y1="4523.69"
-                x2="2268.85"
-                y2="1.40088"
-                gradientUnits="userSpaceOnUse">
-                <Stop stop-color="#1FAF38" />
-                <Stop offset="1" stop-color="#60D669" />
-              </LinearGradient>
-              <LinearGradient
-                id="paint1_linear_3189_16665"
-                x1="2349.41"
-                y1="4685.05"
-                x2="2349.41"
-                y2="0.589844"
-                gradientUnits="userSpaceOnUse">
-                <Stop stop-color="#F9F9F9" />
-                <Stop offset="1" stop-color="white" />
-              </LinearGradient>
+              <ClipPath id="clip0_5579_17671">
+                <Rect
+                  width="47"
+                  height="47"
+                  fill="white"
+                  transform="translate(0 0.589844)"
+                />
+              </ClipPath>
             </Defs>
           </Svg>
-
           <View style={styles.Check}>
             <Text
               style={[
@@ -510,7 +475,7 @@ const PostAdvertMenu = () => {
                 dynamicStyles.TextColor,
               ]}>
               {' '}
-              Post Adverts on Your Whatsapp Status
+              Follow an Account on Spotify
             </Text>
             <Text
               style={[
@@ -522,10 +487,8 @@ const PostAdvertMenu = () => {
                 },
                 dynamicStyles.TextColor,
               ]}>
-              Post adverts of various businesses and top brands on your WhatsApp
-              status and earn ₦60 per advert past. The more you post, the more
-              you earn. Note that your WhatsApp Status must have at least 500
-              Active Followers to be eligible for this task.
+              Follow selected and given profiles on Spotify and earn ₦5 per
+              follower. The more you hustle, the more you gain.
             </Text>
             <View
               style={{
@@ -567,7 +530,7 @@ const PostAdvertMenu = () => {
                   },
                   dynamicStyles.TextColor,
                 ]}>
-                ₦60 per Advert Post
+                ₦5 per Follow
               </Text>
             </View>
             <View>
@@ -581,7 +544,7 @@ const PostAdvertMenu = () => {
                   borderTopRightRadius: 4,
                   borderTopLeftRadius: 4,
                 }}
-                onPress={() => setModalVisible(true)}>
+                onPress={() => navigation.navigate('Earn1Spotify')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -600,7 +563,7 @@ const PostAdvertMenu = () => {
                   borderBottomRightRadius: 4,
                   borderBottomLeftRadius: 4,
                 }}
-                onPress={() => setModalVisible(true)}>
+                onPress={() => navigation.navigate('Earn1Spotify')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -618,14 +581,17 @@ const PostAdvertMenu = () => {
         <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
           <Svg
             width="47"
-            height="47"
-            viewBox="0 0 47 47"
+            height="48"
+            viewBox="0 0 47 48"
             fill="none"
             xmlns="http://www.w3.org/2000/svg">
-            <Path
-              d="M37.0145 2.25781H44.2211L28.4761 20.2549L47 44.7399H32.4966L21.1382 29.8879L8.13883 44.7399H0.92825L17.7699 25.4895L0 2.25977H14.8716L25.1391 15.8349L37.0145 2.25781ZM34.4863 40.4277H38.4793L12.7018 6.34485H8.41692L34.4863 40.4277Z"
-              fill="white"
-            />
+            <G id="like">
+              <Path
+                id="Vector"
+                d="M40.6614 25.0858C41.4325 24.0669 41.8594 22.8184 41.8594 21.5195C41.8594 19.4587 40.7073 17.508 38.853 16.4202C38.3757 16.1402 37.8321 15.9928 37.2787 15.9933H26.2723L26.5477 10.3524C26.6119 8.98924 26.13 7.69491 25.1937 6.70809C24.7341 6.2217 24.1798 5.8347 23.5648 5.57103C22.9498 5.30735 22.2873 5.17259 21.6182 5.17508C19.2314 5.17508 17.1201 6.78153 16.4867 9.08104L12.544 23.3555H12.5303V43H34.2081C34.6304 43 35.0435 42.9174 35.4244 42.7521C37.6092 41.8204 39.0183 39.6861 39.0183 37.3178C39.0183 36.7394 38.9356 36.1703 38.7704 35.6195C39.5415 34.6006 39.9684 33.3521 39.9684 32.0532C39.9684 31.4749 39.8857 30.9057 39.7205 30.355C40.4916 29.336 40.9185 28.0876 40.9185 26.7887C40.9093 26.2103 40.8267 25.6366 40.6614 25.0858ZM5.14062 24.8242V41.5312C5.14062 42.3436 5.79697 43 6.60938 43H9.59277V23.3555H6.60938C5.79697 23.3555 5.14062 24.0118 5.14062 24.8242Z"
+                fill="#1877F2"
+              />
+            </G>
           </Svg>
 
           <View style={styles.Check}>
@@ -635,7 +601,7 @@ const PostAdvertMenu = () => {
                 dynamicStyles.TextColor,
               ]}>
               {' '}
-              Post Adverts on Your X account
+              Like Social Media Posts
             </Text>
             <Text
               style={[
@@ -647,10 +613,8 @@ const PostAdvertMenu = () => {
                 },
                 dynamicStyles.TextColor,
               ]}>
-              Post adverts of various businesses and top brands on your Twitter
-              page and earn ₦110 per advert past. The more you post, the more
-              you earn. Note that your Twitter page must have at least 500
-              Active Followers to be eligible for this task.
+              Like and follow people on different social media platform and earn
+              ₦3.5 per likes. the more you like post the more you earn
             </Text>
             <View
               style={{
@@ -692,7 +656,7 @@ const PostAdvertMenu = () => {
                   },
                   dynamicStyles.TextColor,
                 ]}>
-                ₦110 per Advert Post
+                ₦3.5 per Page Like
               </Text>
             </View>
             <View>
@@ -706,7 +670,7 @@ const PostAdvertMenu = () => {
                   borderTopRightRadius: 4,
                   borderTopLeftRadius: 4,
                 }}
-                onPress={() => setModalVisible(true)}>
+                onPress={() => navigation.navigate('Earn1Like')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -725,7 +689,7 @@ const PostAdvertMenu = () => {
                   borderBottomRightRadius: 4,
                   borderBottomLeftRadius: 4,
                 }}
-                onPress={() => setModalVisible(true)}>
+                onPress={() => navigation.navigate('Earn1Like')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -739,24 +703,6 @@ const PostAdvertMenu = () => {
           </View>
         </View>
       </View>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>
-              You must pay a N1000 activation fee to earn on trendit3.
-            </Text>
-            <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
-              <Text style={{color: '#000'}}>Pay</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
     </View>
   );
 };
@@ -768,39 +714,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 30,
     backgroundColor: '#1E1E1E',
-    paddingHorizontal: 100,
+    width: '100%',
+    paddingHorizontal: 5,
     borderRadius: 10,
   },
 
   Container1: {
     paddingVertical: 10,
+    width: '100%',
   },
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
-    color: '#000',
+  Check: {
+    width: '80%',
   },
 });
 
-export default PostAdvertMenu;
+export default PaidEngageAdvertMenu;

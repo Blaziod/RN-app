@@ -55,7 +55,7 @@ const Advertise1WAMenu = () => {
   const [userBalance, setUserBalance] = useState(null);
   const result =
     userBalance?.balance -
-    (isNaN(Number(chooseNumber)) ? 0 : Number(chooseNumber) * 100);
+    (isNaN(Number(chooseNumber)) ? 0 : Number(chooseNumber) * 80);
 
   useEffect(() => {
     AsyncStorage.getItem('userbalance')
@@ -180,7 +180,7 @@ const Advertise1WAMenu = () => {
     console.log('Image at start of createTask:', image);
     if (chooseImage) {
       setTaskType('advert');
-      setAmount(chooseNumber * 150);
+      setAmount(chooseNumber * 140);
       const taskData = new FormData();
       taskData.append('platform', choosePlatform);
       taskData.append('target_country', chooseLocation);
@@ -189,7 +189,7 @@ const Advertise1WAMenu = () => {
       taskData.append('caption', caption);
       taskData.append('gender', gender);
       // taskData.append('hashtags', hashtag);
-      taskData.append('amount', chooseNumber * 150);
+      taskData.append('amount', chooseNumber * 140);
       taskData.append('target_state', 'Lagos');
       console.log('Task Data:', image?.uri);
       taskData.append('media', {
@@ -380,6 +380,7 @@ const Advertise1WAMenu = () => {
             onChangeText={setChooseNumber}
             placeholder="Select"
             placeholderTextColor="#fff"
+            keyboardType="numeric"
           />
         </TouchableOpacity>
         <Text
@@ -611,7 +612,7 @@ const Advertise1WAMenu = () => {
               fontSize: 30,
             }}>
             {userData1?.userdata?.wallet?.currency_code}:{' '}
-            {isNaN(Number(chooseNumber)) ? 0 : Number(chooseNumber) * 100}
+            {isNaN(Number(chooseNumber)) ? 0 : Number(chooseNumber) * 80}
           </Text>
         </View>
         <TouchableOpacity
@@ -1049,7 +1050,7 @@ const Advertise1WAMenu = () => {
                           {/* {userData1?.userdata?.wallet?.currency_code}:{' '} */}
                           {isNaN(Number(chooseNumber))
                             ? 0
-                            : Number(chooseNumber) * 100}
+                            : Number(chooseNumber) * 80}
                         </Text>
                       </View>
                       <View
@@ -1074,7 +1075,7 @@ const Advertise1WAMenu = () => {
                           {/* {userData1?.userdata?.wallet?.currency_code}:{' '} */}
                           {isNaN(Number(chooseNumber))
                             ? 0
-                            : Number(chooseNumber) * 100}
+                            : Number(chooseNumber) * 80}
                         </Text>
                       </View>
                       <View

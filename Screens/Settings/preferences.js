@@ -7,15 +7,51 @@ const PreferencesSettings = () => {
   const [isDarkEnabled, setDarkEnabled] = useState(false);
   const [isLightEnabled, setLightEnabled] = useState(false);
   const [isSystemEnabled, setSystemEnabled] = useState(false);
+
+  // Define colors for light and dark themes
+  const themeColors = {
+    dark: {
+      backgroundColor: '#121212',
+      textColor: '#ffffff',
+      inputBackgroundColor: '#1C1C1C',
+      placeholderTextColor: '#ffffff',
+    },
+    light: {
+      backgroundColor: '#ffffff',
+      textColor: '#000000',
+      inputBackgroundColor: '#f0f0f0',
+      placeholderTextColor: '#000000',
+    },
+  };
+
+  const currentTheme = isLightEnabled ? themeColors.light : themeColors.dark;
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.Header2}>Appearance</Text>
+    <View
+      style={[
+        styles.container,
+        {backgroundColor: currentTheme.backgroundColor},
+      ]}>
+      <Text style={[styles.Header2, {color: currentTheme.textColor}]}>
+        Appearance
+      </Text>
 
       <View>
-        <View style={styles.row}>
+        <View
+          style={[
+            styles.row,
+            {backgroundColor: currentTheme.inputBackgroundColor},
+          ]}>
           <TextInput
-            style={styles.Input2}
+            style={[
+              styles.Input2,
+              {
+                backgroundColor: currentTheme.inputBackgroundColor,
+                color: currentTheme.textColor,
+              },
+            ]}
             placeholder="Dark Mode"
+            placeholderTextColor={currentTheme.placeholderTextColor}
             editable={isDarkEnabled}
           />
           <Switch
@@ -32,10 +68,21 @@ const PreferencesSettings = () => {
             value={isDarkEnabled}
           />
         </View>
-        <View style={styles.row2}>
+        <View
+          style={[
+            styles.row2,
+            {backgroundColor: currentTheme.inputBackgroundColor},
+          ]}>
           <TextInput
-            style={styles.Input2}
+            style={[
+              styles.Input2,
+              {
+                backgroundColor: currentTheme.inputBackgroundColor,
+                color: currentTheme.textColor,
+              },
+            ]}
             placeholder="Light Mode"
+            placeholderTextColor={currentTheme.placeholderTextColor}
             editable={isLightEnabled}
           />
           <Switch
@@ -52,10 +99,21 @@ const PreferencesSettings = () => {
             value={isLightEnabled}
           />
         </View>
-        <View style={styles.row2}>
+        <View
+          style={[
+            styles.row2,
+            {backgroundColor: currentTheme.inputBackgroundColor},
+          ]}>
           <TextInput
-            style={styles.Input2}
+            style={[
+              styles.Input2,
+              {
+                backgroundColor: currentTheme.inputBackgroundColor,
+                color: currentTheme.textColor,
+              },
+            ]}
             placeholder="System Settings"
+            placeholderTextColor={currentTheme.placeholderTextColor}
             editable={isSystemEnabled}
           />
           <Switch
@@ -72,7 +130,6 @@ const PreferencesSettings = () => {
             value={isSystemEnabled}
           />
         </View>
-        {/* <TextInput style={styles.Input2} placeholder="Google Auth App" /> */}
       </View>
     </View>
   );

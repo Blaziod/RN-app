@@ -13,9 +13,32 @@ import {
   ClipPath,
   Rect,
 } from 'react-native-svg';
+import {useTheme} from '../../Components/Contexts/colorTheme';
 
 const EngageAdvertMenu = () => {
   const navigation = useNavigation();
+  const {theme} = useTheme();
+
+  const dynamicStyles = StyleSheet.create({
+    AppContainer: {
+      flex: 1,
+      backgroundColor: theme === 'dark' ? '#1E1E1E' : '#FFFFFF', // Dynamic background color
+      width: '100%',
+    },
+    DivContainer: {
+      backgroundColor:
+        theme === 'dark' ? '#1E1E1E' : 'rgba(177, 177, 177, 0.20)', // Dynamic background color
+    },
+    TextColor: {
+      color: theme === 'dark' ? '#FFFFFF' : '#000000', // Dynamic text color
+    },
+    Button: {
+      backgroundColor: theme === 'dark' ? '#FFF' : '#CB29BE', // Dynamic background color
+    },
+    Btext: {
+      color: theme === 'dark' ? '#FF6DFB' : '#FFF', // Dynamic text color
+    },
+  });
   return (
     <View>
       <View style={styles.Container}>
@@ -63,7 +86,7 @@ const EngageAdvertMenu = () => {
                 paddingTop: 10,
                 fontSize: 12,
               }}>
-              Download and review selected app on the Apple store and earn N30
+              Download and review selected app on the Apple store and earn ₦60
               per review, Increased productivity translates to increased
               earnings.
             </Text>
@@ -104,7 +127,7 @@ const EngageAdvertMenu = () => {
                   fontFamily: 'Campton Bold',
                   fontSize: 12,
                 }}>
-                ₦30 per Download and Review
+                ₦60 per Download and Review
               </Text>
             </View>
             <View>
@@ -185,7 +208,7 @@ const EngageAdvertMenu = () => {
                 fontSize: 12,
               }}>
               Subscribe on Youtube channels and earn per view, like and comments
-              and eardn N 50 per subscription, Engage and earn more.
+              and earn ₦ 35 per subscription, Engage and earn more.
             </Text>
             <View
               style={{
@@ -224,7 +247,7 @@ const EngageAdvertMenu = () => {
                   fontFamily: 'Campton Bold',
                   fontSize: 12,
                 }}>
-                ₦50 per Subscription
+                ₦35 per Subscription
               </Text>
             </View>
             <View>
@@ -298,7 +321,7 @@ const EngageAdvertMenu = () => {
                 fontSize: 12,
               }}>
               Follow people and pages on selected social media account like
-              Facebook, Instagram, Tiktok, and others and earn N 3 per follow
+              Facebook, Instagram, Tiktok, and others and earn ₦3.5 per follow
               the more people you follow the more you earn.
             </Text>
             <View
@@ -338,7 +361,7 @@ const EngageAdvertMenu = () => {
                   fontFamily: 'Campton Bold',
                   fontSize: 12,
                 }}>
-                ₦3 per Page Like and Follow
+                ₦3.5 per Follow
               </Text>
             </View>
             <View>
@@ -422,7 +445,7 @@ const EngageAdvertMenu = () => {
                 paddingTop: 10,
                 fontSize: 12,
               }}>
-              Follow selected and given profiles on Spotify and earnN10 per
+              Follow selected and given profiles on Spotify and earn ₦5 per
               follower. The more you hustle, the more you gain.
             </Text>
             <View
@@ -462,7 +485,7 @@ const EngageAdvertMenu = () => {
                   fontFamily: 'Campton Bold',
                   fontSize: 12,
                 }}>
-                ₦3 per Page Like and Follow
+                ₦5 per Follow
               </Text>
             </View>
             <View>
@@ -538,7 +561,7 @@ const EngageAdvertMenu = () => {
                 fontSize: 12,
               }}>
               Like and follow people on different social media platform and earn
-              ₦3 per likes. the more you like post the more tou earn
+              ₦3.5 per likes. the more you like post the more you earn
             </Text>
             <View
               style={{
@@ -577,7 +600,7 @@ const EngageAdvertMenu = () => {
                   fontFamily: 'Campton Bold',
                   fontSize: 12,
                 }}>
-                ₦3 per Page Like and Follow
+                ₦3.5 per Page Like
               </Text>
             </View>
             <View>
@@ -637,11 +660,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#1E1E1E',
     width: '100%',
     paddingHorizontal: 5,
+    borderRadius: 10,
   },
 
   Container1: {
     paddingVertical: 10,
     width: '100%',
+    borderRadius: 10,
   },
   Check: {
     width: '80%',

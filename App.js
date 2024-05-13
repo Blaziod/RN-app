@@ -4,6 +4,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import TabNavigation from './Navigation/tabNavigation';
 import Toast from 'react-native-toast-message';
+import {ThemeProvider} from './Components/Contexts/colorTheme';
 
 //Screens
 import SignIn from './Screens/Auth/signIn';
@@ -58,14 +59,16 @@ const App = () => {
     });
   }, []);
   return (
-    <NavigationContainer
-      linking={{
-        prefixes: ['trendit://app', 'https://blaziod.github.io'],
-        config,
-      }}>
-      <StackNavigator />
-      <Toast />
-    </NavigationContainer>
+    <ThemeProvider>
+      <NavigationContainer
+        linking={{
+          prefixes: ['trendit://app', 'https://blaziod.github.io'],
+          config,
+        }}>
+        <StackNavigator />
+        <Toast />
+      </NavigationContainer>
+    </ThemeProvider>
   );
 };
 export default App;

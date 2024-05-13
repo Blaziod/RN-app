@@ -78,7 +78,7 @@ const Advertise1FB = ({navigation}) => {
                         fontFamily: 'CamptonMedium',
                         fontSize: 12,
                       }}>
-                      Earning:
+                      Pricing:
                     </Text>
                   </View>
                   <Text
@@ -87,7 +87,7 @@ const Advertise1FB = ({navigation}) => {
                       fontFamily: 'Campton Bold',
                       fontSize: 12,
                     }}>
-                    ₦150 per Advert Post
+                    ₦140 Per Advert Post
                   </Text>
                 </View>
                 <View

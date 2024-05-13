@@ -78,7 +78,7 @@ const Advertise1FS = ({navigation}) => {
                         fontFamily: 'CamptonMedium',
                         fontSize: 12,
                       }}>
-                      Earning:
+                      Pricing:
                     </Text>
                   </View>
                   <Text

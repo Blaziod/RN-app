@@ -79,7 +79,7 @@ const Advertise1GP = ({navigation}) => {
                         fontFamily: 'CamptonMedium',
                         fontSize: 12,
                       }}>
-                      Earning:
+                      Pricing:
                     </Text>
                   </View>
                   <Text
@@ -88,7 +88,7 @@ const Advertise1GP = ({navigation}) => {
                       fontFamily: 'Campton Bold',
                       fontSize: 12,
                     }}>
-                    ₦50 per Download and Review
+                    ₦100 per Download and Review
                   </Text>
                 </View>
                 <View

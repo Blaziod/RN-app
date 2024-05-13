@@ -8,10 +8,32 @@ import Headers from '../../Components/Headers/Headers';
 import AdvertiseMenu from '../../Components/Menus/advertiseMenu';
 import {Svg, Path, Defs, ClipPath, Rect, Mask, G} from 'react-native-svg';
 import EngageAdvertiseMenu from '../../Components/Menus/engageAdvertiseMenu';
+import {useTheme} from '../../Components/Contexts/colorTheme';
 
 const Advertise = () => {
   const [earnMenu, setEarnMenu] = useState(1);
+  const {theme} = useTheme();
 
+  const dynamicStyles = StyleSheet.create({
+    AppContainer: {
+      flex: 1,
+      backgroundColor: theme === 'dark' ? '#121212' : '#FFFFFF', // Dynamic background color
+      width: '100%',
+    },
+    DivContainer: {
+      backgroundColor:
+        theme === 'dark' ? '#171717' : 'rgba(177, 177, 177, 0.20)', // Dynamic background color
+    },
+    TextColor: {
+      color: theme === 'dark' ? '#FFFFFF' : '#000000', // Dynamic text color
+    },
+    Button: {
+      backgroundColor: theme === 'dark' ? '#FFF' : '#CB29BE', // Dynamic background color
+    },
+    Btext: {
+      color: theme === 'dark' ? '#FF6DFB' : '#FFF', // Dynamic text color
+    },
+  });
   const onSelectSwitch = value => {
     setEarnMenu(value);
   };
@@ -20,7 +42,7 @@ const Advertise = () => {
       <ScrollView
         scrollEnabled={true}
         contentInsetAdjustmentBehavior="automatic">
-        <View style={styles.AppContainer}>
+        <View style={[styles.AppContainer, dynamicStyles.AppContainer]}>
           <Headers />
           <View style={styles.AppContainer1}>
             <View style={styles.earnImage1}>
@@ -262,17 +284,19 @@ const Advertise = () => {
             </View>
             <View style={styles.EarnonTContainer}>
               <View style={styles.EarnOnT}>
-                <Text style={styles.EarnOnTText}>
+                <Text style={[styles.EarnOnTText, dynamicStyles.TextColor]}>
                   Advertise to reach wider audience
                 </Text>
-                <Text style={styles.EarnOnTText1}>
-                  Get people with atleast 1000 active followers to repost your
+                <Text style={[styles.EarnOnTText1, dynamicStyles.TextColor]}>
+                  Get people with at least 500 active followers to repost your
                   adverts and perform certain social tasks for you on their
                   social media accounts. Select the type of task you want people
                   to perform below:
                 </Text>
               </View>
-              <Text style={styles.EarnText}>Advertise</Text>
+              <Text style={[styles.EarnText, dynamicStyles.TextColor]}>
+                Advertise
+              </Text>
               <View>
                 <EarnCustomSwitch
                   selectionMode={1}
@@ -366,7 +390,7 @@ const styles = StyleSheet.create({
     fontFamily: 'CamptonMedium',
     paddingHorizontal: 10,
     paddingVertical: 20,
-    paddingTop: 120,
+    paddingTop: 50,
   },
   EarnMenu: {
     flexDirection: 'row',

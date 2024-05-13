@@ -1,15 +1,8 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ActivityIndicator,
-} from 'react-native';
+import React from 'react';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   Svg,
   Path,
@@ -19,32 +12,38 @@ import {
   RadialGradient,
   G,
 } from 'react-native-svg';
+import {useTheme} from '../../Components/Contexts/colorTheme';
 
 const AdvertiseMenu = () => {
-  const [userData, setUserData] = useState(null);
   const navigation = useNavigation();
-  useEffect(() => {
-    // Your code to run on screen focus
-    AsyncStorage.getItem('userdatafiles1')
-      .then(data => {
-        // eslint-disable-next-line no-shadow
-        const userData = JSON.parse(data);
-        setUserData(userData);
-        console.log('Here I am', userData);
+  const {theme} = useTheme();
+  const strokeColor = theme === 'dark' ? '#fff' : '#000'; // Choosing color based on theme
 
-        if (!userData) {
-          return <ActivityIndicator />;
-        }
-      })
-      .catch(error => {
-        console.error('Error retrieving user data:', error);
-      });
-  }, []);
+  const dynamicStyles = StyleSheet.create({
+    AppContainer: {
+      flex: 1,
+      backgroundColor: theme === 'dark' ? '#1E1E1E' : '#FFFFFF', // Dynamic background color
+      width: '100%',
+    },
+    DivContainer: {
+      backgroundColor:
+        theme === 'dark' ? '#1E1E1E' : 'rgba(177, 177, 177, 0.20)', // Dynamic background color
+    },
+    TextColor: {
+      color: theme === 'dark' ? '#FFFFFF' : '#000000', // Dynamic text color
+    },
+    Button: {
+      backgroundColor: theme === 'dark' ? '#FFF' : '#CB29BE', // Dynamic background color
+    },
+    Btext: {
+      color: theme === 'dark' ? '#FF6DFB' : '#FFF', // Dynamic text color
+    },
+  });
 
   return (
     <View>
       <View style={styles.Container1}>
-        <View style={styles.Advert1}>
+        <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
           <Svg
             width="47"
             height="48"
@@ -62,21 +61,28 @@ const AdvertiseMenu = () => {
           </Svg>
 
           <View style={styles.Check}>
-            <Text style={{color: '#fff', fontFamily: 'CamptonMedium'}}>
+            <Text
+              style={[
+                {color: '#fff', fontFamily: 'CamptonMedium'},
+                dynamicStyles.TextColor,
+              ]}>
+              {' '}
               Get people to post your Advert on Facebook
             </Text>
             <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'CamptonBook',
-                paddingTop: 10,
-                fontSize: 12,
-              }}>
-              Get Genuine people with more than a 1000 followers 0r friends on
-              their facebook account to post your advert to their audience to
-              post your ads on their social media account. Get real people to
-              post your ads on their social media account. Get real people to
-              post your ads on their social media account.
+              style={[
+                {
+                  color: '#fff',
+                  fontFamily: 'CamptonBook',
+                  paddingTop: 10,
+                  fontSize: 12,
+                },
+                dynamicStyles.TextColor,
+              ]}>
+              Get Genuine people with more than a 500 followers or friends on
+              their Facebook account to post your advert to their audience to
+              post your ads on their social media account. Expand your audience
+              reach today through Trendit3
             </Text>
             <View
               style={{
@@ -103,16 +109,19 @@ const AdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 12,
                   }}>
-                  Earning:
+                  Pricing:
                 </Text>
               </View>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'Campton Bold',
-                  fontSize: 12,
-                }}>
-                {userData?.userdata?.wallet?.currency_code} 150 per advert post
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'Campton Bold',
+                    fontSize: 12,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
+                ₦140 per Advert post
               </Text>
             </View>
             <View>
@@ -132,7 +141,7 @@ const AdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 10,
                   }}>
-                  Generate Task
+                  Create Advert
                 </Text>
               </TouchableOpacity>
             </View>
@@ -140,7 +149,7 @@ const AdvertiseMenu = () => {
         </View>
       </View>
       <View style={styles.Container1}>
-        <View style={styles.Advert1}>
+        <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
           <Svg
             width="47"
             height="48"
@@ -162,18 +171,26 @@ const AdvertiseMenu = () => {
           </Svg>
 
           <View style={styles.Check}>
-            <Text style={{color: '#fff', fontFamily: 'CamptonMedium'}}>
+            <Text
+              style={[
+                {color: '#fff', fontFamily: 'CamptonMedium'},
+                dynamicStyles.TextColor,
+              ]}>
+              {' '}
               Get People to post your advert on Tiktok
             </Text>
             <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'CamptonBook',
-                paddingTop: 10,
-                fontSize: 12,
-              }}>
+              style={[
+                {
+                  color: '#fff',
+                  fontFamily: 'CamptonBook',
+                  paddingTop: 10,
+                  fontSize: 12,
+                },
+                dynamicStyles.TextColor,
+              ]}>
               Get real people to post your adverts on their Tiktok account
-              having atleast 1000 active followers each on their account to post
+              having at least 500 active followers each on their account to post
               your advert to their followers. This will give your advert massive
               views within a short period of time. You can indicate any number
               of people you want to post your advert.
@@ -203,16 +220,19 @@ const AdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 12,
                   }}>
-                  Earning:
+                  Pricing:
                 </Text>
               </View>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'Campton Bold',
-                  fontSize: 12,
-                }}>
-                {userData?.userdata?.wallet?.currency_code} 150 per advert post
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'Campton Bold',
+                    fontSize: 12,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
+                ₦140 per Advert post
               </Text>
             </View>
             <View>
@@ -232,7 +252,7 @@ const AdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 10,
                   }}>
-                  Generate Task
+                  Create Advert
                 </Text>
               </TouchableOpacity>
             </View>
@@ -240,7 +260,7 @@ const AdvertiseMenu = () => {
         </View>
       </View>
       <View style={styles.Container1}>
-        <View style={styles.Advert1}>
+        <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
           <Svg
             width="47"
             height="48"
@@ -262,21 +282,28 @@ const AdvertiseMenu = () => {
           </Svg>
 
           <View style={styles.Check}>
-            <Text style={{color: '#fff', fontFamily: 'CamptonMedium'}}>
+            <Text
+              style={[
+                {color: '#fff', fontFamily: 'CamptonMedium'},
+                dynamicStyles.TextColor,
+              ]}>
+              {' '}
               Get People to post your advert on Youtube
             </Text>
             <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'CamptonBook',
-                paddingTop: 10,
-                fontSize: 12,
-              }}>
-              Get Genuine people with more than a 1000 followers 0r friends on
-              their Youtube account to post your advert to their audience to
-              post your ads on their social media account. Get real people to
-              post your ads on their social media account. Get real people to
-              post your ads on their social media account.
+              style={[
+                {
+                  color: '#fff',
+                  fontFamily: 'CamptonBook',
+                  paddingTop: 10,
+                  fontSize: 12,
+                },
+                dynamicStyles.TextColor,
+              ]}>
+              Get Genuine people with more than a 500 subscribers on their
+              Youtube account to post your advert to their audience to post your
+              ads on their social media account. Spark high user engagement on
+              your page .
             </Text>
             <View
               style={{
@@ -303,16 +330,19 @@ const AdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 12,
                   }}>
-                  Earning:
+                  Pricing:
                 </Text>
               </View>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'Campton Bold',
-                  fontSize: 12,
-                }}>
-                {userData?.userdata?.wallet?.currency_code} 150 per advert post
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'Campton Bold',
+                    fontSize: 12,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
+                ₦140 per Advert post
               </Text>
             </View>
             <View>
@@ -332,7 +362,7 @@ const AdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 10,
                   }}>
-                  Generate Task
+                  Create Advert
                 </Text>
               </TouchableOpacity>
             </View>
@@ -340,7 +370,7 @@ const AdvertiseMenu = () => {
         </View>
       </View>
       <View style={styles.Container1}>
-        <View style={styles.Advert1}>
+        <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
           <Svg
             width="47"
             height="47"
@@ -349,26 +379,33 @@ const AdvertiseMenu = () => {
             xmlns="http://www.w3.org/2000/svg">
             <Path
               d="M37.0145 2.25781H44.2211L28.4761 20.2549L47 44.7399H32.4966L21.1382 29.8879L8.13883 44.7399H0.92825L17.7699 25.4895L0 2.25977H14.8716L25.1391 15.8349L37.0145 2.25781ZM34.4863 40.4277H38.4793L12.7018 6.34485H8.41692L34.4863 40.4277Z"
-              fill="white"
+              fill={strokeColor}
             />
           </Svg>
 
           <View style={styles.Check}>
-            <Text style={{color: '#fff', fontFamily: 'CamptonMedium'}}>
+            <Text
+              style={[
+                {color: '#fff', fontFamily: 'CamptonMedium'},
+                dynamicStyles.TextColor,
+              ]}>
+              {' '}
               Get People to post your advert on Twitter
             </Text>
             <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'CamptonBook',
-                paddingTop: 10,
-                fontSize: 12,
-              }}>
-              Get Genuine people with more than a 1000 followers 0r friends on
+              style={[
+                {
+                  color: '#fff',
+                  fontFamily: 'CamptonBook',
+                  paddingTop: 10,
+                  fontSize: 12,
+                },
+                dynamicStyles.TextColor,
+              ]}>
+              Get Genuine people with more than a 500 followers 0r friends on
               their Twitter account to post your advert to their audience to
-              post your ads on their social media account. Get real people to
-              post your ads on their social media account. Get real people to
-              post your ads on their social media account.{' '}
+              post your ads on their social media account. Expand your audience
+              reach today through Trendit3
             </Text>
             <View
               style={{
@@ -395,16 +432,19 @@ const AdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 12,
                   }}>
-                  Earning:
+                  Pricing:
                 </Text>
               </View>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'Campton Bold',
-                  fontSize: 12,
-                }}>
-                {userData?.userdata?.wallet?.currency_code} 150 per advert post
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'Campton Bold',
+                    fontSize: 12,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
+                ₦140 per Advert post
               </Text>
             </View>
             <View>
@@ -424,7 +464,7 @@ const AdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 10,
                   }}>
-                  Generate Task
+                  Create Advert
                 </Text>
               </TouchableOpacity>
             </View>
@@ -432,7 +472,7 @@ const AdvertiseMenu = () => {
         </View>
       </View>
       <View style={styles.Container1}>
-        <View style={styles.Advert1}>
+        <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
           <Svg
             width="47"
             height="47"
@@ -479,18 +519,26 @@ const AdvertiseMenu = () => {
           </Svg>
 
           <View style={styles.Check}>
-            <Text style={{color: '#fff', fontFamily: 'CamptonMedium'}}>
+            <Text
+              style={[
+                {color: '#fff', fontFamily: 'CamptonMedium'},
+                dynamicStyles.TextColor,
+              ]}>
+              {' '}
               Get People to post your advert on Instagram
             </Text>
             <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'CamptonBook',
-                paddingTop: 10,
-                fontSize: 12,
-              }}>
+              style={[
+                {
+                  color: '#fff',
+                  fontFamily: 'CamptonBook',
+                  paddingTop: 10,
+                  fontSize: 12,
+                },
+                dynamicStyles.TextColor,
+              ]}>
               Get real people to post your advert on their Instagram account
-              having atleast 1000 active followers each on their account to post
+              having at least 500 active followers each on their account to post
               your advert to their followers. This will give your advert massive
               views within a short period of time. You can indicate any number
               of people you want to post your advert.
@@ -520,16 +568,19 @@ const AdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 12,
                   }}>
-                  Earning:
+                  Pricing:
                 </Text>
               </View>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'Campton Bold',
-                  fontSize: 12,
-                }}>
-                {userData?.userdata?.wallet?.currency_code} 150 per advert post
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'Campton Bold',
+                    fontSize: 12,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
+                ₦140 per Advert post
               </Text>
             </View>
             <View>
@@ -549,7 +600,7 @@ const AdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 10,
                   }}>
-                  Generate Task
+                  Create Advert
                 </Text>
               </TouchableOpacity>
             </View>
@@ -557,7 +608,7 @@ const AdvertiseMenu = () => {
         </View>
       </View>
       <View style={styles.Container1}>
-        <View style={styles.Advert1}>
+        <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
           <Svg
             width="47"
             height="48"
@@ -601,16 +652,24 @@ const AdvertiseMenu = () => {
           </Svg>
 
           <View style={styles.Check}>
-            <Text style={{color: '#fff', fontFamily: 'CamptonMedium'}}>
+            <Text
+              style={[
+                {color: '#fff', fontFamily: 'CamptonMedium'},
+                dynamicStyles.TextColor,
+              ]}>
+              {' '}
               Get People to post your advert on WhatsApp
             </Text>
             <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'CamptonBook',
-                paddingTop: 10,
-                fontSize: 12,
-              }}>
+              style={[
+                {
+                  color: '#fff',
+                  fontFamily: 'CamptonBook',
+                  paddingTop: 10,
+                  fontSize: 12,
+                },
+                dynamicStyles.TextColor,
+              ]}>
               Get real people to post your adverts on their WhatsApp Status
               having atleast 1000 active followers each on their account to post
               your advert to their followers. This will give your advert massive
@@ -642,16 +701,19 @@ const AdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 12,
                   }}>
-                  Earning:
+                  Pricing:
                 </Text>
               </View>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'Campton Bold',
-                  fontSize: 12,
-                }}>
-                {userData?.userdata?.wallet?.currency_code} 100 per advert post
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'Campton Bold',
+                    fontSize: 12,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
+                ₦80 per Advert post
               </Text>
             </View>
             <View>
@@ -671,7 +733,7 @@ const AdvertiseMenu = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 10,
                   }}>
-                  Generate Task
+                  Create Advert
                 </Text>
               </TouchableOpacity>
             </View>
@@ -690,6 +752,7 @@ const styles = StyleSheet.create({
     paddingVertical: 30,
     backgroundColor: '#1E1E1E',
     paddingHorizontal: 90,
+    borderRadius: 10,
   },
 
   Container1: {

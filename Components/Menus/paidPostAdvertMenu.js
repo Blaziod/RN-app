@@ -1,7 +1,8 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Modal} from 'react-native';
+import React from 'react';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import {
   Svg,
   Path,
@@ -12,10 +13,11 @@ import {
 } from 'react-native-svg';
 import {useTheme} from '../../Components/Contexts/colorTheme';
 
-const PostAdvertMenu = () => {
-  const [modalVisible, setModalVisible] = useState(false);
-
+const PaidPostAdvertMenu = () => {
+  const navigation = useNavigation();
   const {theme} = useTheme();
+  const strokeColor = theme === 'dark' ? '#fff' : '#000'; // Choosing color based on theme
+
   const dynamicStyles = StyleSheet.create({
     AppContainer: {
       flex: 1,
@@ -39,7 +41,7 @@ const PostAdvertMenu = () => {
 
   return (
     <View>
-      <View style={styles.Container}>
+      <View style={[styles.Container]}>
         <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
           <Svg
             width="47"
@@ -63,7 +65,6 @@ const PostAdvertMenu = () => {
                 {color: '#fff', fontFamily: 'CamptonMedium'},
                 dynamicStyles.TextColor,
               ]}>
-              {' '}
               Post Adverts on Your FaceBook Page
             </Text>
             <Text
@@ -135,7 +136,7 @@ const PostAdvertMenu = () => {
                   borderTopRightRadius: 4,
                   borderTopLeftRadius: 4,
                 }}
-                onPress={() => setModalVisible(true)}>
+                onPress={() => navigation.navigate('Earn1FB')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -268,7 +269,7 @@ const PostAdvertMenu = () => {
                   borderTopRightRadius: 4,
                   borderTopLeftRadius: 4,
                 }}
-                onPress={() => setModalVisible(true)}>
+                onPress={() => navigation.navigate('Earn1Tiktok')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -287,7 +288,7 @@ const PostAdvertMenu = () => {
                   borderBottomRightRadius: 4,
                   borderBottomLeftRadius: 4,
                 }}
-                onPress={() => setModalVisible(true)}>
+                onPress={() => navigation.navigate('Earn1Tiktok')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -426,7 +427,7 @@ const PostAdvertMenu = () => {
                   borderTopRightRadius: 4,
                   borderTopLeftRadius: 4,
                 }}
-                onPress={() => setModalVisible(true)}>
+                onPress={() => navigation.navigate('Earn1IG')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -445,7 +446,7 @@ const PostAdvertMenu = () => {
                   borderBottomRightRadius: 4,
                   borderBottomLeftRadius: 4,
                 }}
-                onPress={() => setModalVisible(true)}>
+                onPress={() => navigation.navigate('Earn1IG')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -581,7 +582,7 @@ const PostAdvertMenu = () => {
                   borderTopRightRadius: 4,
                   borderTopLeftRadius: 4,
                 }}
-                onPress={() => setModalVisible(true)}>
+                onPress={() => navigation.navigate('Earn1WB')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -600,7 +601,7 @@ const PostAdvertMenu = () => {
                   borderBottomRightRadius: 4,
                   borderBottomLeftRadius: 4,
                 }}
-                onPress={() => setModalVisible(true)}>
+                onPress={() => navigation.navigate('Earn1WB')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -624,7 +625,7 @@ const PostAdvertMenu = () => {
             xmlns="http://www.w3.org/2000/svg">
             <Path
               d="M37.0145 2.25781H44.2211L28.4761 20.2549L47 44.7399H32.4966L21.1382 29.8879L8.13883 44.7399H0.92825L17.7699 25.4895L0 2.25977H14.8716L25.1391 15.8349L37.0145 2.25781ZM34.4863 40.4277H38.4793L12.7018 6.34485H8.41692L34.4863 40.4277Z"
-              fill="white"
+              fill={strokeColor}
             />
           </Svg>
 
@@ -706,7 +707,7 @@ const PostAdvertMenu = () => {
                   borderTopRightRadius: 4,
                   borderTopLeftRadius: 4,
                 }}
-                onPress={() => setModalVisible(true)}>
+                onPress={() => navigation.navigate('Earn1X')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -725,7 +726,7 @@ const PostAdvertMenu = () => {
                   borderBottomRightRadius: 4,
                   borderBottomLeftRadius: 4,
                 }}
-                onPress={() => setModalVisible(true)}>
+                onPress={() => navigation.navigate('Earn1X')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -739,24 +740,6 @@ const PostAdvertMenu = () => {
           </View>
         </View>
       </View>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>
-              You must pay a N1000 activation fee to earn on trendit3.
-            </Text>
-            <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
-              <Text style={{color: '#000'}}>Pay</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
     </View>
   );
 };
@@ -775,32 +758,6 @@ const styles = StyleSheet.create({
   Container1: {
     paddingVertical: 10,
   },
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
-    color: '#000',
-  },
 });
 
-export default PostAdvertMenu;
+export default PaidPostAdvertMenu;

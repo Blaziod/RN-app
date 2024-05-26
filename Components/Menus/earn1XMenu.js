@@ -15,7 +15,7 @@ import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 
-const Earn1FBMenu = () => {
+const Earn1XMenu = () => {
   const navigation = useNavigation();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [fetching, setFectching] = useState(false);
@@ -74,23 +74,22 @@ const Earn1FBMenu = () => {
             style: {
               borderLeftColor: 'pink',
               backgroundColor: 'yellow',
-              width: '80%',
+              width: '100%',
               alignSelf: 'center',
               justifyContent: 'center',
               alignItems: 'center',
             },
             text1Style: {
               color: 'red',
-              fontSize: 14,
+              fontSize: 12,
             },
             text2Style: {
               color: 'green',
-              fontSize: 14,
+              fontSize: 12,
               fontFamily: 'Campton Bold',
             },
           });
-        }
-         else {
+        } else {
           if (response.status === 401) {
             console.log('401 Unauthorized: Access token is invalid or expired');
             await AsyncStorage.removeItem('userbalance');
@@ -107,18 +106,18 @@ const Earn1FBMenu = () => {
               style: {
                 borderLeftColor: 'pink',
                 backgroundColor: 'yellow',
-                width: '80%',
+                width: '100%',
                 alignSelf: 'center',
                 justifyContent: 'center',
                 alignItems: 'center',
               },
               text1Style: {
                 color: 'red',
-                fontSize: 14,
+                fontSize: 12,
               },
               text2Style: {
                 color: 'green',
-                fontSize: 14,
+                fontSize: 12,
                 fontFamily: 'Campton Bold',
               },
             });
@@ -139,23 +138,23 @@ const Earn1FBMenu = () => {
         setFectching(false);
         Toast.show({
           type: 'success',
-         
+
           text2: error.message,
           style: {
             borderLeftColor: 'pink',
             backgroundColor: 'yellow',
-            width: '80%',
+            width: '100%',
             alignSelf: 'center',
             justifyContent: 'center',
             alignItems: 'center',
           },
           text1Style: {
             color: 'red',
-            fontSize: 14,
+            fontSize: 12,
           },
           text2Style: {
             color: 'green',
-            fontSize: 14,
+            fontSize: 12,
             fontFamily: 'Campton Bold',
           },
         });
@@ -182,7 +181,7 @@ const Earn1FBMenu = () => {
             },
             body: JSON.stringify({
               task_type: 'advert',
-              platform: 'facebook',
+              platform: 'twitter',
             }),
           },
         );
@@ -199,18 +198,18 @@ const Earn1FBMenu = () => {
             style: {
               borderLeftColor: 'pink',
               backgroundColor: 'yellow',
-              width: '80%',
+              width: '100%',
               alignSelf: 'center',
               justifyContent: 'center',
               alignItems: 'center',
             },
             text1Style: {
               color: 'red',
-              fontSize: 14,
+              fontSize: 12,
             },
             text2Style: {
               color: 'green',
-              fontSize: 14,
+              fontSize: 12,
               fontFamily: 'Campton Bold',
             },
           });
@@ -237,18 +236,18 @@ const Earn1FBMenu = () => {
               style: {
                 borderLeftColor: 'pink',
                 backgroundColor: 'yellow',
-                width: '80%',
+                width: '100%',
                 alignSelf: 'center',
                 justifyContent: 'center',
                 alignItems: 'center',
               },
               text1Style: {
                 color: 'red',
-                fontSize: 14,
+                fontSize: 12,
               },
               text2Style: {
                 color: 'green',
-                fontSize: 14,
+                fontSize: 12,
                 fontFamily: 'Campton Bold',
               },
             });
@@ -279,18 +278,18 @@ const Earn1FBMenu = () => {
           style: {
             borderLeftColor: 'pink',
             backgroundColor: 'yellow',
-            width: '80%',
+            width: '100%',
             alignSelf: 'center',
             justifyContent: 'center',
             alignItems: 'center',
           },
           text1Style: {
             color: 'red',
-            fontSize: 14,
+            fontSize: 12,
           },
           text2Style: {
             color: 'green',
-            fontSize: 14,
+            fontSize: 12,
             fontFamily: 'Campton Bold',
           },
         });
@@ -320,20 +319,42 @@ const Earn1FBMenu = () => {
                   padding: 10,
                   marginBottom: 10, // Add space between items
                 }}
-                onPress={() => navigation.navigate('Earn2FB')}>
+                onPress={() => navigation.navigate('Earn2X')}>
                 <View
                   style={{
-                    backgroundColor: '#323232',
-                    justifyContent: 'center',
+                    flexDirection: 'row',
+                    gap: 10,
                     alignItems: 'center',
-                    padding: 4,
-                    width: 55,
                   }}>
-                  <Text
-                    style={{fontSize: 12, color: '#fff', fontWeight: 'bold'}}>
-                    Pending
-                  </Text>
+                  <Svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 48 48"
+                    fill="none">
+                    <Path
+                      d="M37.5145 3.14795H44.7211L28.9761 21.145L47.5 45.6301H32.9966L21.6383 30.7781L8.63883 45.6301H1.42825L18.2699 26.3797L0.5 3.14991H15.3716L25.6391 16.7251L37.5145 3.14795ZM34.9863 41.3178H38.9793L13.2018 7.23499H8.91692L34.9863 41.3178Z"
+                      fill="black"
+                    />
+                  </Svg>
+                  <View
+                    style={{
+                      backgroundColor: '#323232',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      padding: 4,
+                      width: '30%',
+                      borderRadius: 4,
+                      flexDirection: 'row',
+                      gap: 10,
+                    }}>
+                    <Text
+                      style={{fontSize: 12, color: '#fff', fontWeight: 'bold'}}>
+                      Pending
+                    </Text>
+                  </View>
                 </View>
+
                 <Text style={{fontSize: 12, color: '#fff'}}>
                   {task.caption}
                 </Text>
@@ -501,7 +522,7 @@ const Earn1FBMenu = () => {
                                 paddingBottom: 10,
                                 paddingTop: 20,
                               }}>
-                              Generate Next Facebook Advert Task?
+                              Generate Next Twitter Advert Task?
                             </Text>
                             <Text
                               style={{
@@ -513,7 +534,7 @@ const Earn1FBMenu = () => {
                                 paddingHorizontal: 20,
                               }}>
                               Are you sure you want to generate your next
-                              Facebook Advert task now. You have 1 hour to
+                              Twitter Advert task now. You have 1 hour to
                               perform this task. Please confirm only if you are
                               ready to perform the task.
                             </Text>
@@ -558,4 +579,4 @@ const Earn1FBMenu = () => {
   );
 };
 
-export default Earn1FBMenu;
+export default Earn1XMenu;

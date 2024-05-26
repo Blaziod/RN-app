@@ -14,7 +14,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import Headers from '../../Components/Headers/Headers';
-import Earn1FBMenu from '../../Components/Menus/earn1FBMenu';
+import Earn1XMenu from '../../Components/Menus/earn1XMenu';
 import Earn1CustomSwitch from '../../Components/CustomSwitches/earn1CustomSwitch';
 import {Svg, Path} from 'react-native-svg';
 import Earn1Image from '../../assets/SVG/earn1Image';
@@ -23,7 +23,7 @@ import Toast from 'react-native-toast-message';
 import InReviewTwitterMenu from '../../Components/Menus/inReviewTwitterMenu';
 import FailedEarnersTask from '../../Components/Menus/failedEarnTask';
 
-const Earn1FB = ({navigation}) => {
+const Earn1X = ({navigation}) => {
   const [earnMenu, setEarnMenu] = useState(1);
   const [link, setLink] = useState('');
   const deviceHeight = Dimensions.get('window').height;
@@ -31,6 +31,7 @@ const Earn1FB = ({navigation}) => {
   const [userAccessToken, setUserAccessToken] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [userSocials, setUserSocials] = useState(null);
+  const [availableTasks, setAvailableTasks] = useState(null);
 
   const onSelectSwitch = value => {
     setEarnMenu(value);
@@ -71,7 +72,7 @@ const Earn1FB = ({navigation}) => {
           },
           body: JSON.stringify({
             link: link,
-            type: 'facebook',
+            type: 'twitter',
           }),
         },
       );
@@ -82,7 +83,7 @@ const Earn1FB = ({navigation}) => {
         Toast.show({
           type: 'success',
           text1: 'Success',
-          text2: 'Your Facebook account has been submitted for review',
+          text2: 'Your X account has been submitted for review',
           style: {
             borderLeftColor: 'pink',
             backgroundColor: 'yellow',
@@ -263,6 +264,57 @@ const Earn1FB = ({navigation}) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userAccessToken]);
+
+  const fetchAvailableTasks = async () => {
+    if (userAccessToken) {
+      try {
+        const response = await fetch(
+          'https://api.trendit3.com/api/tasks/advert/Twitter',
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${userAccessToken.accessToken}`,
+            },
+          },
+        );
+        const data = await response.json();
+
+        if (response.ok) {
+          setAvailableTasks(data);
+          console.log('Tasks:', data);
+        } else {
+          if (response.status === 401) {
+            console.log('401 Unauthorized: Access token is invalid or expired');
+            await AsyncStorage.removeItem('userbalance');
+            await AsyncStorage.removeItem('userdata1');
+            await AsyncStorage.removeItem('userdata');
+            await AsyncStorage.removeItem('userdata2');
+            await AsyncStorage.removeItem('userdatas');
+            await AsyncStorage.removeItem('userdatafiles1');
+            await AsyncStorage.removeItem('accesstoken');
+            navigation.reset({
+              index: 0,
+              routes: [
+                {
+                  name: 'SignIn',
+                },
+              ],
+            });
+          }
+          throw new Error(data.message);
+        }
+      } catch (error) {
+        console.error('Error during Tasks fetch:', error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchAvailableTasks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userAccessToken]);
+
   return (
     <SafeAreaView style={styles.AppContainer}>
       <Modal
@@ -336,17 +388,13 @@ const Earn1FB = ({navigation}) => {
                   <View>
                     <Svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="46"
-                      height="47"
-                      viewBox="0 0 46 47"
+                      width="48"
+                      height="48"
+                      viewBox="0 0 48 48"
                       fill="none">
                       <Path
-                        d="M46 23.5C46 10.7975 35.7025 0.5 23 0.5C10.2975 0.5 0 10.7975 0 23.5C0 34.9799 8.41081 44.4952 19.4062 46.2206V30.1484H13.5664V23.5H19.4062V18.4328C19.4062 12.6684 22.8401 9.48437 28.0938 9.48437C30.6101 9.48437 33.2422 9.93359 33.2422 9.93359V15.5937H30.342C27.4848 15.5937 26.5938 17.3667 26.5938 19.1857V23.5H32.9727L31.9529 30.1484H26.5938V46.2206C37.5892 44.4952 46 34.9801 46 23.5Z"
-                        fill="#1877F2"
-                      />
-                      <Path
-                        d="M31.9529 30.1484L32.9727 23.5H26.5938V19.1857C26.5938 17.3665 27.4848 15.5938 30.342 15.5938H33.2422V9.93359C33.2422 9.93359 30.6101 9.48438 28.0936 9.48438C22.8401 9.48438 19.4062 12.6684 19.4062 18.4328V23.5H13.5664V30.1484H19.4062V46.2206C20.5951 46.4069 21.7966 46.5003 23 46.5C24.2034 46.5004 25.4049 46.4069 26.5938 46.2206V30.1484H31.9529Z"
-                        fill="white"
+                        d="M37.5145 3.14795H44.7211L28.9761 21.145L47.5 45.6301H32.9966L21.6383 30.7781L8.63883 45.6301H1.42825L18.2699 26.3797L0.5 3.14991H15.3716L25.6391 16.7251L37.5145 3.14795ZM34.9863 41.3178H38.9793L13.2018 7.23499H8.91692L34.9863 41.3178Z"
+                        fill="black"
                       />
                     </Svg>
                   </View>
@@ -360,36 +408,35 @@ const Earn1FB = ({navigation}) => {
                       paddingHorizontal: 20,
                       paddingVertical: 20,
                     }}>
-                    Link Your Facebook Account
+                    Link Your X Account
                   </Text>
                 </View>
                 <View style={{paddingBottom: 10, paddingHorizontal: 20}}>
                   <Text
                     style={{fontSize: 12, paddingTop: 10, paddingBottom: 10}}>
                     You must obey the following rules in order to successfully
-                    link your Facebook account to Trendti3.
+                    link your X account to Trendti3.
                   </Text>
                   <View style={{flexDirection: 'row', gap: 5}}>
                     <Text style={{fontSize: 12}}>1.</Text>
                     <Text style={{fontSize: 12}}>
-                      Your account on Facebook must have at least 500 Active
-                      Followers. Note that Ghost or Bots followers are not
-                      allowed and your account on Trendit³ will be banned if you
-                      have ghost followers
+                      Your account on X must have at least 500 Active Followers.
+                      Note that Ghost or Bots followers are not allowed and your
+                      account on Trendit³ will be banned if you have ghost
+                      followers
                     </Text>
                   </View>
                   <View style={{flexDirection: 'row', gap: 5, paddingTop: 5}}>
                     <Text style={{fontSize: 12}}>2.</Text>
                     <Text style={{fontSize: 12}}>
-                      You Account on Facebook must have been opened one year
-                      ago.
+                      You Account on X must have been opened one year ago.
                     </Text>
                   </View>
                   <View style={{flexDirection: 'row', gap: 5, paddingTop: 5}}>
                     <Text style={{fontSize: 12}}>3.</Text>
                     <Text style={{fontSize: 12}}>
-                      You must have posted at least five times on your Facebook
-                      account within the last one year
+                      You must have posted at least five times on your X account
+                      within the last one year
                     </Text>
                   </View>
                 </View>
@@ -407,8 +454,8 @@ const Earn1FB = ({navigation}) => {
                       paddingTop: 10,
                       paddingBottom: 10,
                     }}>
-                    Please enter your Facebook profile link which you want to
-                    use to perform this task:{' '}
+                    Please enter your X profile link which you want to use to
+                    perform this task:{' '}
                   </Text>
                   <View style={{paddingVertical: 20}}>
                     <TextInput
@@ -480,18 +527,14 @@ const Earn1FB = ({navigation}) => {
               </View>
               <View style={{paddingTop: 30}}>
                 <Svg
-                  width="47"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="48"
                   height="48"
-                  viewBox="0 0 47 48"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg">
+                  viewBox="0 0 48 48"
+                  fill="none">
                   <Path
-                    d="M47 24.0898C47 11.1112 36.4786 0.589844 23.5 0.589844C10.5214 0.589844 0 11.1112 0 24.0898C0 35.8193 8.59366 45.5415 19.8281 47.3044V30.8828H13.8613V24.0898H19.8281V18.9125C19.8281 13.0228 23.3366 9.76953 28.7045 9.76953C31.2756 9.76953 33.9648 10.2285 33.9648 10.2285V16.0117H31.0016C28.0823 16.0117 27.1719 17.8232 27.1719 19.6818V24.0898H33.6895L32.6476 30.8828H27.1719V47.3044C38.4063 45.5415 47 35.8195 47 24.0898Z"
-                    fill="#1877F2"
-                  />
-                  <Path
-                    d="M32.6476 30.8828L33.6895 24.0898H27.1719V19.6818C27.1719 17.8231 28.0823 16.0117 31.0016 16.0117H33.9648V10.2285C33.9648 10.2285 31.2756 9.76953 28.7043 9.76953C23.3366 9.76953 19.8281 13.0228 19.8281 18.9125V24.0898H13.8613V30.8828H19.8281V47.3044C21.0428 47.4947 22.2705 47.5902 23.5 47.5898C24.7295 47.5902 25.9572 47.4948 27.1719 47.3044V30.8828H32.6476Z"
-                    fill="white"
+                    d="M37.5145 3.14795H44.7211L28.9761 21.145L47.5 45.6301H32.9966L21.6383 30.7781L8.63883 45.6301H1.42825L18.2699 26.3797L0.5 3.14991H15.3716L25.6391 16.7251L37.5145 3.14795ZM34.9863 41.3178H38.9793L13.2018 7.23499H8.91692L34.9863 41.3178Z"
+                    fill="black"
                   />
                 </Svg>
               </View>
@@ -510,7 +553,7 @@ const Earn1FB = ({navigation}) => {
                     paddingBottom: 5,
                     color: '#000',
                   }}>
-                  Post advert on FaceBook
+                  Post advert on Twitter
                 </Text>
                 <Text
                   style={{
@@ -521,10 +564,10 @@ const Earn1FB = ({navigation}) => {
                     paddingBottom: 10,
                   }}>
                   Post adverts of various Individuals businesses and top brands
-                  on your FaceBook page and earn ₦110 per posted advert. The
-                  more you post, the more you earn. Please note that your
-                  FaceBook page must have at least 500 active followers to be
-                  eligible for this task.
+                  on your Twitter page and earn ₦110 per posted advert. The more
+                  you post, the more you earn. Please note that your Twitter
+                  page must have at least 500 active followers to be eligible
+                  for this task.
                 </Text>
                 <TouchableOpacity
                   style={{
@@ -533,7 +576,9 @@ const Earn1FB = ({navigation}) => {
                     alignItems: 'center',
                     padding: 4,
                   }}>
-                  <Text style={{color: '#1877f2'}}>124 Task Available</Text>
+                  <Text style={{color: '#1877f2'}}>
+                    {availableTasks?.total} Tasks Available
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -541,23 +586,25 @@ const Earn1FB = ({navigation}) => {
               <ActivityIndicator size="large" color="#fff" />
             ) : (
               <View>
-                {userSocials?.facebook_verified && ( // If the user has linked their Facebook account already, show the following message instead of the link button and instructions to link the account again (this is to prevent users from linking the same account multiple times)
+                {userSocials?.x_verified && (
                   <View>
                     <View style={styles.ProfileSetUp}>
                       <View style={styles.ProfileTexting}>
                         <Text style={styles.SetUpText}>
-                          Your FaceBook Profile Account
+                          Your Twitter Profile Account
                         </Text>
                         <Text style={styles.SetUpSubText}>
-                          Your FaceBook task must be done from the above
-                          FaceBook Profile which has been linked to your
-                          Trendit³ account
+                          Your Twitter task must be done from the above Twitter
+                          Profile which has been linked to your Trendit³ account
                         </Text>
                         <View style={{paddingTop: 10}} />
                         <TouchableOpacity style={styles.GotoButton3}>
-                          <Text style={styles.GotoText2}>
-                            {userSocials?.facebook_link}
-                          </Text>
+                          <View style={{width: '60%'}}>
+                            <Text style={styles.GotoText2}>
+                              {userSocials?.x_link}
+                            </Text>
+                          </View>
+
                           <Text style={styles.GotoText3}>verified</Text>
                         </TouchableOpacity>
                       </View>
@@ -589,7 +636,7 @@ const Earn1FB = ({navigation}) => {
 
                     {earnMenu === 1 && (
                       <View style={{paddingVertical: 15}}>
-                        <Earn1FBMenu />
+                        <Earn1XMenu />
                       </View>
                     )}
                     {earnMenu === 2 && (
@@ -603,43 +650,53 @@ const Earn1FB = ({navigation}) => {
                     {earnMenu === 5}
                   </View>
                 )}
-                {!userSocials?.facebook_verified && (
+                {!userSocials?.x_verified && (
                   <View style={styles.ProfileSetUp}>
                     <View style={styles.ProfileTexting}>
                       <Text style={styles.SetUpText}>
-                        Link Your Facebook Account
+                        Link Your Twitter Account
                       </Text>
                       <Text style={styles.SetUpSubText}>
-                        You need to link your Facebook Account to Trendit before
-                        you can start earning with your Facebook Account. Click
-                        the button below to link your Facebook account now.
+                        You need to link your Twitter Account to Trendit before
+                        you can start earning with your Twitter Account. Click
+                        the button below to link your Twitter account now.
                       </Text>
                       <View style={{paddingTop: 10}} />
                       <TouchableOpacity
                         style={styles.GotoButton2}
                         onPress={() => setIsModalVisible(true)}>
                         <Svg
+                          xmlns="http://www.w3.org/2000/svg"
                           width="24"
                           height="24"
-                          viewBox="0 0 47 48"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg">
+                          viewBox="0 0 48 48"
+                          fill="none">
                           <Path
-                            d="M47 24.0898C47 11.1112 36.4786 0.589844 23.5 0.589844C10.5214 0.589844 0 11.1112 0 24.0898C0 35.8193 8.59366 45.5415 19.8281 47.3044V30.8828H13.8613V24.0898H19.8281V18.9125C19.8281 13.0228 23.3366 9.76953 28.7045 9.76953C31.2756 9.76953 33.9648 10.2285 33.9648 10.2285V16.0117H31.0016C28.0823 16.0117 27.1719 17.8232 27.1719 19.6818V24.0898H33.6895L32.6476 30.8828H27.1719V47.3044C38.4063 45.5415 47 35.8195 47 24.0898Z"
-                            fill="#1877F2"
-                          />
-                          <Path
-                            d="M32.6476 30.8828L33.6895 24.0898H27.1719V19.6818C27.1719 17.8231 28.0823 16.0117 31.0016 16.0117H33.9648V10.2285C33.9648 10.2285 31.2756 9.76953 28.7043 9.76953C23.3366 9.76953 19.8281 13.0228 19.8281 18.9125V24.0898H13.8613V30.8828H19.8281V47.3044C21.0428 47.4947 22.2705 47.5902 23.5 47.5898C24.7295 47.5902 25.9572 47.4948 27.1719 47.3044V30.8828H32.6476Z"
-                            fill="white"
+                            d="M37.5145 3.14795H44.7211L28.9761 21.145L47.5 45.6301H32.9966L21.6383 30.7781L8.63883 45.6301H1.42825L18.2699 26.3797L0.5 3.14991H15.3716L25.6391 16.7251L37.5145 3.14795ZM34.9863 41.3178H38.9793L13.2018 7.23499H8.91692L34.9863 41.3178Z"
+                            fill="black"
                           />
                         </Svg>
                         <Text style={styles.GotoText}>
                           {' '}
-                          Link Facebook account
+                          Link Twitter account
                         </Text>
                       </TouchableOpacity>
                     </View>
-                    <View style={styles.IconAA}>{/* <Cross /> */}</View>
+                    <View style={styles.IconAA}>
+                      <Svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="25"
+                        viewBox="0 0 24 25"
+                        fill="none">
+                        <Path
+                          d="M18 6.89026L6 18.8903M18 18.8903L6 6.89027"
+                          stroke="white"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                        />
+                      </Svg>
+                    </View>
                   </View>
                 )}
               </View>
@@ -731,5 +788,4 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
 });
-
-export default Earn1FB;
+export default Earn1X;

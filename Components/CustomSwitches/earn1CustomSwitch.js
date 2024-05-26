@@ -25,7 +25,6 @@ const Earn1CustomSwitch = ({
       <View
         style={{
           height: 44,
-          backgroundColor: '#121212',
           flexDirection: 'row',
           justifyContent: 'center',
         }}>
@@ -74,7 +73,7 @@ const Earn1CustomSwitch = ({
           onPress={() => updateSwitchData(5)}
           style={{
             paddingLeft: 20,
-            paddingRight: 70,
+            paddingRight: 90,
             borderBottomWidth: 0.5,
             borderBottomColor: getSelectionMode === 5 ? '#FF6DFB' : '#fff',
             justifyContent: 'center',

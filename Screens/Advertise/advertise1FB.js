@@ -11,19 +11,39 @@ import {
   ImageBackground,
 } from 'react-native';
 import Headers from '../../Components/Headers/Headers';
-// import Wallet from '../../assets/SVG/post-earn.svg';
-
-// import Left from '../../assets/SVG/left';
-// import Info from '../../assets/SVG/info';
 import Advertise1FBMenu from '../../Components/Menus/advertise1FBMenu';
+import {useTheme} from '../../Components/Contexts/colorTheme';
 
 const Advertise1FB = ({navigation}) => {
+  const {theme} = useTheme();
+
+  const dynamicStyles = StyleSheet.create({
+    AppContainer: {
+      flex: 1,
+      backgroundColor: theme === 'dark' ? '#121212' : '#FFFFFF', // Dynamic background color
+      width: '100%',
+    },
+    DivContainer: {
+      backgroundColor:
+        theme === 'dark' ? '#2F2F2F6B' : 'rgba(177, 177, 177, 0.20)', // Dynamic background color
+    },
+    TextColor: {
+      color: theme === 'dark' ? '#FFFFFF' : '#000000', // Dynamic text color
+    },
+    Button: {
+      backgroundColor: theme === 'dark' ? '#FFF' : '#CB29BE', // Dynamic background color
+    },
+    Btext: {
+      color: theme === 'dark' ? '#FF6DFB' : '#FFF', // Dynamic text color
+    },
+  });
+
   return (
     <SafeAreaView>
       <ScrollView
         scrollEnabled={true}
         contentInsetAdjustmentBehavior="automatic">
-        <View style={styles.AppContainer}>
+        <View style={[styles.AppContainer, dynamicStyles.AppContainer]}>
           <Headers />
           <View style={{paddingBottom: 20, paddingHorizontal: 20}}>
             <TouchableOpacity
@@ -34,11 +54,14 @@ const Advertise1FB = ({navigation}) => {
             </TouchableOpacity>
 
             <View
-              style={{
-                backgroundColor: '#2F2F2F6B',
-                opacity: 0.9,
-                height: 'auto',
-              }}>
+              style={[
+                {
+                  backgroundColor: '#2F2F2F6B',
+                  opacity: 0.9,
+                  height: 'auto',
+                },
+                dynamicStyles.DivContainer,
+              ]}>
               <ImageBackground
                 source={require('../../assets/fbi2.png')}
                 style={{
@@ -48,19 +71,25 @@ const Advertise1FB = ({navigation}) => {
                   paddingBottom: 20,
                 }}>
                 <Text
-                  style={{
-                    color: '#B1B1B1',
-                    fontFamily: 'CamptonLight',
-                    fontSize: 10,
-                  }}>
+                  style={[
+                    {
+                      color: '#B1B1B1',
+                      fontFamily: 'CamptonLight',
+                      fontSize: 10,
+                    },
+                    dynamicStyles.TextColor,
+                  ]}>
                   Jan 12th 9:27
                 </Text>
                 <Text
-                  style={{
-                    color: '#fff',
-                    fontFamily: 'CamptonMedium',
-                    fontSize: 30,
-                  }}>
+                  style={[
+                    {
+                      color: '#fff',
+                      fontFamily: 'CamptonMedium',
+                      fontSize: 30,
+                    },
+                    dynamicStyles.TextColor,
+                  ]}>
                   Get People to Post Your Advert on Facebook
                 </Text>
                 <View
@@ -73,60 +102,39 @@ const Advertise1FB = ({navigation}) => {
                   <View style={{flexDirection: 'row', gap: 3}}>
                     {/* <Wallet style={styles.wallet} /> */}
                     <Text
-                      style={{
-                        color: '#808080',
-                        fontFamily: 'CamptonMedium',
-                        fontSize: 12,
-                      }}>
+                      style={[
+                        {
+                          color: '#808080',
+                          fontFamily: 'CamptonMedium',
+                          fontSize: 12,
+                        },
+                        dynamicStyles.TextColor,
+                      ]}>
                       Pricing:
                     </Text>
                   </View>
                   <Text
-                    style={{
-                      color: '#fff',
-                      fontFamily: 'Campton Bold',
-                      fontSize: 12,
-                    }}>
+                    style={[
+                      {
+                        color: '#fff',
+                        fontFamily: 'Campton Bold',
+                        fontSize: 12,
+                      },
+                      dynamicStyles.TextColor,
+                    ]}>
                     ₦140 Per Advert Post
                   </Text>
                 </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    gap: 10,
-                  }}>
-                  <Text
-                    style={{
-                      color: '#fff',
-                      fontFamily: 'CamptonBook',
-                      fontSize: 10,
-                    }}>
-                    20+ PEOPLE
-                  </Text>
-                  <Text
-                    style={{
-                      color: '#fff',
-                      fontFamily: 'CamptonBook',
-                      fontSize: 10,
-                    }}>
-                    134 LIKES
-                  </Text>
-                  <Text
-                    style={{
-                      color: '#fff',
-                      fontFamily: 'CamptonBook',
-                      fontSize: 10,
-                    }}>
-                    453 COMMENTS
-                  </Text>
-                </View>
                 <Text
-                  style={{
-                    color: '#909090',
-                    fontFamily: 'CamptonBook',
-                    fontSize: 12,
-                    paddingTop: 10,
-                  }}>
+                  style={[
+                    {
+                      color: '#909090',
+                      fontFamily: 'CamptonBook',
+                      fontSize: 12,
+                      paddingTop: 10,
+                    },
+                    dynamicStyles.TextColor,
+                  ]}>
                   Get real people to post your advert on their Facebook account
                   having at least 1000 active followers each on their account to
                   post your advert to their followers. This will give your
@@ -143,12 +151,15 @@ const Advertise1FB = ({navigation}) => {
                 borderRadius: 10,
               }}>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'CamptonMedium',
-                  fontSize: 25,
-                  //   paddingTop: 10,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'CamptonMedium',
+                    fontSize: 25,
+                    //   paddingTop: 10,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 Create Advert Task
               </Text>
               <View

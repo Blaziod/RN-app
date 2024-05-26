@@ -21,6 +21,7 @@ import Earn3IG from '../Screens/Earn/earn3';
 import Earn1FB from '../Screens/Earn/earn1FB';
 import Earn2FB from '../Screens/Earn/earn2FB';
 import Earn3FB from '../Screens/Earn/earn3FB';
+import Earn1WA from '../Screens/Earn/earn1WA';
 import Advertise1 from '../Screens/Advertise/advertise1';
 import Transactions from '../Screens/Transactions';
 import Advertise1FB from '../Screens/Advertise/advertise1FB';
@@ -35,6 +36,7 @@ import Advertise1FS from '../Screens/Advertise/advertise1FS';
 import Advertise1GP from '../Screens/Advertise/advertise1GP';
 import Advertise1SP from '../Screens/Advertise/advertise1SP';
 import ComingSoon from '../Screens/ComingSoon/comingSoon';
+import Earn1X from '../Screens/Earn/earn1X';
 
 const Tab = createBottomTabNavigator();
 const MoreStack = createStackNavigator();
@@ -63,6 +65,8 @@ function EarnStackScreen() {
       <EarnStack.Screen name="Earn1FB" component={Earn1FB} />
       <EarnStack.Screen name="Earn2FB" component={Earn2FB} />
       <EarnStack.Screen name="Earn3FB" component={Earn3FB} />
+      <EarnStack.Screen name="Earn1X" component={Earn1X} />
+      <EarnStack.Screen name="Earn1WA" component={Earn1WA} />
     </EarnStack.Navigator>
   );
 }

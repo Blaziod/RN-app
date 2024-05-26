@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   ScrollView,
@@ -11,34 +11,75 @@ import {
   ImageBackground,
 } from 'react-native';
 import Headers from '../../Components/Headers/Headers';
-// import Wallet from '../../assets/SVG/post-earn.svg';
-
-// import Left from '../../assets/SVG/left';
-// import Info from '../../assets/SVG/info';
 import Advertise1Menu from '../../Components/Menus/advertise1Menu';
+import {useTheme} from '../../Components/Contexts/colorTheme';
 
 const Advertise1 = ({navigation}) => {
+  const {theme} = useTheme();
+  const [currentDateTime, setCurrentDateTime] = useState(
+    new Date().toLocaleString(),
+  );
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentDateTime(new Date().toLocaleString()); // Updates the time every second
+    }, 1000);
+
+    return () => clearInterval(timer); // Clear the interval on component unmount
+  }, []);
+
+  const dynamicStyles = StyleSheet.create({
+    AppContainer: {
+      flex: 1,
+      backgroundColor: theme === 'dark' ? '#121212' : '#FFFFFF', // Dynamic background color
+      width: '100%',
+    },
+    DivContainer: {
+      backgroundColor:
+        theme === 'dark' ? '#171717' : 'rgba(177, 177, 177, 0.20)', // Dynamic background color
+    },
+    TextColor: {
+      color: theme === 'dark' ? '#FFFFFF' : '#000000', // Dynamic text color
+    },
+    Button: {
+      backgroundColor: theme === 'dark' ? '#FFF' : '#CB29BE', // Dynamic background color
+    },
+    Btext: {
+      color: theme === 'dark' ? '#FF6DFB' : '#FFF', // Dynamic text color
+    },
+  });
+
   return (
     <SafeAreaView>
       <ScrollView
         scrollEnabled={true}
         contentInsetAdjustmentBehavior="automatic">
-        <View style={styles.AppContainer}>
+        <View style={[styles.AppContainer, dynamicStyles.AppContainer]}>
           <Headers />
-          <View style={{paddingBottom: 20, paddingHorizontal: 20}}>
+          <View
+            style={[
+              {paddingBottom: 20, paddingHorizontal: 20},
+              dynamicStyles.DivContainer,
+            ]}>
             <TouchableOpacity
-              style={{flexDirection: 'row', gap: 5}}
+              style={[
+                {flexDirection: 'row', gap: 5},
+                dynamicStyles.DivContainer,
+              ]}
               onPress={() => navigation.navigate('Advertise')}>
               {/* <Left /> */}
               <Text style={{color: '#FFD0FE', paddingBottom: 20}}>Go Back</Text>
             </TouchableOpacity>
 
             <View
-              style={{
-                backgroundColor: '#2F2F2F6B',
-                opacity: 0.9,
-                height: 'auto',
-              }}>
+              style={[
+                {
+                  backgroundColor: '#2F2F2F6B',
+                  opacity: 0.9,
+                  height: 'auto',
+                },
+                dynamicStyles.DivContainer,
+              ]}>
               <ImageBackground
                 source={require('../../assets/Frame131.png')}
                 style={{
@@ -49,11 +90,11 @@ const Advertise1 = ({navigation}) => {
                 }}>
                 <Text
                   style={{
-                    color: '#B1B1B1',
+                    color: '#FFF',
                     fontFamily: 'CamptonLight',
                     fontSize: 10,
                   }}>
-                  Jan 12th 9:27
+                  {currentDateTime}
                 </Text>
                 <Text
                   style={{
@@ -90,36 +131,7 @@ const Advertise1 = ({navigation}) => {
                     ₦140 Per Advert Post
                   </Text>
                 </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    gap: 10,
-                  }}>
-                  <Text
-                    style={{
-                      color: '#fff',
-                      fontFamily: 'CamptonBook',
-                      fontSize: 10,
-                    }}>
-                    20+ PEOPLE
-                  </Text>
-                  <Text
-                    style={{
-                      color: '#fff',
-                      fontFamily: 'CamptonBook',
-                      fontSize: 10,
-                    }}>
-                    134 LIKES
-                  </Text>
-                  <Text
-                    style={{
-                      color: '#fff',
-                      fontFamily: 'CamptonBook',
-                      fontSize: 10,
-                    }}>
-                    453 COMMENTS
-                  </Text>
-                </View>
+
                 <Text
                   style={{
                     color: '#909090',

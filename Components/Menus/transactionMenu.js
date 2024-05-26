@@ -3,13 +3,37 @@
 import React from 'react';
 import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import {Svg, Path} from 'react-native-svg';
+import {useTheme} from '../../Components/Contexts/colorTheme';
 
 const TransactionMenu = () => {
+  const {theme} = useTheme();
+
+  const dynamicStyles = StyleSheet.create({
+    AppContainer: {
+      flex: 1,
+      backgroundColor: theme === 'dark' ? '#121212' : '#FFFFFF', // Dynamic background color
+      width: '100%',
+    },
+    DivContainer: {
+      backgroundColor:
+        theme === 'dark' ? '#1e1e1e' : 'rgba(177, 177, 177, 0.20)', // Dynamic background color
+    },
+    TextColor: {
+      color: theme === 'dark' ? '#FFFFFF' : '#000000', // Dynamic text color
+    },
+    Button: {
+      backgroundColor: theme === 'dark' ? '#FFF' : '#CB29BE', // Dynamic background color
+    },
+    Btext: {
+      color: theme === 'dark' ? '#FF6DFB' : '#FFF', // Dynamic text color
+    },
+  });
+
   return (
     <ScrollView>
       <View>
-        <View style={styles.Container1}>
-          <View style={styles.Advert1}>
+        <View style={[styles.Container1, dynamicStyles.AppContainer]}>
+          <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
             <View
               style={{
                 backgroundColor: 'rgba(255, 255, 255, 0.10);',
@@ -34,51 +58,63 @@ const TransactionMenu = () => {
             </View>
             <View style={styles.Check}>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'CamptonBook',
-                  paddingTop: 10,
-                  fontSize: 10,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'CamptonBook',
+                    paddingTop: 10,
+                    fontSize: 10,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 Credit
               </Text>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'CamptonBook',
-                  // paddingTop: 10,
-                  fontSize: 10,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'CamptonBook',
+                    // paddingTop: 10,
+                    fontSize: 10,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 Nov 13th 2023 9:21pm
               </Text>
             </View>
             <View style={styles.Check1}>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'CamptonBook',
-                  // paddingTop: 10,
-                  fontSize: 13,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'CamptonBook',
+                    // paddingTop: 10,
+                    fontSize: 13,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 Payment for New Social Task Order (Get Real People to Follow
                 Your Page on Social Media)
               </Text>
             </View>
             <View style={styles.Check}>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'CamptonBook',
-                  // paddingTop: 10,
-                  fontSize: 13,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'CamptonBook',
+                    // paddingTop: 10,
+                    fontSize: 13,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 + ₦3,675
               </Text>
             </View>
           </View>
         </View>
         <View style={styles.Container1}>
-          <View style={styles.Advert1}>
+          <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
             <View
               style={{
                 backgroundColor: 'rgba(255, 255, 255, 0.10);',
@@ -103,51 +139,63 @@ const TransactionMenu = () => {
             </View>
             <View style={styles.Check}>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'CamptonBook',
-                  paddingTop: 10,
-                  fontSize: 10,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'CamptonBook',
+                    paddingTop: 10,
+                    fontSize: 10,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 Credit
               </Text>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'CamptonBook',
-                  // paddingTop: 10,
-                  fontSize: 10,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'CamptonBook',
+                    // paddingTop: 10,
+                    fontSize: 10,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 Nov 13th 2023 9:21pm
               </Text>
             </View>
             <View style={styles.Check1}>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'CamptonBook',
-                  // paddingTop: 10,
-                  fontSize: 13,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'CamptonBook',
+                    // paddingTop: 10,
+                    fontSize: 13,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 Payment for New Social Task Order (Get Real People to Follow
                 Your Page on Social Media)
               </Text>
             </View>
             <View style={styles.Check}>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'CamptonBook',
-                  // paddingTop: 10,
-                  fontSize: 13,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'CamptonBook',
+                    // paddingTop: 10,
+                    fontSize: 13,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 + ₦3,675
               </Text>
             </View>
           </View>
         </View>
         <View style={styles.Container1}>
-          <View style={styles.Advert1}>
+          <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
             <View
               style={{
                 backgroundColor: 'rgba(255, 255, 255, 0.10);',
@@ -172,51 +220,63 @@ const TransactionMenu = () => {
             </View>
             <View style={styles.Check}>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'CamptonBook',
-                  paddingTop: 10,
-                  fontSize: 10,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'CamptonBook',
+                    paddingTop: 10,
+                    fontSize: 10,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 Credit
               </Text>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'CamptonBook',
-                  // paddingTop: 10,
-                  fontSize: 10,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'CamptonBook',
+                    // paddingTop: 10,
+                    fontSize: 10,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 Nov 13th 2023 9:21pm
               </Text>
             </View>
             <View style={styles.Check1}>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'CamptonBook',
-                  // paddingTop: 10,
-                  fontSize: 13,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'CamptonBook',
+                    // paddingTop: 10,
+                    fontSize: 13,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 Payment for New Social Task Order (Get Real People to Follow
                 Your Page on Social Media)
               </Text>
             </View>
             <View style={styles.Check}>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'CamptonBook',
-                  // paddingTop: 10,
-                  fontSize: 13,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'CamptonBook',
+                    // paddingTop: 10,
+                    fontSize: 13,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 + ₦3,675
               </Text>
             </View>
           </View>
         </View>
         <View style={styles.Container1}>
-          <View style={styles.Advert1}>
+          <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
             <View
               style={{
                 backgroundColor: 'rgba(255, 255, 255, 0.10);',
@@ -241,51 +301,63 @@ const TransactionMenu = () => {
             </View>
             <View style={styles.Check}>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'CamptonBook',
-                  paddingTop: 10,
-                  fontSize: 10,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'CamptonBook',
+                    paddingTop: 10,
+                    fontSize: 10,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 Credit
               </Text>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'CamptonBook',
-                  // paddingTop: 10,
-                  fontSize: 10,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'CamptonBook',
+                    // paddingTop: 10,
+                    fontSize: 10,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 Nov 13th 2023 9:21pm
               </Text>
             </View>
             <View style={styles.Check1}>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'CamptonBook',
-                  // paddingTop: 10,
-                  fontSize: 13,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'CamptonBook',
+                    // paddingTop: 10,
+                    fontSize: 13,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 Payment for New Social Task Order (Get Real People to Follow
                 Your Page on Social Media)
               </Text>
             </View>
             <View style={styles.Check}>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'CamptonBook',
-                  // paddingTop: 10,
-                  fontSize: 13,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'CamptonBook',
+                    // paddingTop: 10,
+                    fontSize: 13,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 + ₦3,675
               </Text>
             </View>
           </View>
         </View>
         <View style={styles.Container1}>
-          <View style={styles.Advert1}>
+          <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
             <View
               style={{
                 backgroundColor: 'rgba(255, 255, 255, 0.10);',
@@ -310,51 +382,63 @@ const TransactionMenu = () => {
             </View>
             <View style={styles.Check}>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'CamptonBook',
-                  paddingTop: 10,
-                  fontSize: 10,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'CamptonBook',
+                    paddingTop: 10,
+                    fontSize: 10,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 Credit
               </Text>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'CamptonBook',
-                  // paddingTop: 10,
-                  fontSize: 10,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'CamptonBook',
+                    // paddingTop: 10,
+                    fontSize: 10,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 Nov 13th 2023 9:21pm
               </Text>
             </View>
             <View style={styles.Check1}>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'CamptonBook',
-                  // paddingTop: 10,
-                  fontSize: 13,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'CamptonBook',
+                    // paddingTop: 10,
+                    fontSize: 13,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 Payment for New Social Task Order (Get Real People to Follow
                 Your Page on Social Media)
               </Text>
             </View>
             <View style={styles.Check}>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'CamptonBook',
-                  // paddingTop: 10,
-                  fontSize: 13,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'CamptonBook',
+                    // paddingTop: 10,
+                    fontSize: 13,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 + ₦3,675
               </Text>
             </View>
           </View>
         </View>
         <View style={styles.Container1}>
-          <View style={styles.Advert1}>
+          <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
             <View
               style={{
                 backgroundColor: 'rgba(255, 255, 255, 0.10);',
@@ -379,44 +463,56 @@ const TransactionMenu = () => {
             </View>
             <View style={styles.Check}>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'CamptonBook',
-                  paddingTop: 10,
-                  fontSize: 10,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'CamptonBook',
+                    paddingTop: 10,
+                    fontSize: 10,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 Credit
               </Text>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'CamptonBook',
-                  // paddingTop: 10,
-                  fontSize: 10,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'CamptonBook',
+                    // paddingTop: 10,
+                    fontSize: 10,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 Nov 13th 2023 9:21pm
               </Text>
             </View>
             <View style={styles.Check1}>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'CamptonBook',
-                  // paddingTop: 10,
-                  fontSize: 13,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'CamptonBook',
+                    // paddingTop: 10,
+                    fontSize: 13,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 Payment for New Social Task Order (Get Real People to Follow
                 Your Page on Social Media)
               </Text>
             </View>
             <View style={styles.Check}>
               <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'CamptonBook',
-                  // paddingTop: 10,
-                  fontSize: 13,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontFamily: 'CamptonBook',
+                    // paddingTop: 10,
+                    fontSize: 13,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 + ₦3,675
               </Text>
             </View>

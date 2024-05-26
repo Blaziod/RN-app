@@ -12,12 +12,35 @@ import {
 import React from 'react';
 import Headers from '../../Components/Headers/Headers';
 import {Svg, Path, G, Defs, ClipPath, Rect} from 'react-native-svg';
+import {useTheme} from '../../Components/Contexts/colorTheme';
 
 const Refer = () => {
   // const width = Dimensions.get('window').width;
+  const {theme} = useTheme();
+
+  const dynamicStyles = StyleSheet.create({
+    AppContainer: {
+      flex: 1,
+      backgroundColor: theme === 'dark' ? '#121212' : '#FFFFFF', // Dynamic background color
+      width: '100%',
+    },
+    DivContainer: {
+      backgroundColor:
+        theme === 'dark' ? '#171717' : 'rgba(177, 177, 177, 0.20)', // Dynamic background color
+    },
+    TextColor: {
+      color: theme === 'dark' ? '#FFFFFF' : '#000000', // Dynamic text color
+    },
+    Button: {
+      backgroundColor: theme === 'dark' ? '#FFF' : '#CB29BE', // Dynamic background color
+    },
+    Btext: {
+      color: theme === 'dark' ? '#FF6DFB' : '#FFF', // Dynamic text color
+    },
+  });
   return (
     <ScrollView scrollEnabled={true} contentInsetAdjustmentBehavior="automatic">
-      <View style={styles.AppContainer}>
+      <View style={[styles.AppContainer, dynamicStyles.AppContainer]}>
         <Headers />
         <View style={{paddingBottom: 20}}>
           <View
@@ -44,7 +67,7 @@ const Refer = () => {
                   color: '#000',
                   alignSelf: 'center',
                 }}>
-                Invite and Get N1000
+                Invite and Get N500
               </Text>
               <Text
                 style={{
@@ -147,13 +170,16 @@ const Refer = () => {
             </ImageBackground>
           </View>
           <Text
-            style={{
-              color: '#fff',
-              fontFamily: 'CamptonMedium',
-              fontSize: 24,
-              paddingVertical: 30,
-              paddingLeft: '5%',
-            }}>
+            style={[
+              {
+                color: '#fff',
+                fontFamily: 'CamptonMedium',
+                fontSize: 24,
+                paddingVertical: 30,
+                paddingLeft: '5%',
+              },
+              dynamicStyles.TextColor,
+            ]}>
             Invited Friends
           </Text>
           <View
@@ -213,12 +239,15 @@ const Refer = () => {
                 paddingHorizontal: 70,
               }}>
               <Text
-                style={{
-                  color: '#fff',
-                  paddingTop: 12,
-                  fontFamily: 'Campton Bold',
-                  fontSize: 14,
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    paddingTop: 12,
+                    fontFamily: 'Campton Bold',
+                    fontSize: 14,
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 No referral yet!
               </Text>
               <Text

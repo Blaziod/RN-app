@@ -27,11 +27,11 @@ import {
 } from '../Modals/AdvertModalPicker';
 
 const Advertise1LSMenu = () => {
-  const [religion, setReligion] = useState('Select');
-  const [gender, setGender] = useState('Select');
-  const [choosePlatform, setChoosePlatform] = useState('Select');
-  const [chooseLocation, setChooseLocation] = useState('Select');
-  const [chooseNumber, setChooseNumber] = useState('Select');
+  const [religion, setReligion] = useState('Select Religion');
+  const [gender, setGender] = useState('Select Gender');
+  const [choosePlatform, setChoosePlatform] = useState('Select Platform');
+  const [chooseLocation, setChooseLocation] = useState('Select Location');
+  const [chooseNumber, setChooseNumber] = useState('Enter The Number');
   const [modalVisible, setModalVisible] = useState(false);
   const [modal2Visible, setModal2Visible] = useState(false);
   const [modal3Visible, setModal3Visible] = useState(false);
@@ -321,7 +321,7 @@ const Advertise1LSMenu = () => {
           }}>
           <TextInput
             onChangeText={setChooseNumber}
-            placeholder="Select"
+            placeholder="Enter Your Desired Number"
             placeholderTextColor="#fff"
             keyboardType="numeric"
           />
@@ -451,7 +451,7 @@ const Advertise1LSMenu = () => {
               fontFamily: 'CamptonBook',
               fontSize: 30,
             }}>
-            {userData1?.userdata?.wallet?.currency_code}:{' '}
+            {userData1?.userdata?.wallet?.currency_symbol}:{' '}
             {isNaN(Number(chooseNumber)) ? 0 : Number(chooseNumber) * 5}
           </Text>
         </View>
@@ -552,19 +552,6 @@ const Advertise1LSMenu = () => {
                       }}>
                       How would you like to pay?
                     </Text>
-                    <Text
-                      style={{
-                        color: '#fff',
-                        fontSize: 12,
-                        // fontWeight: 400,
-                        fontFamily: 'CamptonBook',
-                        textAlign: 'center',
-                        paddingHorizontal: 20,
-                      }}>
-                      Are you sure you want to generate your next Twitter task
-                      now. You have 1 hour to perform this task. Please confirm
-                      only if you are ready to perform the task.
-                    </Text>
                   </View>
                   <View style={{paddingHorizontal: 10}}>
                     <TouchableOpacity
@@ -611,8 +598,9 @@ const Advertise1LSMenu = () => {
                             fontSize: 12,
                             fontFamily: 'CamptonBook',
                           }}>
-                          Get real people to post your ads on their social media
-                          account.
+                          Pay through our highly secured online payment partner
+                          using your VISA/Mastercard/Verve card. Or Bank
+                          transfer via USSD or internet Bank Transfer. .
                         </Text>
                       </View>
                       <Svg
@@ -680,8 +668,9 @@ const Advertise1LSMenu = () => {
                             fontSize: 12,
                             fontFamily: 'CamptonBook',
                           }}>
-                          Get real people to post your ads on their social media
-                          account.
+                          Wallet Balance:
+                          {userData?.userdata?.wallet?.currency_symbol}{' '}
+                          {userBalance?.balance}
                         </Text>
                       </View>
                       <Svg
@@ -747,8 +736,7 @@ const Advertise1LSMenu = () => {
                             fontSize: 12,
                             fontFamily: 'CamptonBook',
                           }}>
-                          Get real people to post your ads on their social media
-                          account.
+                          Pay with BTC to our BTC address
                         </Text>
                       </View>
                       <Svg
@@ -887,7 +875,7 @@ const Advertise1LSMenu = () => {
                             fontSize: 30,
                             fontFamily: 'CamptonMedium',
                           }}>
-                          {/* {userData1?.userdata?.wallet?.currency_code}:{' '} */}
+                          {/* {userData1?.userdata?.wallet?.currency_symbol}:{' '} */}
                           {isNaN(Number(chooseNumber))
                             ? 0
                             : Number(chooseNumber) * 5}
@@ -912,7 +900,7 @@ const Advertise1LSMenu = () => {
                             color: '#B1B1B1',
                             fontFamily: 'CamptonBook',
                           }}>
-                          {/* {userData1?.userdata?.wallet?.currency_code}:{' '} */}
+                          {/* {userData1?.userdata?.wallet?.currency_symbol}:{' '} */}
                           {isNaN(Number(chooseNumber))
                             ? 0
                             : Number(chooseNumber) * 5}

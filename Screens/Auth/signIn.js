@@ -11,11 +11,15 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Image,
+  Linking,
+  Alert,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 import {Svg, Path} from 'react-native-svg';
+import queryString from 'query-string';
+import axios from 'axios';
 
 const SignIn = () => {
   const [email_username, setEmail] = useState('');
@@ -25,12 +29,100 @@ const SignIn = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [isFocused2, setIsFocused2] = useState(false);
+  const [ggToken, setGgToken] = useState(null);
 
   useEffect(() => {
     const checkToken = async () => {
       const token = await AsyncStorage.getItem('accesstoken');
       if (token) {
-        console.log('Token found:', token);
+        try {
+          const response = await axios.get(
+            'https://api.trendit3.com/api/profile',
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+              },
+            },
+          );
+
+          if (response.status >= 200 && response.status < 300) {
+            Alert.alert('Login Successful');
+            console.log(response.data);
+            AsyncStorage.setItem(
+              'userdatafiles1',
+              JSON.stringify({
+                userdata: response.data.user_profile,
+              }),
+            )
+              .then(() => {
+                console.log(response.data.user_profile);
+                console.log('User data stored successfully');
+              })
+              .catch(error => {
+                console.error('Error storing user data:', error);
+              });
+
+            Toast.show({
+              type: 'success',
+              text1: 'Success',
+              text2: response.data.message,
+              style: {
+                borderLeftColor: 'pink',
+                backgroundColor: 'yellow',
+                width: '80%',
+                alignSelf: 'center',
+                justifyContent: 'center',
+                alignItems: 'center',
+              },
+              text1Style: {
+                color: 'red',
+                fontSize: 14,
+              },
+              text2Style: {
+                color: 'green',
+                fontSize: 14,
+                fontFamily: 'Campton Bold',
+              },
+            });
+          } else if (response.status === 401) {
+            console.error('Unauthorized: Access token is invalid or expired.');
+            await AsyncStorage.removeItem('userbalance');
+            await AsyncStorage.removeItem('userdata1');
+            await AsyncStorage.removeItem('userdata');
+            await AsyncStorage.removeItem('userdata2');
+            await AsyncStorage.removeItem('userdatas');
+            await AsyncStorage.removeItem('userdatafiles1');
+            await AsyncStorage.removeItem('accesstoken');
+
+            Toast.show({
+              type: 'error',
+              text1: 'Error',
+              text2: response.data.message,
+              style: {
+                borderLeftColor: 'pink',
+                backgroundColor: 'yellow',
+                width: '80%',
+                alignSelf: 'center',
+                justifyContent: 'center',
+                alignItems: 'center',
+              },
+              text1Style: {
+                color: 'red',
+                fontSize: 14,
+              },
+              text2Style: {
+                color: 'green',
+                fontSize: 14,
+                fontFamily: 'Campton Bold',
+              },
+            });
+            navigation.navigate('SignIn');
+          } else {
+          }
+        } catch (error) {
+        } finally {
+        }
         navigation.reset({
           index: 0,
           routes: [
@@ -46,6 +138,160 @@ const SignIn = () => {
     };
 
     checkToken();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const fetchUserProfile = async () => {
+    try {
+      setIsLoading(true);
+
+      const response = await axios.get('https://api.trendit3.com/api/profile', {
+        headers: {
+          Authorization: `Bearer ${ggToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.status >= 200 && response.status < 300) {
+        Alert.alert('Login Successful');
+        console.log(response.data);
+        AsyncStorage.setItem(
+          'userdatafiles1',
+          JSON.stringify({
+            userdata: response.data.user_profile,
+          }),
+        )
+          .then(() => {
+            console.log(response.data.user_profile);
+            console.log('User data stored successfully');
+          })
+          .catch(error => {
+            console.error('Error storing user data:', error);
+          });
+
+        Toast.show({
+          type: 'success',
+          text1: 'Success',
+          text2: response.data.message,
+          style: {
+            borderLeftColor: 'pink',
+            backgroundColor: 'yellow',
+            width: '80%',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          text1Style: {
+            color: 'red',
+            fontSize: 14,
+          },
+          text2Style: {
+            color: 'green',
+            fontSize: 14,
+            fontFamily: 'Campton Bold',
+          },
+        });
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: 'Tabs',
+              params: {screen: 'Home', signInToken: ggToken},
+            },
+          ],
+        });
+      } else if (response.status === 401) {
+        console.error('Unauthorized: Access token is invalid or expired.');
+        await AsyncStorage.removeItem('userbalance');
+        await AsyncStorage.removeItem('userdata1');
+        await AsyncStorage.removeItem('userdata');
+        await AsyncStorage.removeItem('userdata2');
+        await AsyncStorage.removeItem('userdatas');
+        await AsyncStorage.removeItem('userdatafiles1');
+        await AsyncStorage.removeItem('accesstoken');
+
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: response.data.message,
+          style: {
+            borderLeftColor: 'pink',
+            backgroundColor: 'yellow',
+            width: '80%',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          text1Style: {
+            color: 'red',
+            fontSize: 14,
+          },
+          text2Style: {
+            color: 'green',
+            fontSize: 14,
+            fontFamily: 'Campton Bold',
+          },
+        });
+        navigation.navigate('SignIn');
+      } else {
+        Alert.alert('Error Else');
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: response.data.message,
+          style: {
+            borderLeftColor: 'pink',
+            backgroundColor: 'yellow',
+            width: '80%',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          text1Style: {
+            color: 'red',
+            fontSize: 14,
+          },
+          text2Style: {
+            color: 'green',
+            fontSize: 14,
+            fontFamily: 'Campton Bold',
+          },
+        });
+      }
+    } catch (error) {
+      Alert.alert('Error', error.toString());
+      console.error(error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: error.message,
+        style: {
+          borderLeftColor: 'pink',
+          backgroundColor: 'yellow',
+          width: '80%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        text1Style: {
+          color: 'red',
+          fontSize: 14,
+        },
+        text2Style: {
+          color: 'green',
+          fontSize: 14,
+          fontFamily: 'Campton Bold',
+        },
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (ggToken !== null) {
+      fetchUserProfile();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -117,6 +363,160 @@ const SignIn = () => {
           },
         });
         navigation.navigate('Tabs', {screen: 'Home'});
+      } else {
+        const errorData = await response.json();
+        console.error('Error signing in:', errorData);
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: errorData.message,
+          style: {
+            borderLeftColor: 'pink',
+            backgroundColor: 'yellow',
+            width: '80%',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          text1Style: {
+            color: 'red',
+            fontSize: 14,
+          },
+          text2Style: {
+            color: 'green',
+            fontSize: 14,
+            fontFamily: 'Campton Bold',
+          },
+        });
+      }
+    } catch (error) {
+      console.error('Error signing in:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: error.message,
+        style: {
+          borderLeftColor: 'pink',
+          backgroundColor: 'yellow',
+          width: '80%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        text1Style: {
+          color: 'red',
+          fontSize: 14,
+        },
+        text2Style: {
+          color: 'green',
+          fontSize: 14,
+          fontFamily: 'Campton Bold',
+        },
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const handleUrl = async event => {
+      try {
+        const parsed = queryString.parseUrl(event.url);
+
+        if (parsed.query) {
+          if (parsed.query.access_token) {
+            const {access_token} = parsed.query;
+            await AsyncStorage.setItem(
+              'accesstoken',
+              JSON.stringify({accessToken: access_token}),
+            );
+            console.log('Token stored successfully:', access_token);
+            setGgToken(access_token); // Update state to trigger the user profile fetch
+          } else if (parsed.query.error) {
+            console.error(
+              'Error received from authorization:',
+              parsed.query.error,
+            );
+            handleAuthorizationError(parsed.query.error);
+          } else {
+            console.error('No access token or error information received.');
+            handleAuthorizationError('No access token received');
+          }
+        }
+      } catch (error) {
+        console.error('Error handling the URL:', error);
+        handleAuthorizationError('Failed to process the authorization data');
+      }
+    };
+
+    // Helper function to handle errors and show user feedback
+    const handleAuthorizationError = errorMessage => {
+      Toast.show({
+        type: 'error',
+        text1: 'Authorization Error',
+        text2: errorMessage,
+        style: {
+          borderLeftColor: 'pink',
+          backgroundColor: 'yellow',
+          width: '80%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        text1Style: {
+          color: 'red',
+          fontSize: 14,
+        },
+        text2Style: {
+          color: 'green',
+          fontSize: 14,
+          fontFamily: 'Campton Bold',
+        },
+      });
+    };
+
+    // Listen for incoming links
+    Linking.getInitialURL().then(url => {
+      if (url) {
+        handleUrl({url});
+      }
+    });
+
+    const subscription = Linking.addEventListener('url', handleUrl);
+
+    // Clean up the listener on unmount
+    return () => subscription.remove();
+  }, []);
+
+  useEffect(() => {
+    // Fetch user profile when the token is set
+    if (ggToken) {
+      fetchUserProfile();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ggToken]);
+
+  const handleGoogleSignIn = async () => {
+    console.log('Signing in with Google');
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        'https://api.trendit3.com/api/app/gg_login',
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Success signing in:', data);
+        // Open the authorization URL
+        if (data.authorization_url) {
+          Linking.openURL(data.authorization_url);
+        }
       } else {
         const errorData = await response.json();
         console.error('Error signing in:', errorData);
@@ -255,30 +655,25 @@ const SignIn = () => {
           </View>
 
           <View style={styles.socialLogins}>
-            <Text style={styles.orText}>OR SIGN UP WITH</Text>
-            <View style={styles.buttonRow}>
-              <TouchableOpacity style={styles.socialButton}>
-                <Image
-                  source={require('../../assets/google-icon.png')}
-                  style={styles.socialIcon}
-                />
-                <Text style={styles.socialButtonText}>Google</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.socialButton}>
-                <Image
-                  source={require('../../assets/facebook-icon.png')}
-                  style={styles.socialIcon}
-                />
-                <Text style={styles.socialButtonText}>Facebook</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.socialButton}>
-                <Image
-                  source={require('../../assets/tiktok-icon.png')}
-                  style={styles.socialIcon}
-                />
-                <Text style={styles.socialButtonText}>TikTok</Text>
-              </TouchableOpacity>
-            </View>
+            <Text style={styles.orText}>OR SIGN IN WITH</Text>
+
+            <TouchableOpacity
+              style={styles.socialButton}
+              onPress={() => handleGoogleSignIn()}>
+              {isLoading ? (
+                <ActivityIndicator size="small" color="#000" />
+              ) : (
+                <>
+                  <Image
+                    source={require('../../assets/google-icon.png')}
+                    style={styles.socialIcon}
+                  />
+                  <Text style={styles.socialButtonText}>
+                    Sign In with Google
+                  </Text>
+                </>
+              )}
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
@@ -461,10 +856,14 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#8E60CF3B',
+    backgroundColor: '#FFF',
     padding: 8,
     marginRight: 10,
-    width: '100%',
+    width: 'auto',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    height: 40,
+    borderRadius: 10,
   },
   socialIcon: {
     width: 20,
@@ -473,7 +872,7 @@ const styles = StyleSheet.create({
   },
   socialButtonText: {
     fontSize: 15,
-    color: '#fff',
+    color: '#000',
     fontFamily: 'Campton Bold',
   },
 });

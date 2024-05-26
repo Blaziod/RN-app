@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   ScrollView,
@@ -18,6 +18,17 @@ import Headers from '../../Components/Headers/Headers';
 import Advertise1YTMenu from '../../Components/Menus/advertise1YTMenu';
 
 const Advertise1YT = ({navigation}) => {
+  const [currentDateTime, setCurrentDateTime] = useState(
+    new Date().toLocaleString(),
+  );
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentDateTime(new Date().toLocaleString()); // Updates the time every second
+    }, 1000);
+
+    return () => clearInterval(timer); // Clear the interval on component unmount
+  }, []);
   return (
     <SafeAreaView>
       <ScrollView
@@ -49,11 +60,11 @@ const Advertise1YT = ({navigation}) => {
                 }}>
                 <Text
                   style={{
-                    color: '#B1B1B1',
+                    color: '#FFF',
                     fontFamily: 'CamptonLight',
                     fontSize: 10,
                   }}>
-                  Jan 12th 9:27
+                  {currentDateTime}
                 </Text>
                 <Text
                   style={{
@@ -90,36 +101,7 @@ const Advertise1YT = ({navigation}) => {
                     ₦140 Per Advert Post
                   </Text>
                 </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    gap: 10,
-                  }}>
-                  <Text
-                    style={{
-                      color: '#fff',
-                      fontFamily: 'CamptonBook',
-                      fontSize: 10,
-                    }}>
-                    20+ PEOPLE
-                  </Text>
-                  <Text
-                    style={{
-                      color: '#fff',
-                      fontFamily: 'CamptonBook',
-                      fontSize: 10,
-                    }}>
-                    134 LIKES
-                  </Text>
-                  <Text
-                    style={{
-                      color: '#fff',
-                      fontFamily: 'CamptonBook',
-                      fontSize: 10,
-                    }}>
-                    453 COMMENTS
-                  </Text>
-                </View>
+
                 <Text
                   style={{
                     color: '#909090',

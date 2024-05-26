@@ -278,9 +278,6 @@ const Advertise = () => {
                   </Svg>
                 </View>
               )}
-              {earnMenu === 3 && (
-                <Text style={{color: '#fff'}}>wowww ndaboski</Text>
-              )}
             </View>
             <View style={styles.EarnonTContainer}>
               <View style={styles.EarnOnT}>
@@ -316,9 +313,6 @@ const Advertise = () => {
                 <View style={{paddingVertical: 15, paddingHorizontal: 10}}>
                   <EngageAdvertiseMenu />
                 </View>
-              )}
-              {earnMenu === 3 && (
-                <Text style={{color: '#fff'}}>wowww ndaboski</Text>
               )}
             </View>
           </View>

@@ -24,6 +24,7 @@ const SignUp = () => {
   const [signupToken, setSignupToken] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [isFocused1, setIsFocused1] = useState(false);
   const navigation = useNavigation();
   // const WIDTH = Dimensions.get('window').width;
   useEffect(() => {
@@ -160,15 +161,15 @@ const SignUp = () => {
               onBlur={() => setIsFocused(false)}
             />
             <TextInput
-              style={[styles.textInput, isFocused && styles.focused]}
+              style={[styles.textInput, isFocused1 && styles.focused]}
               placeholder="Referral code/Username(Optional)"
               placeholderTextColor="#888"
               autoCapitalize="none"
               autoCorrect={false}
               onChangeText={setReferral}
               value={referral}
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
+              onFocus={() => setIsFocused1(true)}
+              onBlur={() => setIsFocused1(false)}
             />
             <TouchableOpacity
               style={styles.continueButton}
@@ -184,61 +185,48 @@ const SignUp = () => {
 
           <View style={styles.socialLogins}>
             <Text style={styles.orText}>OR SIGN UP WITH</Text>
-            <View style={styles.buttonRow}>
-              <TouchableOpacity style={styles.socialButton}>
-                <Image
-                  source={require('../assets/google-icon.png')}
-                  style={styles.socialIcon}
-                />
-                <Text style={styles.socialButtonText}>Google</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.socialButton}>
-                <Image
-                  source={require('../../assets/facebook-icon.png')}
-                  style={styles.socialIcon}
-                />
-                <Text style={styles.socialButtonText}>Facebook</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.socialButton}>
-                <Image
-                  source={require('../../assets/tiktok-icon.png')}
-                  style={styles.socialIcon}
-                />
-                <Text style={styles.socialButtonText}>TikTok</Text>
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                gap: 4,
-                paddingTop: 10,
-                alignSelf: 'center',
-              }}
-              onPress={() => navigation.navigate('SignIn')}>
-              <Text
-                style={{
-                  color: '#fff',
-                  fontSize: 14,
-                  fontFamily: 'CamptonBook',
-                }}>
-                Already have an account?
-              </Text>
-              <View onPress={() => navigation.navigate('SignIn')}>
-                <Text
-                  style={{
-                    color: 'red',
-                    fontSize: 14,
-                    fontFamily: 'CamptonBook',
-                  }}
-                  onPress={() => navigation.navigate('SignIn')}>
-                  Sign In
-                </Text>
-              </View>
-            </View>
+
+            <TouchableOpacity style={styles.socialButton}>
+              <Image
+                source={require('../../assets/google-icon.png')}
+                style={styles.socialIcon}
+              />
+              <Text style={styles.socialButtonText}>Sign Up with Google</Text>
+            </TouchableOpacity>
           </View>
         </View>
+
         {/* </View> */}
       </ScrollView>
+      <View
+        style={{
+          flexDirection: 'row',
+          gap: 4,
+          alignSelf: 'center',
+          justifyContent: 'flex-end',
+          paddingBottom: 50,
+        }}
+        onPress={() => navigation.navigate('SignIn')}>
+        <Text
+          style={{
+            color: '#fff',
+            fontSize: 14,
+            fontFamily: 'CamptonBook',
+          }}>
+          Already have an account?
+        </Text>
+        <View onPress={() => navigation.navigate('SignIn')}>
+          <Text
+            style={{
+              color: 'red',
+              fontSize: 14,
+              fontFamily: 'CamptonBook',
+            }}
+            onPress={() => navigation.navigate('SignIn')}>
+            Sign In
+          </Text>
+        </View>
+      </View>
       <View
         style={{
           flexDirection: 'row',
@@ -364,9 +352,14 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#8E60CF3B',
+    backgroundColor: '#FFF',
     padding: 8,
     marginRight: 10,
+    width: 'auto',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    height: 40,
+    borderRadius: 10,
   },
   socialIcon: {
     width: 20,
@@ -375,7 +368,7 @@ const styles = StyleSheet.create({
   },
   socialButtonText: {
     fontSize: 15,
-    color: '#fff',
+    color: '#000',
     fontFamily: 'Campton Bold',
   },
 });

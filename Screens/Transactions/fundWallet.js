@@ -530,7 +530,7 @@ const FundWallet = () => {
               </Text>
               <View style={{justifyContent: 'center'}}>
                 <Text style={styles.WalletAmount}>
-                  {userData?.userdata?.wallet?.currency_code}{' '}
+                  {userData?.userdata?.wallet?.currency_symbol}{' '}
                   {isLoading ? (
                     <ActivityIndicator
                       size="medium"

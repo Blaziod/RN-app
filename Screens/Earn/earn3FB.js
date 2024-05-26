@@ -24,6 +24,17 @@ import {useNavigation} from '@react-navigation/native';
 
 const Earn3FB = () => {
   const navigation = useNavigation();
+  const [currentDateTime, setCurrentDateTime] = useState(
+    new Date().toLocaleString(),
+  );
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentDateTime(new Date().toLocaleString()); // Updates the time every second
+    }, 1000);
+
+    return () => clearInterval(timer); // Clear the interval on component unmount
+  }, []);
   const [time, setTime] = useState(60 * 60); // 60 minutes * 60 seconds
 
   useEffect(() => {
@@ -67,11 +78,11 @@ const Earn3FB = () => {
                 }}>
                 <Text
                   style={{
-                    color: '#B1B1B1',
+                    color: '#FFF',
                     fontFamily: 'CamptonLight',
                     fontSize: 10,
                   }}>
-                  Jan 12th 9:27
+                  {currentDateTime}
                 </Text>
                 <Text
                   style={{
@@ -106,36 +117,6 @@ const Earn3FB = () => {
                       fontSize: 12,
                     }}>
                     ₦140 Per Advert Post
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    gap: 10,
-                  }}>
-                  <Text
-                    style={{
-                      color: '#fff',
-                      fontFamily: 'CamptonBook',
-                      fontSize: 10,
-                    }}>
-                    20+ PEOPLE
-                  </Text>
-                  <Text
-                    style={{
-                      color: '#fff',
-                      fontFamily: 'CamptonBook',
-                      fontSize: 10,
-                    }}>
-                    134 LIKES
-                  </Text>
-                  <Text
-                    style={{
-                      color: '#fff',
-                      fontFamily: 'CamptonBook',
-                      fontSize: 10,
-                    }}>
-                    453 COMMENTS
                   </Text>
                 </View>
               </ImageBackground>
@@ -301,7 +282,7 @@ const Earn3FB = () => {
                   }}>
                   <Text style={styles.Box2Text}>
                     You must NOT DELETE THE ADVERT POST on the Facebook page
-                    after you have post the advert on your account Your Trendit3
+                    after you have post the advert on your account Your Trendit³
                     account will be suspended once you Delete the advert on your
                     Facebook Page.{' '}
                   </Text>

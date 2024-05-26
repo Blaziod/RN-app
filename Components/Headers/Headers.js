@@ -49,14 +49,15 @@ const Headers = () => {
                 styles.Name,
                 {color: theme === 'dark' ? '#FFFFFF' : '#000000'},
               ]}>
-              {userData?.userdata?.firstname} {userData?.userdata?.lastname}
+              {userData?.userdata?.firstname || 'Edit First Name'}{' '}
+              {userData?.userdata?.lastname || 'Edit Last Name'}
             </Text>
             <Text
               style={[
                 styles.UserName,
                 {color: theme === 'dark' ? '#FFFFFF' : '#000000'},
               ]}>
-              @{userData?.userdata.username}
+              @{userData?.userdata?.username || 'Edit Username'}
             </Text>
           </View>
           <View style={styles.headerImages}>

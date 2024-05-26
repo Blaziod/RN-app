@@ -5,20 +5,43 @@ import {
   View,
   Text,
   SafeAreaView,
-  // Dimensions,
   TouchableOpacity,
   StatusBar,
   ActivityIndicator,
+  StyleSheet,
 } from 'react-native';
 import {Svg, Path, G} from 'react-native-svg';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
+import {useTheme} from '../../Components/Contexts/colorTheme';
 
 const More = () => {
   // const height = Dimensions.get('screen').height;
   const [userData, setUserData] = useState(null);
   const navigation = useNavigation();
+  const {theme} = useTheme();
+  const strokeColor = theme === 'dark' ? '#fff' : '#000'; // Choosing color based on theme
+
+  const dynamicStyles = StyleSheet.create({
+    AppContainer: {
+      flex: 1,
+      backgroundColor: theme === 'dark' ? '#121212' : '#FFFFFF', // Dynamic background color
+      width: '100%',
+    },
+    DivContainer: {
+      backgroundColor: theme === 'dark' ? '#000' : 'rgba(177, 177, 177, 0.20)', // Dynamic background color
+    },
+    TextColor: {
+      color: theme === 'dark' ? '#FFFFFF' : '#000000', // Dynamic text color
+    },
+    Button: {
+      backgroundColor: theme === 'dark' ? '#FFF' : '#CB29BE', // Dynamic background color
+    },
+    Btext: {
+      color: theme === 'dark' ? '#FF6DFB' : '#FFF', // Dynamic text color
+    },
+  });
 
   useEffect(() => {
     AsyncStorage.getItem('accesstoken')
@@ -119,20 +142,26 @@ const More = () => {
   };
 
   return (
-    <SafeAreaView style={{backgroundColor: '#121212', flex: 1}}>
+    <SafeAreaView
+      style={[
+        {backgroundColor: '#121212', flex: 1},
+        dynamicStyles.AppContainer,
+      ]}>
       <StatusBar />
       <View style={{paddingTop: '100%'}} />
       <View
         style={{
           alignItems: 'flex-end',
-          // height: height,
         }}>
         <View
-          style={{
-            backgroundColor: '#000',
-            padding: 10,
-            width: '45%',
-          }}>
+          style={[
+            {
+              backgroundColor: '#000',
+              padding: 10,
+              width: '45%',
+            },
+            dynamicStyles.DivContainer,
+          ]}>
           <View style={{padding: 10}}>
             <TouchableOpacity
               style={{
@@ -152,14 +181,20 @@ const More = () => {
                   <Path
                     id="Icon"
                     d="M9 21L9 3M3 21L3 16M15 21L15 7M21 21V12"
-                    stroke="#B1B1B1"
+                    stroke={strokeColor}
                     stroke-width="2"
                     stroke-linecap="round"
                   />
                 </G>
               </Svg>
 
-              <Text style={{color: '#B1B1B1', fontSize: 14}}>Transactions</Text>
+              <Text
+                style={[
+                  {color: '#B1B1B1', fontSize: 14},
+                  dynamicStyles.TextColor,
+                ]}>
+                Transactions
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={{
@@ -179,15 +214,20 @@ const More = () => {
                   <Path
                     id="Icon"
                     d="M21 10.4087C21.8639 12.0076 21.7221 13.9978 20.5616 15.505C19.2895 17.1572 15.4395 20.6419 14.1777 21.7697C14.0365 21.8959 13.966 21.959 13.8836 21.9838C13.8118 22.0054 13.7331 22.0054 13.6613 21.9838C13.5789 21.959 13.5084 21.8959 13.3672 21.7697C12.9444 21.3918 12.2312 20.7494 11.4217 20M9.77245 4.67663C8.2174 2.84174 5.62425 2.34816 3.67587 4.02837C1.7275 5.70858 1.4532 8.51781 2.98327 10.505C4.25541 12.1572 8.10538 15.6419 9.36719 16.7697C9.50836 16.8959 9.57894 16.959 9.66128 16.9838C9.73314 17.0054 9.81177 17.0054 9.88363 16.9838C9.96596 16.959 10.0365 16.8959 10.1777 16.7697C11.4395 15.6419 15.2895 12.1572 16.5616 10.505C18.0917 8.51781 17.8509 5.69091 15.869 4.02837C13.8872 2.36584 11.3275 2.84174 9.77245 4.67663Z"
-                    stroke="#B1B1B1"
+                    stroke={strokeColor}
                     stroke-width="2"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                   />
                 </G>
               </Svg>
-
-              <Text style={{color: '#B1B1B1', fontSize: 14}}>Refer Link</Text>
+              <Text
+                style={[
+                  {color: '#B1B1B1', fontSize: 14},
+                  dynamicStyles.TextColor,
+                ]}>
+                Refer Link
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={{
@@ -207,14 +247,20 @@ const More = () => {
                   <Path
                     id="Icon"
                     d="M4 5H16M16 5C16 6.10457 16.8954 7 18 7C19.1046 7 20 6.10457 20 5C20 3.89543 19.1046 3 18 3C16.8954 3 16 3.89543 16 5ZM8 12H20M8 12C8 13.1046 7.10457 14 6 14C4.89543 14 4 13.1046 4 12C4 10.8954 4.89543 10 6 10C7.10457 10 8 10.8954 8 12ZM4 19H16M16 19C16 20.1046 16.8954 21 18 21C19.1046 21 20 20.1046 20 19C20 17.8954 19.1046 17 18 17C16.8954 17 16 17.8954 16 19Z"
-                    stroke="#B1B1B1"
+                    stroke={strokeColor}
                     stroke-width="2"
                     stroke-linecap="round"
                   />
                 </G>
               </Svg>
 
-              <Text style={{color: '#B1B1B1', fontSize: 14}}>Settings</Text>
+              <Text
+                style={[
+                  {color: '#B1B1B1', fontSize: 14},
+                  dynamicStyles.TextColor,
+                ]}>
+                Settings
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={{
@@ -233,14 +279,20 @@ const More = () => {
                   <Path
                     id="Icon"
                     d="M12 16.0099V11.0099M12 8.00993V7.99994M4.33984 6.42257L11.0001 2.57728C11.6189 2.22001 12.3813 2.22001 13.0001 2.57728L19.6604 6.42257C20.2792 6.77984 20.6604 7.44009 20.6604 8.15463V15.8452C20.6604 16.5598 20.2792 17.22 19.6604 17.5773L13.0001 21.4226C12.3813 21.7798 11.6189 21.7798 11.0001 21.4226L4.33984 17.5773C3.72104 17.22 3.33984 16.5598 3.33984 15.8452V8.15463C3.33984 7.44009 3.72104 6.77984 4.33984 6.42257Z"
-                    stroke="#B1B1B1"
+                    stroke={strokeColor}
                     stroke-width="2"
                     stroke-linecap="round"
                   />
                 </G>
               </Svg>
 
-              <Text style={{color: '#B1B1B1', fontSize: 14}}>Support</Text>
+              <Text
+                style={[
+                  {color: '#B1B1B1', fontSize: 14},
+                  dynamicStyles.TextColor,
+                ]}>
+                Support
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={{

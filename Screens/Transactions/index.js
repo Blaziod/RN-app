@@ -19,6 +19,7 @@ import TransactionsCustomSwitch from '../../Components/CustomSwitches/transactio
 import TransactionMenu from '../../Components/Menus/transactionMenu';
 import TransactionsTopCustomSwitch from '../../Components/CustomSwitches/transactionTopCustomSwitch';
 import TransactionTopMenu from '../../Components/Menus/transactionTopMenu';
+import {useTheme} from '../../Components/Contexts/colorTheme';
 
 const wait = timeout => {
   return new Promise(resolve => {
@@ -59,6 +60,29 @@ const Transactions = () => {
     wait(4000).then(() => setRefreshing(false));
     console.log('Waittt');
   };
+  const {theme} = useTheme();
+
+  const dynamicStyles = StyleSheet.create({
+    AppContainer: {
+      flex: 1,
+      backgroundColor: theme === 'dark' ? '#121212' : '#FFFFFF', // Dynamic background color
+      width: '100%',
+    },
+    DivContainer: {
+      backgroundColor:
+        theme === 'dark' ? '#171717' : 'rgba(177, 177, 177, 0.20)', // Dynamic background color
+    },
+    TextColor: {
+      color: theme === 'dark' ? '#FFFFFF' : '#000000', // Dynamic text color
+    },
+    Button: {
+      backgroundColor: theme === 'dark' ? '#FFF' : '#CB29BE', // Dynamic background color
+    },
+    Btext: {
+      color: theme === 'dark' ? '#FF6DFB' : '#FFF', // Dynamic text color
+    },
+  });
+
   const fetchBalance = async () => {
     setIsLoading(true);
     if (userAccessToken) {
@@ -177,7 +201,7 @@ const Transactions = () => {
   }, [hasFetchedBalance, isFocused]);
 
   return (
-    <SafeAreaView style={styles.AppContainer}>
+    <SafeAreaView style={[styles.AppContainer, dynamicStyles.AppContainer]}>
       <ScrollView
         scrollEnabled={true}
         // contentContainerStyle={{flex: 1}}
@@ -219,13 +243,16 @@ const Transactions = () => {
             <View style={{paddingBottom: 10}} />
 
             <Text
-              style={{
-                color: '#fff',
-                fontSize: 25,
-                fontFamily: 'Campton Bold',
-                paddingVertical: 20,
-                paddingLeft: 20,
-              }}>
+              style={[
+                {
+                  color: '#fff',
+                  fontSize: 25,
+                  fontFamily: 'Campton Bold',
+                  paddingVertical: 20,
+                  paddingLeft: 20,
+                },
+                dynamicStyles.TextColor,
+              ]}>
               Transaction History
             </Text>
             <TransactionsCustomSwitch
@@ -233,6 +260,8 @@ const Transactions = () => {
               option1="All"
               option2="Earned"
               option5="Orders"
+              option3="Orders"
+              option4="Orders"
               onSelectSwitch={onSelectSwitch}
             />
             {transactionMenu === 1 && (

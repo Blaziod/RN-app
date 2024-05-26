@@ -163,24 +163,6 @@ const PaidEngageAdvertMenu = () => {
                   Generate Task
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: '#4C4C4C',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: 109,
-                  borderBottomRightRadius: 4,
-                  borderBottomLeftRadius: 4,
-                }}>
-                <Text
-                  style={{
-                    color: '#fff',
-                    fontFamily: 'CamptonMedium',
-                    fontSize: 10,
-                  }}>
-                  124 Task Available
-                </Text>
-              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -294,25 +276,6 @@ const PaidEngageAdvertMenu = () => {
                   Generate Task
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: '#4C4C4C',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: 109,
-                  borderBottomRightRadius: 4,
-                  borderBottomLeftRadius: 4,
-                }}
-                onPress={() => navigation.navigate('Earn1')}>
-                <Text
-                  style={{
-                    color: '#fff',
-                    fontFamily: 'CamptonMedium',
-                    fontSize: 10,
-                  }}>
-                  124 Task Available
-                </Text>
-              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -417,25 +380,6 @@ const PaidEngageAdvertMenu = () => {
                     fontSize: 10,
                   }}>
                   Generate Task
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: '#4C4C4C',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: 109,
-                  borderBottomRightRadius: 4,
-                  borderBottomLeftRadius: 4,
-                }}
-                onPress={() => navigation.navigate('Earn1Follow')}>
-                <Text
-                  style={{
-                    color: '#fff',
-                    fontFamily: 'CamptonMedium',
-                    fontSize: 10,
-                  }}>
-                  124 Task Available
                 </Text>
               </TouchableOpacity>
             </View>
@@ -554,25 +498,6 @@ const PaidEngageAdvertMenu = () => {
                   Generate Task
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: '#4C4C4C',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: 109,
-                  borderBottomRightRadius: 4,
-                  borderBottomLeftRadius: 4,
-                }}
-                onPress={() => navigation.navigate('Earn1Spotify')}>
-                <Text
-                  style={{
-                    color: '#fff',
-                    fontFamily: 'CamptonMedium',
-                    fontSize: 10,
-                  }}>
-                  124 Task Available
-                </Text>
-              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -678,25 +603,6 @@ const PaidEngageAdvertMenu = () => {
                     fontSize: 10,
                   }}>
                   Generate Task
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: '#4C4C4C',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: 109,
-                  borderBottomRightRadius: 4,
-                  borderBottomLeftRadius: 4,
-                }}
-                onPress={() => navigation.navigate('Earn1Like')}>
-                <Text
-                  style={{
-                    color: '#fff',
-                    fontFamily: 'CamptonMedium',
-                    fontSize: 10,
-                  }}>
-                  124 Task Available
                 </Text>
               </TouchableOpacity>
             </View>

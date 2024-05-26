@@ -7,16 +7,14 @@ const ThemeContext = createContext();
 export const useTheme = () => useContext(ThemeContext);
 
 export const ThemeProvider = ({children}) => {
-  const [theme, setTheme] = useState('dark'); // Default to dark mode
+  const [theme, setTheme] = useState('dark');
 
-  // Function to toggle theme
   const toggleTheme = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(newTheme);
     AsyncStorage.setItem('appTheme', newTheme);
   };
 
-  // Load theme from storage
   useEffect(() => {
     AsyncStorage.getItem('appTheme').then(storedTheme => {
       if (storedTheme) {

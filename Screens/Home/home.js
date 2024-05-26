@@ -12,6 +12,11 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   RefreshControl,
+  Alert,
+  Linking,
+  Modal,
+  TextInput,
+  Dimensions,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Headers from '../../Components/Headers/Headers';
@@ -19,6 +24,9 @@ import {useNavigation} from '@react-navigation/native';
 import {useIsFocused} from '@react-navigation/native';
 import {Svg, Path, Stop, RadialGradient, Defs} from 'react-native-svg';
 import {useTheme} from '../../Components/Contexts/colorTheme';
+import axios from 'axios';
+import Toast from 'react-native-toast-message';
+import queryString from 'query-string';
 
 const wait = timeout => {
   return new Promise(resolve => {
@@ -32,10 +40,19 @@ const Home = () => {
   const [userData, setUserData] = useState(null);
   const [userAccessToken, setUserAccessToken] = useState(null);
   const [userBalance, setUserBalance] = useState(null);
+  const [userSocials, setUserSocials] = useState(null);
   const [hasFetchedBalance, setHasFetchedBalance] = useState(false);
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
+  const [isFocused1, setIsFocused1] = useState(false);
+  const [isLoading1, setIsLoading1] = useState(false);
+  const [amount, setAmount] = useState('');
+  const [txRef, setTxRef] = useState(null);
+  const [transactionId, setTransactionId] = useState(null);
+  const homeScreenUrl = 'https://blaziod.github.io';
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const deviceHeight = Dimensions.get('window').height;
 
   // const WIDTH = Dimensions.get('screen').width;
   const [refreshing, setRefreshing] = useState(false);
@@ -76,6 +93,296 @@ const Home = () => {
     fetchUserBalance();
     wait(2000).then(() => setRefreshing(false));
     console.log('Waittt');
+  };
+
+  useEffect(() => {
+    const handleUrl = async event => {
+      try {
+        const url = event.url;
+        // Alert.alert('Url Caught');
+        const parsed = queryString.parseUrl(url);
+        // Alert.alert('Url parsed');
+
+        if (parsed.query.tx_ref) {
+          const {tx_ref, transaction_id, status} = parsed.query;
+          // Alert.alert('tx_ref found');
+
+          if (status === 'completed') {
+            setTxRef(tx_ref);
+            setTransactionId(transaction_id);
+            Alert.alert('Verifying your payment');
+          }
+        }
+      } catch (error) {
+        console.error(error);
+        Alert.alert('Error: handling', error.toString());
+      }
+    };
+
+    // Listen for incoming links
+    const subscription = Linking.addEventListener('url', handleUrl);
+
+    // Clean up the listener on unmount
+    return () => subscription.remove();
+  }, []);
+
+  useEffect(() => {
+    if (transactionId !== null) {
+      verifyPayment();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transactionId]);
+
+  const verifyPayment = async () => {
+    try {
+      // Alert.alert('URL: ', `${txRef}, ${transactionId}`);
+      setIsLoading1(true);
+      const response = await axios.post(
+        'https://api.trendit3.com/api/payment/verify',
+        {reference: txRef, transaction_id: transactionId},
+        {
+          headers: {
+            Authorization: `Bearer ${userAccessToken.accessToken}`,
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
+      if (response.status >= 200 && response.status < 300) {
+        Alert.alert('Payment Verified');
+        console.log(response.data);
+        setAmount('');
+        Toast.show({
+          type: 'success',
+          text1: 'Success',
+          text2: response.data.message,
+          style: {
+            borderLeftColor: 'pink',
+            backgroundColor: 'yellow',
+            width: '80%',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          text1Style: {
+            color: 'red',
+            fontSize: 14,
+          },
+          text2Style: {
+            color: 'green',
+            fontSize: 14,
+            fontFamily: 'Campton Bold',
+          },
+        });
+      } else if (response.status === 401) {
+        console.error('Unauthorized: Access token is invalid or expired.');
+        await AsyncStorage.removeItem('userbalance');
+        await AsyncStorage.removeItem('userdata1');
+        await AsyncStorage.removeItem('userdata');
+        await AsyncStorage.removeItem('userdata2');
+        await AsyncStorage.removeItem('userdatas');
+        await AsyncStorage.removeItem('userdatafiles1');
+        await AsyncStorage.removeItem('accesstoken');
+
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: response.data.message,
+          style: {
+            borderLeftColor: 'pink',
+            backgroundColor: 'yellow',
+            width: '80%',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          text1Style: {
+            color: 'red',
+            fontSize: 14,
+          },
+          text2Style: {
+            color: 'green',
+            fontSize: 14,
+            fontFamily: 'Campton Bold',
+          },
+        });
+        navigation.navigate('SignIn');
+      } else {
+        Alert.alert('Error Else');
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: response.data.message,
+          style: {
+            borderLeftColor: 'pink',
+            backgroundColor: 'yellow',
+            width: '80%',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          text1Style: {
+            color: 'red',
+            fontSize: 14,
+          },
+          text2Style: {
+            color: 'green',
+            fontSize: 14,
+            fontFamily: 'Campton Bold',
+          },
+        });
+      }
+    } catch (error) {
+      Alert.alert('Error', error.toString());
+      console.error(error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: error.message,
+        style: {
+          borderLeftColor: 'pink',
+          backgroundColor: 'yellow',
+          width: '80%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        text1Style: {
+          color: 'red',
+          fontSize: 14,
+        },
+        text2Style: {
+          color: 'green',
+          fontSize: 14,
+          fontFamily: 'Campton Bold',
+        },
+      });
+    } finally {
+      setIsLoading1(false);
+    }
+  };
+
+  const handleCreditWallet = async () => {
+    const userToken = userAccessToken?.accessToken;
+    console.log('Testing', userToken);
+    if (isNaN(amount) || amount === '') {
+      Alert.alert('Error', 'Please enter a valid amount.');
+      console.log(homeScreenUrl);
+      return;
+    }
+
+    setIsFocused1(true);
+    try {
+      if (!homeScreenUrl) {
+        Alert.alert('Error', 'Callback URL is not defined.');
+        return;
+      }
+      const response = await axios.post(
+        'https://api.trendit3.com/api/payment/credit-wallet',
+
+        {amount: Number(amount)},
+        {
+          headers: {
+            Authorization: `Bearer ${userAccessToken.accessToken}`, // replace userToken with your actual token
+            'Content-Type': 'application/json',
+            'CALLBACK-URL': homeScreenUrl,
+          },
+        },
+      );
+
+      if (response.data.status === 'success') {
+        // Alert.alert('Payment initialized', 'Redirecting to payment page...');
+        Toast.show({
+          type: 'success',
+          text1: 'Success',
+          text2: response.data.message,
+          style: {
+            borderLeftColor: 'pink',
+            backgroundColor: 'yellow',
+            width: '80%',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          text1Style: {
+            color: 'red',
+            fontSize: 14,
+          },
+          text2Style: {
+            color: 'green',
+            fontSize: 14,
+            fontFamily: 'Campton Bold',
+          },
+        });
+        console.log(response.data);
+        const url = response.data.authorization_url;
+        console.log('URL:', url); // replace with the actual URL you want to redirect to
+
+        Linking.openURL(url);
+      } else if (response.status === 401) {
+        console.error('Unauthorized: Access token is invalid or expired.');
+        await AsyncStorage.removeItem('userbalance');
+        await AsyncStorage.removeItem('userdata1');
+        await AsyncStorage.removeItem('userdata');
+        await AsyncStorage.removeItem('userdata2');
+        await AsyncStorage.removeItem('userdatas');
+        await AsyncStorage.removeItem('userdatafiles1');
+        await AsyncStorage.removeItem('accesstoken');
+
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: response.data.message,
+          style: {
+            borderLeftColor: 'pink',
+            backgroundColor: 'yellow',
+            width: '80%',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          text1Style: {
+            color: 'red',
+            fontSize: 14,
+          },
+          text2Style: {
+            color: 'green',
+            fontSize: 14,
+            fontFamily: 'Campton Bold',
+          },
+        });
+        navigation.navigate('SignIn');
+      } else {
+        Alert.alert('Error', response.data.message);
+      }
+    } catch (error) {
+      Alert.alert('Error', 'An error occurred while processing the request.');
+      console.error(error.response.data); // log the server's response
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: error.message,
+        style: {
+          borderLeftColor: 'pink',
+          backgroundColor: 'yellow',
+          width: '80%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        text1Style: {
+          color: 'red',
+          fontSize: 14,
+        },
+        text2Style: {
+          color: 'green',
+          fontSize: 14,
+          fontFamily: 'Campton Bold',
+        },
+      });
+    } finally {
+      setIsLoading1(false);
+    }
   };
 
   const fetchBalance = async () => {
@@ -123,7 +430,14 @@ const Home = () => {
             await AsyncStorage.removeItem('userdatas');
             await AsyncStorage.removeItem('userdatafiles1');
             await AsyncStorage.removeItem('accesstoken');
-            navigation.navigate('SignIn');
+            navigation.reset({
+              index: 0,
+              routes: [
+                {
+                  name: 'SignIn',
+                },
+              ],
+            });
           }
           setIsLoading(false);
           throw new Error(data.message);
@@ -143,7 +457,79 @@ const Home = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused, userAccessToken]);
 
-  // Inside your component
+  const fetchSocialLinks = async () => {
+    setIsLoading(true);
+    if (userAccessToken) {
+      try {
+        const response = await fetch(
+          'https://api.trendit3.com/api/verified_socials',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${userAccessToken.accessToken}`, // Add the access token to the headers
+            },
+          },
+        );
+
+        const data = await response.json();
+
+        if (response.ok) {
+          console.log('Successful', data);
+          AsyncStorage.setItem(
+            'sociallinks',
+            JSON.stringify({
+              facebook: data.facebook,
+              tiktok: data.tiktok,
+              x: data.x,
+              instagram: data.instagram,
+            }),
+          )
+            .then(() => {
+              setUserSocials(data);
+              console.log('Socials Stored');
+            })
+            .catch(error => {
+              console.error('Error storing user Socials:', error);
+            });
+          setIsLoading(false);
+        } else {
+          if (response.status === 401) {
+            console.log('401 Unauthorized: Access token is invalid or expired');
+            await AsyncStorage.removeItem('userbalance');
+            await AsyncStorage.removeItem('userdata1');
+            await AsyncStorage.removeItem('userdata');
+            await AsyncStorage.removeItem('userdata2');
+            await AsyncStorage.removeItem('userdatas');
+            await AsyncStorage.removeItem('userdatafiles1');
+            await AsyncStorage.removeItem('accesstoken');
+            navigation.reset({
+              index: 0,
+              routes: [
+                {
+                  name: 'SignIn',
+                },
+              ],
+            });
+          }
+          setIsLoading(false);
+          throw new Error(data.message);
+        }
+      } catch (error) {
+        console.error('Error during balance fetch:', error);
+      }
+    } else {
+      console.log('No access token found');
+    }
+  };
+
+  useEffect(() => {
+    if (isFocused && userAccessToken) {
+      fetchSocialLinks();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFocused, userAccessToken]);
+
   const fetchUserData = () => {
     AsyncStorage.getItem('userdatafiles1')
       .then(data => {
@@ -219,7 +605,7 @@ const Home = () => {
             <View style={styles.walletBalanceContainer}>
               <Text style={styles.WalletBalance}>Wallet bal:</Text>
               <Text style={styles.WalletAmount}>
-                {userData?.userdata?.wallet?.currency_code}{' '}
+                {userData?.userdata?.wallet?.currency_symbol}
                 {isLoading ? (
                   <ActivityIndicator size="small" color="#0000ff" />
                 ) : (
@@ -229,9 +615,7 @@ const Home = () => {
               <View style={styles.WalletButtonsContainer}>
                 <TouchableOpacity
                   style={styles.fundButton}
-                  onPress={() =>
-                    navigation.navigate('More', {screen: 'Credit'})
-                  }>
+                  onPress={() => setIsModalVisible(true)}>
                   <Svg
                     width="18"
                     height="18"
@@ -341,9 +725,10 @@ const Home = () => {
                     Complete your profile set up
                   </Text>
                   <Text style={[styles.SetUpSubText, dynamicStyles.TextColor]}>
-                    You need to link your Facebook Account to Hawkit before you
-                    can start earning with your Facebook Account. Click the
-                    button below to link your Facebook account now.
+                    To personalize your experience and let you take full
+                    advantage of everything we offer, we encourage you to
+                    complete your profile settings. A well-rounded profile lets
+                    you showcase your expertise, interests, and goals. 
                   </Text>
                   <View style={{paddingTop: 10}} />
                   <TouchableOpacity
@@ -397,9 +782,9 @@ const Home = () => {
                     Link Your Instagram Account
                   </Text>
                   <Text style={[styles.SetUpSubText, dynamicStyles.TextColor]}>
-                    You need to link your Facebook Account to Hawkit before you
-                    can start earning with your Facebook Account. Click the
-                    button below to link your Facebook account now.
+                    You need to link your Instagram account to Trendit³ before
+                    you can start earning. Click the button below to link your
+                    Instagram account now.
                   </Text>
                   <View style={{paddingTop: 10}} />
 
@@ -487,6 +872,148 @@ const Home = () => {
           )}
         </View>
       </ScrollView>
+      <Modal
+        animationType={'slide'}
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={() => setIsModalVisible(false)}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: '#000000aa',
+            padding: 20,
+            justifyContent: 'center',
+          }}>
+          <>
+            <SafeAreaView>
+              <View
+                style={{
+                  backgroundColor: '#121212',
+                  width: '100%',
+                  paddingHorizontal: 10,
+                  paddingVertical: 20,
+                  maxHeight: deviceHeight * 0.7,
+                  position: 'relative',
+                }}>
+                <TouchableOpacity
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: 50,
+                    height: 50,
+                    borderRadius: 50,
+                    position: 'absolute',
+                    top: -10,
+                    alignSelf: 'flex-end',
+                  }}
+                  onPress={() => setIsModalVisible(false)}>
+                  <View
+                    style={{
+                      backgroundColor: '#FF6DFB',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      width: 50,
+                      height: 50,
+                      borderRadius: 50,
+                      position: 'absolute',
+                      top: -20,
+                      alignSelf: 'flex-end',
+                    }}>
+                    <Svg
+                      width="30"
+                      height="30"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <Path
+                        d="M18 6L6 18M18 18L6 6.00001"
+                        stroke="white"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                      />
+                    </Svg>
+                  </View>
+                </TouchableOpacity>
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    paddingHorizontal: 30,
+                    paddingVertical: 30,
+                  }}>
+                  <Text
+                    style={{
+                      color: '#fff',
+                      fontSize: 24,
+                      fontFamily: 'Campton Bold',
+                      paddingBottom: 10,
+                      paddingTop: 20,
+                    }}>
+                    Fund Wallet
+                  </Text>
+                  <Text
+                    style={{
+                      color: '#b1b1b1',
+                      fontSize: 12,
+                      fontWeight: 400,
+                      fontFamily: 'CamptonBook',
+                      textAlign: 'center',
+                      paddingHorizontal: 20,
+                    }}>
+                    Please enter the amount which you like to fund your wallet
+                    with
+                  </Text>
+                </View>
+                <View style={{paddingBottom: 10, paddingHorizontal: 20}}>
+                  <Text style={{color: '#fff', paddingBottom: 5}}>Amount</Text>
+                  <TextInput
+                    placeholder="₦ Amount"
+                    style={{
+                      backgroundColor: '#fff',
+                      color: '#000',
+                      padding: 10,
+                      borderRadius: 10,
+                    }}
+                    keyboardType="numeric"
+                    placeholderTextColor={'#000'}
+                    value={amount}
+                    selectionColor={'#000'}
+                    onChangeText={setAmount}
+                  />
+                  <Text
+                    style={{fontSize: 10, paddingTop: 10, paddingBottom: 10}}>
+                    You can choose your preferred method of payment such as Card
+                    payment, Bank transfer or USSD, simply by clicking on th
+                    “Change Payment” button.
+                  </Text>
+                </View>
+                <View style={{paddingHorizontal: 10, paddingBottom: 30}}>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: '#CB29BE',
+                      height: 40,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      width: '90%',
+                      borderRadius: 110,
+                      alignSelf: 'center',
+                    }}
+                    onPress={handleCreditWallet}>
+                    <Text
+                      style={{
+                        color: '#fff',
+                        fontFamily: 'CamptonBook',
+                        fontSize: 14,
+                      }}>
+                      Fund Wallet
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </SafeAreaView>
+          </>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };

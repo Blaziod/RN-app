@@ -23,6 +23,7 @@ import {useIsFocused} from '@react-navigation/native';
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
 import queryString from 'query-string';
+import {useTheme} from '../../Components/Contexts/colorTheme';
 
 const TransactionTopMenu = () => {
   const navigation = useNavigation();
@@ -40,6 +41,30 @@ const TransactionTopMenu = () => {
   const [userBalance, setUserBalance] = useState(null);
   const [hasFetchedBalance, setHasFetchedBalance] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
+  const {theme} = useTheme();
+  const dynamicStyles = StyleSheet.create({
+    AppContainer: {
+      flex: 1,
+      backgroundColor: theme === 'dark' ? '#121212' : '#FFFFFF', // Dynamic background color
+      width: '100%',
+    },
+    DivContainer: {
+      backgroundColor:
+        theme === 'dark'
+          ? 'rgba(255, 255, 255, 0.03)'
+          : 'rgba(177, 177, 177, 0.20)', // Dynamic background color
+    },
+    TextColor: {
+      color: theme === 'dark' ? '#FFFFFF' : '#000000', // Dynamic text color
+    },
+    Button: {
+      backgroundColor: theme === 'dark' ? '#000' : '#FFF', // Dynamic background color
+    },
+    Btext: {
+      color: theme === 'dark' ? '#FF6DFB' : '#FFF', // Dynamic text color
+    },
+  });
 
   const fetchBalance = async () => {
     setIsLoading(true);
@@ -77,6 +102,24 @@ const TransactionTopMenu = () => {
           setHasFetchedBalance(true);
           setIsLoading(false);
         } else {
+          if (response.status === 401) {
+            console.log('401 Unauthorized: Access token is invalid or expired');
+            await AsyncStorage.removeItem('userbalance');
+            await AsyncStorage.removeItem('userdata1');
+            await AsyncStorage.removeItem('userdata');
+            await AsyncStorage.removeItem('userdata2');
+            await AsyncStorage.removeItem('userdatas');
+            await AsyncStorage.removeItem('userdatafiles1');
+            await AsyncStorage.removeItem('accesstoken');
+            navigation.reset({
+              index: 0,
+              routes: [
+                {
+                  name: 'SignIn',
+                },
+              ],
+            });
+          }
           setIsLoading(false);
           throw new Error(data.message);
         }
@@ -525,7 +568,8 @@ const TransactionTopMenu = () => {
         </View>
       </Modal>
       <View>
-        <View style={styles.walletBalanceContainer}>
+        <View
+          style={[styles.walletBalanceContainer, dynamicStyles.DivContainer]}>
           <View
             style={{
               flexDirection: 'row',
@@ -553,11 +597,14 @@ const TransactionTopMenu = () => {
                 />
               </Svg>
               <Text
-                style={{
-                  color: '#b1b1b1',
-                  fontSize: 14,
-                  fontFamily: 'CamptonBook',
-                }}>
+                style={[
+                  {
+                    color: '#b1b1b1',
+                    fontSize: 14,
+                    fontFamily: 'CamptonBook',
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 Jan 1 - Jan 27, 2023
               </Text>
             </View>
@@ -569,25 +616,31 @@ const TransactionTopMenu = () => {
                 justifyContent: 'center',
               }}>
               <Text
-                style={{
-                  color: '#b1b1b1',
-                  fontSize: 14,
-                  fontFamily: 'CamptonBook',
-                }}>
+                style={[
+                  {
+                    color: '#b1b1b1',
+                    fontSize: 14,
+                    fontFamily: 'CamptonBook',
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 Period:
               </Text>
               <Text
-                style={{
-                  color: '#b1b1b1',
-                  fontSize: 14,
-                  fontFamily: 'CamptonBook',
-                }}>
+                style={[
+                  {
+                    color: '#b1b1b1',
+                    fontSize: 14,
+                    fontFamily: 'CamptonBook',
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 All time
               </Text>
             </View>
           </View>
           <Text style={styles.WalletAmount}>
-            {userData?.userdata?.wallet?.currency_code}{' '}
+            {userData?.userdata?.wallet?.currency_symbol}{' '}
             {isLoading ? (
               <ActivityIndicator size="small" color="#0000ff" />
             ) : (
@@ -596,7 +649,7 @@ const TransactionTopMenu = () => {
           </Text>
           <View style={styles.WalletButtonsContainer}>
             <TouchableOpacity
-              style={styles.fundButton}
+              style={[styles.fundButton]}
               onPress={() => setIsModalVisible(true)}>
               <Svg
                 width="18"
@@ -611,7 +664,7 @@ const TransactionTopMenu = () => {
                 />
               </Svg>
 
-              <Text style={styles.fundText}>Fund</Text>
+              <Text style={[styles.fundText]}>Fund</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.withdrawButton}
@@ -628,7 +681,7 @@ const TransactionTopMenu = () => {
                 />
               </Svg>
 
-              <Text style={styles.withdrawText}>Withdraw</Text>
+              <Text style={[styles.withdrawText]}>Withdraw</Text>
             </TouchableOpacity>
           </View>
           <View
@@ -640,56 +693,74 @@ const TransactionTopMenu = () => {
             }}>
             <View>
               <Text
-                style={{
-                  color: '#fff',
-                  fontSize: 9,
-                  fontFamily: 'CamptonBook',
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontSize: 9,
+                    fontFamily: 'CamptonBook',
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 Total earned
               </Text>
               <Text
-                style={{
-                  color: '#fff',
-                  fontSize: 13,
-                  fontFamily: 'CamptonBook',
-                }}>
-                {userData?.userdata?.wallet?.currency_code} 30,008.25
+                style={[
+                  {
+                    color: '#fff',
+                    fontSize: 13,
+                    fontFamily: 'CamptonBook',
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
+                {userData?.userdata?.wallet?.currency_symbol} 30,008.25
               </Text>
             </View>
             <View>
               <Text
-                style={{
-                  color: '#fff',
-                  fontSize: 9,
-                  fontFamily: 'CamptonBook',
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontSize: 9,
+                    fontFamily: 'CamptonBook',
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 Total earned
               </Text>
               <Text
-                style={{
-                  color: '#fff',
-                  fontSize: 13,
-                  fontFamily: 'CamptonBook',
-                }}>
-                {userData?.userdata?.wallet?.currency_code} 30,008.25
+                style={[
+                  {
+                    color: '#fff',
+                    fontSize: 13,
+                    fontFamily: 'CamptonBook',
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
+                {userData?.userdata?.wallet?.currency_symbol} 30,008.25
               </Text>
             </View>
             <View>
               <Text
-                style={{
-                  color: '#fff',
-                  fontSize: 9,
-                  fontFamily: 'CamptonBook',
-                }}>
+                style={[
+                  {
+                    color: '#fff',
+                    fontSize: 9,
+                    fontFamily: 'CamptonBook',
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 Total earned
               </Text>
               <Text
-                style={{
-                  color: '#fff',
-                  fontSize: 13,
-                  fontFamily: 'CamptonBook',
-                }}>
-                {userData?.userdata?.wallet?.currency_code} 30,008.25
+                style={[
+                  {
+                    color: '#fff',
+                    fontSize: 13,
+                    fontFamily: 'CamptonBook',
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
+                {userData?.userdata?.wallet?.currency_symbol} 30,008.25
               </Text>
             </View>
           </View>
@@ -761,7 +832,7 @@ const styles = StyleSheet.create({
   WalletAmount: {
     fontFamily: 'CamptonBook',
     fontSize: 40,
-    color: '#FFD0FE',
+    color: '#FF6DFB',
   },
   fundIcon: {
     height: 15,

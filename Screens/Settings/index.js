@@ -11,6 +11,7 @@ import BankSettings from './bankDetails';
 import PreferencesSettings from './preferences';
 import {Svg, Path} from 'react-native-svg';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {useTheme} from '../../Components/Contexts/colorTheme';
 
 const Settings = () => {
   const [earnMenu, setEarnMenu] = useState(1);
@@ -18,22 +19,49 @@ const Settings = () => {
   const onSelectSwitch = value => {
     setEarnMenu(value);
   };
+
+  const {theme} = useTheme();
+
+  const dynamicStyles = StyleSheet.create({
+    AppContainer: {
+      flex: 1,
+      backgroundColor: theme === 'dark' ? '#000' : '#FFFFFF', // Dynamic background color
+      width: '100%',
+    },
+    DivContainer: {
+      backgroundColor:
+        theme === 'dark' ? '#171717' : 'rgba(177, 177, 177, 0.20)', // Dynamic background color
+    },
+    TextColor: {
+      color: theme === 'dark' ? '#FFFFFF' : '#000000', // Dynamic text color
+    },
+    Button: {
+      backgroundColor: theme === 'dark' ? '#FFF' : '#CB29BE', // Dynamic background color
+    },
+    Btext: {
+      color: theme === 'dark' ? '#FF6DFB' : '#FFF', // Dynamic text color
+    },
+  });
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, dynamicStyles.AppContainer]}>
       <ScrollView
         scrollEnabled={true}
         contentInsetAdjustmentBehavior="automatic">
         <View>
           <Headers />
-          <View style={styles.box}>
-            <Text style={styles.Headers}>Profile Settings</Text>
+          <View style={[styles.box]}>
+            <Text style={[styles.Headers, dynamicStyles.TextColor]}>
+              Profile Settings
+            </Text>
             <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                gap: 10,
-              }}>
+              style={[
+                {
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: 10,
+                },
+              ]}>
               <SettingsCustomSwitch
                 selectionMode={1}
                 option1="General"
@@ -44,32 +72,6 @@ const Settings = () => {
                 // option6="Save"
                 onSelectSwitch={onSelectSwitch}
               />
-              <TouchableOpacity
-                style={{
-                  flexDirection: 'row',
-                  gap: 10,
-                }}>
-                <Svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="19"
-                  viewBox="0 0 18 19"
-                  fill="none">
-                  <Path
-                    d="M15 5.75L7.10355 13.6464C6.90829 13.8417 6.59171 13.8417 6.39645 13.6464L3 10.25"
-                    stroke="#FFD0FE"
-                    stroke-linecap="round"
-                  />
-                </Svg>
-                <Text
-                  style={{
-                    color: '#FFD0FE',
-                    fontFamily: 'CamptonMedium',
-                    fontSize: 13,
-                  }}>
-                  Save
-                </Text>
-              </TouchableOpacity>
             </View>
 
             {earnMenu === 1 && (

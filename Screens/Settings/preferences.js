@@ -2,56 +2,45 @@
 import React from 'react';
 import {View, Text, TextInput, StyleSheet, Switch} from 'react-native';
 import {useState} from 'react';
+import {useTheme} from '../../Components/Contexts/colorTheme';
 
 const PreferencesSettings = () => {
   const [isDarkEnabled, setDarkEnabled] = useState(false);
   const [isLightEnabled, setLightEnabled] = useState(false);
   const [isSystemEnabled, setSystemEnabled] = useState(false);
+  const {theme, toggleTheme} = useTheme();
 
-  // Define colors for light and dark themes
-  const themeColors = {
-    dark: {
-      backgroundColor: '#121212',
-      textColor: '#ffffff',
-      inputBackgroundColor: '#1C1C1C',
-      placeholderTextColor: '#ffffff',
+  const dynamicStyles = StyleSheet.create({
+    AppContainer: {
+      flex: 1,
+      backgroundColor: theme === 'dark' ? '#000' : '#FFFFFF', // Dynamic background color
+      width: '100%',
     },
-    light: {
-      backgroundColor: '#ffffff',
-      textColor: '#000000',
-      inputBackgroundColor: '#f0f0f0',
-      placeholderTextColor: '#000000',
+    DivContainer: {
+      backgroundColor:
+        theme === 'dark' ? '#171717' : 'rgba(177, 177, 177, 0.20)', // Dynamic background color
     },
-  };
-
-  const currentTheme = isLightEnabled ? themeColors.light : themeColors.dark;
+    TextColor: {
+      color: theme === 'dark' ? '#FFFFFF' : '#000000', // Dynamic text color
+    },
+    Button: {
+      backgroundColor: theme === 'dark' ? '#FFF' : '#CB29BE',
+    },
+    Btext: {
+      color: theme === 'dark' ? '#FF6DFB' : '#FFF',
+    },
+  });
 
   return (
-    <View
-      style={[
-        styles.container,
-        {backgroundColor: currentTheme.backgroundColor},
-      ]}>
-      <Text style={[styles.Header2, {color: currentTheme.textColor}]}>
-        Appearance
-      </Text>
+    <View style={[styles.container, dynamicStyles.AppContainer]}>
+      <Text style={[styles.Header2, dynamicStyles.TextColor]}>Appearance</Text>
 
       <View>
-        <View
-          style={[
-            styles.row,
-            {backgroundColor: currentTheme.inputBackgroundColor},
-          ]}>
+        <View style={[styles.row2, dynamicStyles.DivContainer]}>
           <TextInput
-            style={[
-              styles.Input2,
-              {
-                backgroundColor: currentTheme.inputBackgroundColor,
-                color: currentTheme.textColor,
-              },
-            ]}
+            style={[styles.Input2, dynamicStyles.TextColor]}
             placeholder="Dark Mode"
-            placeholderTextColor={currentTheme.placeholderTextColor}
+            placeholderTextColor={theme === 'dark' ? '#FFFFFF' : '#000000'}
             editable={isDarkEnabled}
           />
           <Switch
@@ -66,24 +55,18 @@ const PreferencesSettings = () => {
               }
             }}
             value={isDarkEnabled}
+            onPress={toggleTheme}
           />
         </View>
         <View
-          style={[
-            styles.row2,
-            {backgroundColor: currentTheme.inputBackgroundColor},
-          ]}>
+          style={[styles.row2, dynamicStyles.DivContainer]}
+          onPress={toggleTheme}>
           <TextInput
-            style={[
-              styles.Input2,
-              {
-                backgroundColor: currentTheme.inputBackgroundColor,
-                color: currentTheme.textColor,
-              },
-            ]}
+            style={[styles.Input2, dynamicStyles.TextColor]}
             placeholder="Light Mode"
-            placeholderTextColor={currentTheme.placeholderTextColor}
+            placeholderTextColor={theme === 'dark' ? '#FFFFFF' : '#000000'}
             editable={isLightEnabled}
+            onPress={toggleTheme}
           />
           <Switch
             trackColor={{false: '#767577', true: '#81b0ff'}}
@@ -97,23 +80,14 @@ const PreferencesSettings = () => {
               }
             }}
             value={isLightEnabled}
+            onPress={toggleTheme}
           />
         </View>
-        <View
-          style={[
-            styles.row2,
-            {backgroundColor: currentTheme.inputBackgroundColor},
-          ]}>
+        <View style={[styles.row2, dynamicStyles.DivContainer]}>
           <TextInput
-            style={[
-              styles.Input2,
-              {
-                backgroundColor: currentTheme.inputBackgroundColor,
-                color: currentTheme.textColor,
-              },
-            ]}
+            style={[styles.Input2, dynamicStyles.TextColor]}
             placeholder="System Settings"
-            placeholderTextColor={currentTheme.placeholderTextColor}
+            placeholderTextColor={theme === 'dark' ? '#FFFFFF' : '#000000'}
             editable={isSystemEnabled}
           />
           <Switch
@@ -181,7 +155,6 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   Input2: {
-    backgroundColor: '#1C1C1C',
     color: '#fff',
     marginTop: 5,
     padding: 10,

@@ -15,6 +15,7 @@ import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 import {useTheme} from '../../Components/Contexts/colorTheme';
+import {ApiLink} from '../../enums/apiLink';
 
 const More = () => {
   // const height = Dimensions.get('screen').height;
@@ -63,7 +64,7 @@ const More = () => {
 
   const logout = async () => {
     try {
-      const response = await fetch('https://api.trendit3.com/api/logout', {
+      const response = await fetch(`${ApiLink.ENDPOINT_1}/logout`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

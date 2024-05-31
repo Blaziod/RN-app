@@ -19,6 +19,7 @@ import {useNavigation} from '@react-navigation/native';
 import {Svg, Path, G} from 'react-native-svg';
 import Toast from 'react-native-toast-message';
 import {launchImageLibrary} from 'react-native-image-picker';
+import {ApiLink} from '../../enums/apiLink';
 
 import {
   TKAdvertiseModalPicker,
@@ -204,7 +205,7 @@ const Advertise1TKMenu = () => {
 
       try {
         const response = await fetch(
-          `https://api.trendit3.com/api/tasks/new?payment_method=${paymentMethod}`,
+          `${ApiLink.ENDPOINT_1}/tasks/new?payment_method=${paymentMethod}`,
           {
             method: 'POST',
             headers: {
@@ -612,7 +613,7 @@ const Advertise1TKMenu = () => {
               fontFamily: 'CamptonBook',
               fontSize: 30,
             }}>
-            {userData1?.userdata?.wallet?.currency_symbol}:{' '}
+            {userData1?.userdata?.wallet?.currency_symbol}{' '}
             {isNaN(Number(chooseNumber)) ? 0 : Number(chooseNumber) * 140}
           </Text>
         </View>
@@ -1036,7 +1037,7 @@ const Advertise1TKMenu = () => {
                             fontSize: 30,
                             fontFamily: 'CamptonMedium',
                           }}>
-                          {/* {userData1?.userdata?.wallet?.currency_symbol}:{' '} */}
+                          {/* {userData1?.userdata?.wallet?.currency_symbol}{' '} */}
                           {isNaN(Number(chooseNumber))
                             ? 0
                             : Number(chooseNumber) * 140}
@@ -1061,7 +1062,7 @@ const Advertise1TKMenu = () => {
                             color: '#B1B1B1',
                             fontFamily: 'CamptonBook',
                           }}>
-                          {/* {userData1?.userdata?.wallet?.currency_symbol}:{' '} */}
+                          {/* {userData1?.userdata?.wallet?.currency_symbol}{' '} */}
                           {isNaN(Number(chooseNumber))
                             ? 0
                             : Number(chooseNumber) * 140}

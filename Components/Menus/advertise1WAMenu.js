@@ -19,6 +19,7 @@ import {useNavigation} from '@react-navigation/native';
 import {Svg, Path, G} from 'react-native-svg';
 import Toast from 'react-native-toast-message';
 import {launchImageLibrary} from 'react-native-image-picker';
+import {ApiLink} from '../../enums/apiLink';
 
 import {
   WAAdvertiseModalPicker,
@@ -203,7 +204,7 @@ const Advertise1WAMenu = () => {
 
       try {
         const response = await fetch(
-          `https://api.trendit3.com/api/tasks/new?payment_method=${paymentMethod}`,
+          `${ApiLink.ENDPOINT_1}/tasks/new?payment_method=${paymentMethod}`,
           {
             method: 'POST',
             headers: {
@@ -611,7 +612,7 @@ const Advertise1WAMenu = () => {
               fontFamily: 'CamptonBook',
               fontSize: 30,
             }}>
-            {userData1?.userdata?.wallet?.currency_symbol}:{' '}
+            {userData1?.userdata?.wallet?.currency_symbol}{' '}
             {isNaN(Number(chooseNumber)) ? 0 : Number(chooseNumber) * 80}
           </Text>
         </View>
@@ -1035,7 +1036,7 @@ const Advertise1WAMenu = () => {
                             fontSize: 30,
                             fontFamily: 'CamptonMedium',
                           }}>
-                          {/* {userData1?.userdata?.wallet?.currency_symbol}:{' '} */}
+                          {/* {userData1?.userdata?.wallet?.currency_symbol}{' '} */}
                           {isNaN(Number(chooseNumber))
                             ? 0
                             : Number(chooseNumber) * 80}
@@ -1060,7 +1061,7 @@ const Advertise1WAMenu = () => {
                             color: '#B1B1B1',
                             fontFamily: 'CamptonBook',
                           }}>
-                          {/* {userData1?.userdata?.wallet?.currency_symbol}:{' '} */}
+                          {/* {userData1?.userdata?.wallet?.currency_symbol}{' '} */}
                           {isNaN(Number(chooseNumber))
                             ? 0
                             : Number(chooseNumber) * 80}

@@ -72,10 +72,10 @@ const getStyles = (theme, selectionMode) =>
       justifyContent: 'space-around',
     },
     button: {
-      flex: 1,
       borderBottomWidth: 0.5,
       justifyContent: 'center',
       alignItems: 'center',
+      paddingRight: 30,
     },
     text: {
       fontSize: 13,

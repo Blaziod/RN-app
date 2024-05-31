@@ -1,7 +1,14 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {View, Text, SafeAreaView, ScrollView, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import EarnCustomSwitch from '../../Components/CustomSwitches/earnCustomSwitch';
 import {useState} from 'react';
 import Headers from '../../Components/Headers/Headers';
@@ -13,6 +20,7 @@ import {useTheme} from '../../Components/Contexts/colorTheme';
 const Advertise = () => {
   const [earnMenu, setEarnMenu] = useState(1);
   const {theme} = useTheme();
+  const strokeColor = theme === 'dark' ? '#fff' : '#000'; // Choosing color based on theme
 
   const dynamicStyles = StyleSheet.create({
     AppContainer: {
@@ -294,14 +302,42 @@ const Advertise = () => {
               <Text style={[styles.EarnText, dynamicStyles.TextColor]}>
                 Advertise
               </Text>
-              <View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  // gap: 5,
+                }}>
                 <EarnCustomSwitch
                   selectionMode={1}
                   option1="Post Advert"
                   option2="Engagement Task"
-                  option3="History"
                   onSelectSwitch={onSelectSwitch}
                 />
+                <TouchableOpacity
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    // gap: 5,
+                  }}>
+                  <Text style={[styles.EarnText2, dynamicStyles.TextColor]}>
+                    History
+                  </Text>
+                  <Svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="17"
+                    viewBox="0 0 16 17"
+                    fill="none">
+                    <Path
+                      d="M6.66797 4.58984L10.1966 8.11844C10.4569 8.37879 10.4569 8.8009 10.1966 9.06125L6.66797 12.5898"
+                      stroke={strokeColor}
+                      stroke-linecap="round"
+                    />
+                  </Svg>
+                </TouchableOpacity>
               </View>
 
               {earnMenu === 1 && (
@@ -385,6 +421,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 20,
     paddingTop: 50,
+  },
+  EarnText2: {
+    color: '#B1B1B1',
+    fontSize: 13,
+    fontFamily: 'Campton Bold',
   },
   EarnMenu: {
     flexDirection: 'row',

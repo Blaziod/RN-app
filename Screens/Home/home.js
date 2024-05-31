@@ -27,6 +27,7 @@ import {useTheme} from '../../Components/Contexts/colorTheme';
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
 import queryString from 'query-string';
+import {ApiLink} from '../../enums/apiLink';
 
 const wait = timeout => {
   return new Promise(resolve => {
@@ -138,7 +139,7 @@ const Home = () => {
       // Alert.alert('URL: ', `${txRef}, ${transactionId}`);
       setIsLoading1(true);
       const response = await axios.post(
-        'https://api.trendit3.com/api/payment/verify',
+        `${ApiLink.ENDPOINT_1}/payment/verify`,
         {reference: txRef, transaction_id: transactionId},
         {
           headers: {
@@ -150,6 +151,7 @@ const Home = () => {
 
       if (response.status >= 200 && response.status < 300) {
         Alert.alert('Payment Verified');
+        fetchBalance();
         console.log(response.data);
         setAmount('');
         Toast.show({
@@ -278,7 +280,7 @@ const Home = () => {
         return;
       }
       const response = await axios.post(
-        'https://api.trendit3.com/api/payment/credit-wallet',
+        `${ApiLink.ENDPOINT_1}/payment/credit-wallet`,
 
         {amount: Number(amount)},
         {
@@ -317,7 +319,7 @@ const Home = () => {
         console.log(response.data);
         const url = response.data.authorization_url;
         console.log('URL:', url); // replace with the actual URL you want to redirect to
-
+        setIsModalVisible(false);
         Linking.openURL(url);
       } else if (response.status === 401) {
         console.error('Unauthorized: Access token is invalid or expired.');
@@ -389,16 +391,13 @@ const Home = () => {
     setIsLoading(true);
     if (userAccessToken) {
       try {
-        const response = await fetch(
-          'https://api.trendit3.com/api/show_balance',
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${userAccessToken.accessToken}`, // Add the access token to the headers
-            },
+        const response = await fetch(`${ApiLink.ENDPOINT_1}/show_balance`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userAccessToken.accessToken}`, // Add the access token to the headers
           },
-        );
+        });
 
         const data = await response.json();
 
@@ -461,16 +460,13 @@ const Home = () => {
     setIsLoading(true);
     if (userAccessToken) {
       try {
-        const response = await fetch(
-          'https://api.trendit3.com/api/verified_socials',
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${userAccessToken.accessToken}`, // Add the access token to the headers
-            },
+        const response = await fetch(`${ApiLink.ENDPOINT_1}/verified_socials`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userAccessToken.accessToken}`, // Add the access token to the headers
           },
-        );
+        });
 
         const data = await response.json();
 

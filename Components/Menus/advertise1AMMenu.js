@@ -17,6 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {Svg, Path, G} from 'react-native-svg';
 import Toast from 'react-native-toast-message';
+import {ApiLink} from '../../enums/apiLink';
 
 import {
   AMAdvertiseModalPicker,
@@ -149,7 +150,7 @@ const Advertise1AMMenu = () => {
 
     try {
       const response = await fetch(
-        `https://api.trendit3.com/api/tasks/new?payment_method=${paymentMethod}`,
+        `${ApiLink.ENDPOINT_1}tasks/new?payment_method=${paymentMethod}`,
         {
           method: 'POST',
           headers: {
@@ -451,7 +452,7 @@ const Advertise1AMMenu = () => {
               fontFamily: 'CamptonBook',
               fontSize: 30,
             }}>
-            {userData1?.userdata?.wallet?.currency_symbol}:{' '}
+            {userData1?.userdata?.wallet?.currency_symbol}{' '}
             {isNaN(Number(chooseNumber)) ? 0 : Number(chooseNumber) * 20}
           </Text>
         </View>
@@ -875,7 +876,7 @@ const Advertise1AMMenu = () => {
                             fontSize: 30,
                             fontFamily: 'CamptonMedium',
                           }}>
-                          {/* {userData1?.userdata?.wallet?.currency_symbol}:{' '} */}
+                          {/* {userData1?.userdata?.wallet?.currency_symbol}{' '} */}
                           {isNaN(Number(chooseNumber))
                             ? 0
                             : Number(chooseNumber) * 20}
@@ -900,7 +901,7 @@ const Advertise1AMMenu = () => {
                             color: '#B1B1B1',
                             fontFamily: 'CamptonBook',
                           }}>
-                          {/* {userData1?.userdata?.wallet?.currency_symbol}:{' '} */}
+                          {/* {userData1?.userdata?.wallet?.currency_symbol}{' '} */}
                           {isNaN(Number(chooseNumber))
                             ? 0
                             : Number(chooseNumber) * 20}

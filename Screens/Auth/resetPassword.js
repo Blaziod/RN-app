@@ -16,6 +16,7 @@ import {
 import Toast from 'react-native-toast-message';
 import {Path, Svg} from 'react-native-svg';
 import {useNavigation} from '@react-navigation/native';
+import {ApiLink} from '../../enums/apiLink';
 
 const ResetPassword = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -29,16 +30,13 @@ const ResetPassword = () => {
   const handleResetPassword = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(
-        'https://api.trendit3.com/api/forgot-password',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({email_username: email}),
+      const response = await fetch(`${ApiLink.ENDPOINT_1}/forgot-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
+        body: JSON.stringify({email_username: email}),
+      });
 
       if (response.ok) {
         const data = await response.json();

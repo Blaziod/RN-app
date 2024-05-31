@@ -23,6 +23,7 @@ import {useIsFocused} from '@react-navigation/native';
 import TransactionsCustomSwitch from '../../Components/CustomSwitches/transactionsCustomSwitch';
 import TransactionMenu from '../../Components/Menus/transactionMenu';
 import {Svg, Path} from 'react-native-svg';
+import {ApiLink} from '../../enums/apiLink';
 
 const wait = timeout => {
   return new Promise(resolve => {
@@ -64,16 +65,13 @@ const WithdrawWallet = () => {
     setIsLoading(true);
     if (userAccessToken) {
       try {
-        const response = await fetch(
-          'https://api.trendit3.com/api/show_balance',
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${userAccessToken.accessToken}`, // Add the access token to the headers
-            },
+        const response = await fetch(`${ApiLink.ENDPOINT_1}/show_balance`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userAccessToken.accessToken}`, // Add the access token to the headers
           },
-        );
+        });
 
         const data = await response.json();
 
@@ -191,7 +189,7 @@ const WithdrawWallet = () => {
         return;
       }
       const response = await axios.post(
-        'https://api.trendit3.com/api/payment/credit-wallet',
+        `${ApiLink.ENDPOINT_1}/payment/credit-wallet`,
 
         {amount: Number(amount)},
         {

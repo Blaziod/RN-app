@@ -24,6 +24,7 @@ import axios from 'axios';
 import Toast from 'react-native-toast-message';
 import queryString from 'query-string';
 import {useTheme} from '../../Components/Contexts/colorTheme';
+import {ApiLink} from '../../enums/apiLink';
 
 const TransactionTopMenu = () => {
   const navigation = useNavigation();
@@ -70,16 +71,13 @@ const TransactionTopMenu = () => {
     setIsLoading(true);
     if (userAccessToken) {
       try {
-        const response = await fetch(
-          'https://api.trendit3.com/api/show_balance',
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${userAccessToken.accessToken}`, // Add the access token to the headers
-            },
+        const response = await fetch(`${ApiLink.ENDPOINT_1}/show_balance`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userAccessToken.accessToken}`, // Add the access token to the headers
           },
-        );
+        });
 
         const data = await response.json();
 
@@ -242,7 +240,7 @@ const TransactionTopMenu = () => {
       // Alert.alert('URL: ', `${txRef}, ${transactionId}`);
       setIsLoading1(true);
       const response = await axios.post(
-        'https://api.trendit3.com/api/payment/verify',
+        `${ApiLink.ENDPOINT_1}/payment/verify`,
         {reference: txRef, transaction_id: transactionId},
         {
           headers: {
@@ -349,7 +347,7 @@ const TransactionTopMenu = () => {
         return;
       }
       const response = await axios.post(
-        'https://api.trendit3.com/api/payment/credit-wallet',
+        `${ApiLink.ENDPOINT_1}/payment/credit-wallet`,
 
         {amount: Number(amount)},
         {
@@ -683,86 +681,6 @@ const TransactionTopMenu = () => {
 
               <Text style={[styles.withdrawText]}>Withdraw</Text>
             </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              gap: 30,
-              justifyContent: 'space-between',
-              paddingTop: 20,
-            }}>
-            <View>
-              <Text
-                style={[
-                  {
-                    color: '#fff',
-                    fontSize: 9,
-                    fontFamily: 'CamptonBook',
-                  },
-                  dynamicStyles.TextColor,
-                ]}>
-                Total earned
-              </Text>
-              <Text
-                style={[
-                  {
-                    color: '#fff',
-                    fontSize: 13,
-                    fontFamily: 'CamptonBook',
-                  },
-                  dynamicStyles.TextColor,
-                ]}>
-                {userData?.userdata?.wallet?.currency_symbol} 30,008.25
-              </Text>
-            </View>
-            <View>
-              <Text
-                style={[
-                  {
-                    color: '#fff',
-                    fontSize: 9,
-                    fontFamily: 'CamptonBook',
-                  },
-                  dynamicStyles.TextColor,
-                ]}>
-                Total earned
-              </Text>
-              <Text
-                style={[
-                  {
-                    color: '#fff',
-                    fontSize: 13,
-                    fontFamily: 'CamptonBook',
-                  },
-                  dynamicStyles.TextColor,
-                ]}>
-                {userData?.userdata?.wallet?.currency_symbol} 30,008.25
-              </Text>
-            </View>
-            <View>
-              <Text
-                style={[
-                  {
-                    color: '#fff',
-                    fontSize: 9,
-                    fontFamily: 'CamptonBook',
-                  },
-                  dynamicStyles.TextColor,
-                ]}>
-                Total earned
-              </Text>
-              <Text
-                style={[
-                  {
-                    color: '#fff',
-                    fontSize: 13,
-                    fontFamily: 'CamptonBook',
-                  },
-                  dynamicStyles.TextColor,
-                ]}>
-                {userData?.userdata?.wallet?.currency_symbol} 30,008.25
-              </Text>
-            </View>
           </View>
         </View>
       </View>

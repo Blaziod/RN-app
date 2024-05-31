@@ -14,6 +14,7 @@ import axios from 'axios';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import Toast from 'react-native-toast-message';
+import {ApiLink} from '../../enums/apiLink';
 
 const VerifyEmailScreen = () => {
   const [otp, setOtp] = useState(new Array(6).fill(''));
@@ -78,13 +79,10 @@ const VerifyEmailScreen = () => {
     setLastAttemptedOTP(otpString); // Save the OTP attempted to prevent re-attempts with the same OTP
     setIsLoading(true);
     try {
-      const response = await axios.post(
-        'https://api.trendit3.com/api/verify-email',
-        {
-          entered_code: otpString,
-          signup_token: signupToken,
-        },
-      );
+      const response = await axios.post(`${ApiLink.ENDPOINT_1}/verify-email`, {
+        entered_code: otpString,
+        signup_token: signupToken,
+      });
       console.log('Verify email response:', response.data);
       if (response.data.status_code === 201) {
         navigation.navigate('Onboard', {userId: response.data.user_data.id});

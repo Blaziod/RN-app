@@ -23,7 +23,7 @@ import Toast from 'react-native-toast-message';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {ApiLink} from '../../enums/apiLink';
 
-const Earn2IG = () => {
+const Earn2TK = () => {
   const navigation = useNavigation();
   const [GeneratedTasks, setGeneratedTasks] = useState([]);
   const [savedGeneratedTask, setSavedGeneratedTask] = useState([]);
@@ -87,6 +87,7 @@ const Earn2IG = () => {
 
   const minutes = Math.floor(time / 60);
   const seconds = time % 60;
+
   const fetchUserAccessToken = () => {
     // Your code to run on screen focus
     AsyncStorage.getItem('accesstoken')
@@ -245,9 +246,9 @@ const Earn2IG = () => {
             fontFamily: 'Campton Bold',
           },
         });
-        navigation.navigate('Earn1X');
         AsyncStorage.removeItem('startTime');
         AsyncStorage.removeItem('duration');
+        navigation.navigate('Earn1X');
       } else if (response.status === 401) {
         console.error('Unauthorized: Access token is invalid or expired.');
         await AsyncStorage.removeItem('userbalance');
@@ -394,7 +395,7 @@ const Earn2IG = () => {
           <View style={{paddingBottom: 20, paddingHorizontal: 20}}>
             <TouchableOpacity
               style={{flexDirection: 'row', gap: 5}}
-              onPress={() => navigation.navigate('Earn1X')}>
+              onPress={() => navigation.navigate('Earn1TK')}>
               {/* <Left /> */}
               <Text style={{color: '#FFD0FE', paddingBottom: 20}}>Go Back</Text>
             </TouchableOpacity>
@@ -406,7 +407,7 @@ const Earn2IG = () => {
                 height: 'auto',
               }}>
               <ImageBackground
-                source={require('../../assets/Frame131.png')}
+                source={require('../../assets/tki.png')}
                 style={{
                   height: 'auto',
                   paddingHorizontal: 20,
@@ -426,7 +427,7 @@ const Earn2IG = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 30,
                   }}>
-                  Post an Advert on your Instagram Page
+                  Post an Advert on your Tiktok Page
                 </Text>
                 <View
                   style={{
@@ -480,10 +481,10 @@ const Earn2IG = () => {
                     fontSize: 12,
                     color: 'blue',
                   }}>
-                  You must NOT DELETE THE ADVERT POST on the Instagram Page
-                  after you have post the advert on your account Your Trendit
-                  account will be suspended once you Delete the advert on your
-                  Instagram Page.
+                  You must NOT DELETE THE ADVERT POST on the Tiktok Page after
+                  you have post the advert on your account Your Trendit account
+                  will be suspended once you Delete the advert on your Tiktok
+                  Page.
                 </Text>
 
                 <View style={{alignSelf: 'center'}}>{/* <Info /> */}</View>
@@ -548,8 +549,8 @@ const Earn2IG = () => {
                       <Text style={styles.Step}>
                         Step 1:{' '}
                         <Text style={styles.StepText}>
-                          Open the Task Link above on your Instagram Mobile App
-                          or browser
+                          Open the Task Link above on your Tiktok Mobile App or
+                          browser
                         </Text>
                       </Text>
                     </View>
@@ -557,7 +558,7 @@ const Earn2IG = () => {
                       <Text style={styles.Step}>
                         Step 2:{' '}
                         <Text style={styles.StepText}>
-                          The link will direct you to a Instagram Page which you
+                          The link will direct you to a Tiktok Page which you
                           are meant to like and follow.
                         </Text>
                       </Text>
@@ -566,9 +567,9 @@ const Earn2IG = () => {
                       <Text style={styles.Step}>
                         Step 3:{' '}
                         <Text style={styles.StepText}>
-                          Click on the Like or Follow button on the Instagram
-                          Page to start liking or following the page. You MUST
-                          NOT Unfollow the account after you have followed the
+                          Click on the Like or Follow button on the Tiktok Page
+                          to start liking or following the page. You MUST NOT
+                          Unfollow the account after you have followed the
                           account.
                         </Text>
                       </Text>
@@ -580,8 +581,8 @@ const Earn2IG = () => {
                           Create a screenshot of the page that shows you have
                           liked or followed the page and upload the screenshot
                           under the Proof of Work Form below. You are also
-                          required to enter your Instagram Username or Name
-                          which you used to perform the task
+                          required to enter your Tiktok Username or Name which
+                          you used to perform the task
                         </Text>
                       </Text>
                     </View>
@@ -652,10 +653,10 @@ const Earn2IG = () => {
                     alignItems: 'center',
                   }}>
                   <Text style={styles.Box2Text}>
-                    You must NOT DELETE THE ADVERT POST on the Instagram Page
-                    after you have post the advert on your account Your Trendit³
+                    You must NOT DELETE THE ADVERT POST on the Tiktok Page after
+                    you have post the advert on your account Your Trendit³
                     account will be suspended once you Delete the advert on your
-                    Instagram Page.{' '}
+                    Tiktok Page.{' '}
                   </Text>
                   <View style={{alignSelf: 'center'}}>{/* <Warning /> */}</View>
                 </View>
@@ -701,7 +702,7 @@ const Earn2IG = () => {
                   </TouchableOpacity>
                 </View>
                 <Text style={{color: '#fff', fontFamily: 'CamptonSemiBold'}}>
-                  Please enter the Instagram Username that performed this task
+                  Please enter the Tiktok Username that performed this task
                 </Text>
                 <View style={{paddingVertical: 10}}>
                   <TextInput
@@ -818,4 +819,4 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
   },
 });
-export default Earn2IG;
+export default Earn2TK;

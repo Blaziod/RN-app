@@ -22,6 +22,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 import InReviewTwitterMenu from '../../Components/Menus/inReviewTwitterMenu';
 import FailedEarnersTask from '../../Components/Menus/failedEarnTask';
+import {ApiLink} from '../../enums/apiLink';
 
 const Earn1X = ({navigation}) => {
   const [earnMenu, setEarnMenu] = useState(1);
@@ -63,7 +64,7 @@ const Earn1X = ({navigation}) => {
     setIsLoading(true);
     try {
       const response = await fetch(
-        'https://api.trendit3.com/api/send_social_verification_request',
+        `${ApiLink.ENDPOINT_1}/send_social_verification_request`,
         {
           method: 'POST',
           headers: {
@@ -196,16 +197,13 @@ const Earn1X = ({navigation}) => {
     setIsLoading(true);
     if (userAccessToken) {
       try {
-        const response = await fetch(
-          'https://api.trendit3.com/api/verified_socials',
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${userAccessToken.accessToken}`, // Add the access token to the headers
-            },
+        const response = await fetch(`${ApiLink.ENDPOINT_1}/verified_socials`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userAccessToken.accessToken}`, // Add the access token to the headers
           },
-        );
+        });
 
         const data = await response.json();
 
@@ -269,7 +267,7 @@ const Earn1X = ({navigation}) => {
     if (userAccessToken) {
       try {
         const response = await fetch(
-          'https://api.trendit3.com/api/tasks/advert/Twitter',
+          `${ApiLink.ENDPOINT_1}/tasks/advert/Twitter`,
           {
             method: 'GET',
             headers: {

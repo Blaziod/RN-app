@@ -15,6 +15,7 @@ import axios from 'axios';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {Svg, Path} from 'react-native-svg';
+import {ApiLink} from '../../enums/apiLink';
 
 const ResetOtp = () => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
@@ -75,7 +76,7 @@ const ResetOtp = () => {
 
     try {
       const response = await axios.post(
-        'https://api.trendit3.com/api/reset-password',
+        `${ApiLink.ENDPOINT_1}/reset-password`,
         {
           entered_code: otp.join(''),
           reset_token: ResetToken,

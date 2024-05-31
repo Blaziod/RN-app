@@ -21,6 +21,7 @@ import {Svg, Path, G} from 'react-native-svg';
 import Toast from 'react-native-toast-message';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useTheme} from '../../Components/Contexts/colorTheme';
+import {ApiLink} from '../../enums/apiLink';
 
 import {
   FBAdvertiseModalPicker,
@@ -242,7 +243,7 @@ const Advertise1FBMenu = () => {
 
     try {
       const response = await fetch(
-        `https://api.trendit3.com/api/tasks/new?payment_method=${paymentMethod}`,
+        `${ApiLink.ENDPOINT_1}/tasks/new?payment_method=${paymentMethod}`,
         {
           method: 'POST',
           headers: {
@@ -756,7 +757,7 @@ const Advertise1FBMenu = () => {
               },
               dynamicStyles.TextColor,
             ]}>
-            {userData1?.userdata?.wallet?.currency_symbol}:
+            {userData1?.userdata?.wallet?.currency_symbol}
             {isNaN(Number(chooseNumber)) ? 0 : Number(chooseNumber) * 140}
           </Text>
         </View>
@@ -1217,7 +1218,7 @@ const Advertise1FBMenu = () => {
                             },
                             dynamicStyles.TextColor,
                           ]}>
-                          {/* {userData1?.userdata?.wallet?.currency_symbol}:{' '} */}
+                          {/* {userData1?.userdata?.wallet?.currency_symbol}{' '} */}
                           {isNaN(Number(chooseNumber))
                             ? 0
                             : Number(chooseNumber) * 140}
@@ -1248,7 +1249,7 @@ const Advertise1FBMenu = () => {
                             },
                             dynamicStyles.TextColor,
                           ]}>
-                          {/* {userData1?.userdata?.wallet?.currency_symbol}:{' '} */}
+                          {/* {userData1?.userdata?.wallet?.currency_symbol}{' '} */}
                           {isNaN(Number(chooseNumber))
                             ? 0
                             : Number(chooseNumber) * 140}

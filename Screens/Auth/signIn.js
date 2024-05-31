@@ -20,6 +20,7 @@ import Toast from 'react-native-toast-message';
 import {Svg, Path} from 'react-native-svg';
 import queryString from 'query-string';
 import axios from 'axios';
+import {ApiLink} from '../../enums/apiLink';
 
 const SignIn = () => {
   const [email_username, setEmail] = useState('');
@@ -36,15 +37,12 @@ const SignIn = () => {
       const token = await AsyncStorage.getItem('accesstoken');
       if (token) {
         try {
-          const response = await axios.get(
-            'https://api.trendit3.com/api/profile',
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json',
-              },
+          const response = await axios.get(`${ApiLink.ENDPOINT_1}/profile`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
             },
-          );
+          });
 
           if (response.status >= 200 && response.status < 300) {
             Alert.alert('Login Successful');
@@ -145,7 +143,7 @@ const SignIn = () => {
     try {
       setIsLoading(true);
 
-      const response = await axios.get('https://api.trendit3.com/api/profile', {
+      const response = await axios.get(`${ApiLink.ENDPOINT_1}/profile`, {
         headers: {
           Authorization: `Bearer ${ggToken}`,
           'Content-Type': 'application/json',
@@ -298,7 +296,7 @@ const SignIn = () => {
   const handleSignUp = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('https://api.trendit3.com/api/login', {
+      const response = await fetch(`${ApiLink.ENDPOINT_1}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -500,15 +498,12 @@ const SignIn = () => {
     console.log('Signing in with Google');
     setIsLoading(true);
     try {
-      const response = await fetch(
-        'https://api.trendit3.com/api/app/gg_login',
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+      const response = await fetch(`${ApiLink.ENDPOINT_1}/app/gg_login`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
+      });
 
       if (response.ok) {
         const data = await response.json();
@@ -608,7 +603,11 @@ const SignIn = () => {
                 secureTextEntry={!isPasswordVisible}
                 onChangeText={setPassword}
                 value={password}
-                style={{width: '85%'}}
+                style={{
+                  width: '85%',
+                  color: 'white',
+                  fontFamily: 'CamptonLight',
+                }}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
               />

@@ -23,7 +23,7 @@ import Toast from 'react-native-toast-message';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {ApiLink} from '../../enums/apiLink';
 
-const Earn2IG = () => {
+const Earn2WB = () => {
   const navigation = useNavigation();
   const [GeneratedTasks, setGeneratedTasks] = useState([]);
   const [savedGeneratedTask, setSavedGeneratedTask] = useState([]);
@@ -87,6 +87,7 @@ const Earn2IG = () => {
 
   const minutes = Math.floor(time / 60);
   const seconds = time % 60;
+
   const fetchUserAccessToken = () => {
     // Your code to run on screen focus
     AsyncStorage.getItem('accesstoken')
@@ -245,7 +246,7 @@ const Earn2IG = () => {
             fontFamily: 'Campton Bold',
           },
         });
-        navigation.navigate('Earn1X');
+        navigation.navigate('Earn1WA');
         AsyncStorage.removeItem('startTime');
         AsyncStorage.removeItem('duration');
       } else if (response.status === 401) {
@@ -394,7 +395,7 @@ const Earn2IG = () => {
           <View style={{paddingBottom: 20, paddingHorizontal: 20}}>
             <TouchableOpacity
               style={{flexDirection: 'row', gap: 5}}
-              onPress={() => navigation.navigate('Earn1X')}>
+              onPress={() => navigation.navigate('Earn1WA')}>
               {/* <Left /> */}
               <Text style={{color: '#FFD0FE', paddingBottom: 20}}>Go Back</Text>
             </TouchableOpacity>
@@ -406,7 +407,7 @@ const Earn2IG = () => {
                 height: 'auto',
               }}>
               <ImageBackground
-                source={require('../../assets/Frame131.png')}
+                source={require('../../assets/wai2.png')}
                 style={{
                   height: 'auto',
                   paddingHorizontal: 20,
@@ -426,7 +427,7 @@ const Earn2IG = () => {
                     fontFamily: 'CamptonMedium',
                     fontSize: 30,
                   }}>
-                  Post an Advert on your Instagram Page
+                  Post an Advert on your Whatsapp status
                 </Text>
                 <View
                   style={{
@@ -452,7 +453,7 @@ const Earn2IG = () => {
                       fontFamily: 'Campton Bold',
                       fontSize: 12,
                     }}>
-                    ₦110 Per Advert Post
+                    ₦60 Per Advert Post
                   </Text>
                 </View>
               </ImageBackground>
@@ -480,10 +481,10 @@ const Earn2IG = () => {
                     fontSize: 12,
                     color: 'blue',
                   }}>
-                  You must NOT DELETE THE ADVERT POST on the Instagram Page
+                  You must NOT DELETE THE ADVERT POST on the WhatsApp Status
                   after you have post the advert on your account Your Trendit
                   account will be suspended once you Delete the advert on your
-                  Instagram Page.
+                  WhatsApp Status.
                 </Text>
 
                 <View style={{alignSelf: 'center'}}>{/* <Info /> */}</View>
@@ -518,73 +519,56 @@ const Earn2IG = () => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <View
+                <Text
                   style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
+                    color: '#fff',
+                    fontFamily: 'CamptonSemiBold',
+                    fontSize: 22,
+                    paddingTop: 20,
                   }}>
+                  Task
+                </Text>
+                <View>
                   <Text
                     style={{
                       color: '#fff',
                       fontFamily: 'CamptonSemiBold',
-                      fontSize: 22,
-                      paddingTop: 20,
+                      fontSize: 12,
+                      paddingBottom: 10,
+                      paddingTop: 60,
                     }}>
-                    Task
+                    Please follow the step-by-step instructions below to do your
+                    task:
                   </Text>
-                  <View>
-                    <Text
-                      style={{
-                        color: '#fff',
-                        fontFamily: 'CamptonSemiBold',
-                        fontSize: 12,
-                        paddingBottom: 10,
-                        paddingTop: 60,
-                      }}>
-                      Please follow the step-by-step instructions below to do
-                      your task:
+                  <View style={styles.StepView}>
+                    <Text style={styles.Step}>
+                      Step 1:{' '}
+                      <Text style={styles.StepText}>
+                        Open the Task Link above on your Whatsapp Mobile App or
+                        browser
+                      </Text>
                     </Text>
-                    <View style={styles.StepView}>
-                      <Text style={styles.Step}>
-                        Step 1:{' '}
-                        <Text style={styles.StepText}>
-                          Open the Task Link above on your Instagram Mobile App
-                          or browser
-                        </Text>
+                  </View>
+
+                  <View style={styles.StepView}>
+                    <Text style={styles.Step}>
+                      Step 2:{' '}
+                      <Text style={styles.StepText}>
+                        Post the Caption and Media on your WhatsApp Status
                       </Text>
-                    </View>
-                    <View style={styles.StepView}>
-                      <Text style={styles.Step}>
-                        Step 2:{' '}
-                        <Text style={styles.StepText}>
-                          The link will direct you to a Instagram Page which you
-                          are meant to like and follow.
-                        </Text>
+                    </Text>
+                  </View>
+                  <View style={styles.StepView}>
+                    <Text style={styles.Step}>
+                      Step 3:{' '}
+                      <Text style={styles.StepText}>
+                        Create a screenshot of the status that shows you have
+                        posted the advert on your status and upload the
+                        screenshot under the Proof of Work Form below. You are
+                        also required to enter your WhatsApp Phone Number which
+                        you used to perform the task
                       </Text>
-                    </View>
-                    <View style={styles.StepView}>
-                      <Text style={styles.Step}>
-                        Step 3:{' '}
-                        <Text style={styles.StepText}>
-                          Click on the Like or Follow button on the Instagram
-                          Page to start liking or following the page. You MUST
-                          NOT Unfollow the account after you have followed the
-                          account.
-                        </Text>
-                      </Text>
-                    </View>
-                    <View style={styles.StepView}>
-                      <Text style={styles.Step}>
-                        Step 4:{' '}
-                        <Text style={styles.StepText}>
-                          Create a screenshot of the page that shows you have
-                          liked or followed the page and upload the screenshot
-                          under the Proof of Work Form below. You are also
-                          required to enter your Instagram Username or Name
-                          which you used to perform the task
-                        </Text>
-                      </Text>
-                    </View>
+                    </Text>
                   </View>
                 </View>
               </View>
@@ -652,10 +636,10 @@ const Earn2IG = () => {
                     alignItems: 'center',
                   }}>
                   <Text style={styles.Box2Text}>
-                    You must NOT DELETE THE ADVERT POST on the Instagram Page
+                    You must NOT DELETE THE ADVERT POST on the WhatsApp Status
                     after you have post the advert on your account Your Trendit³
                     account will be suspended once you Delete the advert on your
-                    Instagram Page.{' '}
+                    Whatsapp Status.{' '}
                   </Text>
                   <View style={{alignSelf: 'center'}}>{/* <Warning /> */}</View>
                 </View>
@@ -701,7 +685,8 @@ const Earn2IG = () => {
                   </TouchableOpacity>
                 </View>
                 <Text style={{color: '#fff', fontFamily: 'CamptonSemiBold'}}>
-                  Please enter the Instagram Username that performed this task
+                  Please enter the WhatsApp Phone Number that performed this
+                  task
                 </Text>
                 <View style={{paddingVertical: 10}}>
                   <TextInput
@@ -818,4 +803,4 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
   },
 });
-export default Earn2IG;
+export default Earn2WB;

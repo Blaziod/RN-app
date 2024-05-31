@@ -24,7 +24,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 import {ApiLink} from '../../enums/apiLink';
 
-const Earn1WAMenu = () => {
+const Earn1TRMenu = () => {
   const navigation = useNavigation();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [fetching, setFectching] = useState(false);
@@ -214,7 +214,6 @@ const Earn1WAMenu = () => {
       </Svg>
     ),
   };
-
   const fetchUserAccessToken = () => {
     // Your code to run on screen focus
     AsyncStorage.getItem('accesstoken')
@@ -254,12 +253,12 @@ const Earn1WAMenu = () => {
         );
         const data = await response.json();
         const task = data.performed_tasks[0]?.task;
-        console.log('tasks', data);
         if (response.ok && data.performed_tasks.length > 0) {
           setPendingTasks(data.performed_tasks);
           setTasks(task);
           console.log(tasks, 'hiiiiii');
           console.log(pendingTasks, 'h0000');
+          console.log('Successful Tasks fetch:', data);
           console.log('Successful Tasks fetch:', data);
           setFectching(false);
           Toast.show({
@@ -374,7 +373,7 @@ const Earn1WAMenu = () => {
           },
           body: JSON.stringify({
             task_type: 'advert',
-            platform: 'whatsapp',
+            platform: 'threads',
           }),
         });
 
@@ -412,7 +411,7 @@ const Earn1WAMenu = () => {
             }),
           )
             .then(() => {
-              navigation.navigate('Earn2WB');
+              navigation.navigate('Earn2TR');
             })
             .catch(error => {
               console.error('Error storing Generated Tasks:', error);
@@ -713,7 +712,7 @@ const Earn1WAMenu = () => {
                                 paddingBottom: 10,
                                 paddingTop: 20,
                               }}>
-                              Generate Next whatsapp Advert Task?
+                              Generate Next Threads Advert Task?
                             </Text>
                             <Text
                               style={{
@@ -725,7 +724,7 @@ const Earn1WAMenu = () => {
                                 paddingHorizontal: 20,
                               }}>
                               Are you sure you want to generate your next
-                              whatsapp Advert task now. You have 1 hour to
+                              Threads Advert task now. You have 1 hour to
                               perform this task. Please confirm only if you are
                               ready to perform the task.
                             </Text>
@@ -770,4 +769,4 @@ const Earn1WAMenu = () => {
   );
 };
 
-export default Earn1WAMenu;
+export default Earn1TRMenu;

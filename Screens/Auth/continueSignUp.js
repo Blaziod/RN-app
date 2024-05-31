@@ -17,6 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { useFocusEffect } from "@react-navigation/native";
 import {useNavigation} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
+import {ApiLink} from '../../enums/apiLink';
 
 const ContinueSignUp = () => {
   const [userData, setUserData] = useState(null);
@@ -34,11 +35,13 @@ const ContinueSignUp = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    fetch('https://api.trendit3.com/api/countries')
+    fetch(`${ApiLink.ENDPOINT_1}/countries`)
       .then(response => response.json())
       .then(data => {
-        setCountries(data.countries);
-        console.log(data.countries);
+        if (data.countries && data.countries.length > 0) {
+          setCountries(data.countries.slice(1)); // Skip the first element
+        }
+        console.log(data.countries.slice(1));
       })
 
       .catch(error => {
@@ -50,12 +53,13 @@ const ContinueSignUp = () => {
     if (selectedCountry !== null) {
       // setIsLoading(true);
       axios
-        .post('https://api.trendit3.com/api/states', {
+        .post(`${ApiLink.ENDPOINT_1}/states`, {
           country: selectedCountry,
         })
         .then(response => {
-          setState(response.data.states || []);
-          // setIsLoading(false);
+          if (response.data.states && response.data.states.length > 0) {
+            setState(response.data.states.slice(1));
+          }
         })
         .catch(error => {
           console.error('Error fetching states:', error);
@@ -68,7 +72,7 @@ const ContinueSignUp = () => {
     if (selectedState !== null) {
       // setIsLoading(true);
       axios
-        .post('https://api.trendit3.com/api/states/lga', {
+        .post(`${ApiLink.ENDPOINT_1}/states/lga`, {
           state: selectedState,
         })
         .then(response => {
@@ -101,7 +105,7 @@ const ContinueSignUp = () => {
 
   const handleContinue = () => {
     setIsLoading(true);
-    const url = 'https://api.trendit3.com/api/profile/update';
+    const url = `${ApiLink.ENDPOINT_1}/profile/update`;
     const formData = new FormData();
     formData.append('gender', gender);
     formData.append('country', selectedCountry);

@@ -22,6 +22,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 import {useTheme} from '../../Components/Contexts/colorTheme';
 import {useNavigation} from '@react-navigation/native';
+import {ApiLink} from '../../enums/apiLink';
 
 const GeneralSettings = () => {
   const navigation = useNavigation();
@@ -46,7 +47,7 @@ const GeneralSettings = () => {
   const [filePath, setFilePath] = useState(null);
   const {theme} = useTheme();
   useEffect(() => {
-    fetch('https://api.trendit3.com/api/countries')
+    fetch(`${ApiLink.ENDPOINT_1}/countries`)
       .then(response => response.json())
       .then(data => {
         setCountries(data.countries);
@@ -62,7 +63,7 @@ const GeneralSettings = () => {
     if (selectedCountry !== null) {
       // setIsLoading(true);
       axios
-        .post('https://api.trendit3.com/api/states', {
+        .post(`${ApiLink.ENDPOINT_1}/states`, {
           country: selectedCountry,
         })
         .then(response => {
@@ -96,7 +97,7 @@ const GeneralSettings = () => {
     if (selectedState !== null) {
       // setIsLoading(true);
       axios
-        .post('https://api.trendit3.com/api/states/lga', {
+        .post(`${ApiLink.ENDPOINT_1}/states/lga`, {
           state: selectedState,
         })
         .then(response => {
@@ -154,7 +155,7 @@ const GeneralSettings = () => {
         setFilePath(source);
 
         console.log(response);
-        const url = 'https://api.trendit3.com/api/profile/edit';
+        const url = `${ApiLink.ENDPOINT_1}/profile/edit`;
         // Create a new FormData object
         console.log('starting Image Upload');
         let formData = new FormData();
@@ -301,7 +302,7 @@ const GeneralSettings = () => {
   const handleContinue = () => {
     setIsLoading(true);
     console.log('Profile Editing Started');
-    const url = 'https://api.trendit3.com/api/profile/edit';
+    const url = `${ApiLink.ENDPOINT_1}/profile/edit`;
     const formData = new FormData();
     formData.append('access_token', userAccessToken?.accessToken);
     formData.append('gender', gender);

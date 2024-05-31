@@ -13,7 +13,7 @@ import {
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Svg, Path} from 'react-native-svg';
-import axios from 'axios';
+import {ApiLink} from '../../enums/apiLink';
 import {debounce} from 'lodash';
 
 const OnboardingSignUp = ({navigation, route}) => {
@@ -46,16 +46,13 @@ const OnboardingSignUp = ({navigation, route}) => {
 
       setIsCheckingUsername(true);
       try {
-        const response = await fetch(
-          'https://api.trendit3.com/api/check-username',
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({username: username}),
+        const response = await fetch(`${ApiLink.ENDPOINT_1}/check-username`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
           },
-        );
+          body: JSON.stringify({username: username}),
+        });
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -113,7 +110,7 @@ const OnboardingSignUp = ({navigation, route}) => {
 
     try {
       const response = await fetch(
-        'https://api.trendit3.com/api/complete-registration',
+        `${ApiLink.ENDPOINT_1}/complete-registration`,
         {
           method: 'POST',
           headers: {
@@ -130,7 +127,7 @@ const OnboardingSignUp = ({navigation, route}) => {
       );
 
       const data = await response.json();
-      if (response.status === 200 || response.status === 201) {
+      if (response.status_code === 200 || response.status_code === 201) {
         await AsyncStorage.setItem(
           'userdatafiles1',
           JSON.stringify({userdata: data.user_data}),
@@ -139,7 +136,6 @@ const OnboardingSignUp = ({navigation, route}) => {
           'accesstoken',
           JSON.stringify({accessToken: data.access_token}),
         );
-
         navigation.navigate('Onboard2');
       } else {
         throw new Error(data.message || 'Failed to complete registration');

@@ -9,6 +9,7 @@ import {
   Dimensions,
   ActivityIndicator,
 } from 'react-native';
+import {ApiLink} from '../../enums/apiLink';
 
 const OPTIONS = [
   'Facebook',
@@ -291,7 +292,7 @@ const AdvertiseModalPicker2 = props => {
   useEffect(() => {
     function FetchCountry() {
       setIsLoading(true); // Set loading to true when the fetch starts
-      fetch('https://api.trendit3.com/api/countries')
+      fetch(`${ApiLink.ENDPOINT_1}/countries`)
         .then(response => response.json())
         .then(data => {
           setLocations(data.countries);
@@ -345,7 +346,7 @@ const AdvertiseModalPicker5 = props => {
   useEffect(() => {
     function FetchReligion() {
       setIsLoading(true); // Set loading to true when the fetch starts
-      fetch('https://api.trendit3.com/api/religions')
+      fetch(`${ApiLink.ENDPOINT_1}/religions`)
         .then(response => response.json())
         .then(data => {
           console.log(data);

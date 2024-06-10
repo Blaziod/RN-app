@@ -29,6 +29,7 @@ const OPTIONS3 = [
   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
 ];
 const OPTIONS4 = ['All Gender', 'Male', 'Female'];
+const OPTIONS5 = ['Facebook', 'Instagram', 'X', 'Tiktok', 'Threads'];
 
 const WIDTH = Dimensions.get('window').width;
 // const HEIGHT = Dimensions.get('window').height;
@@ -450,6 +451,33 @@ const AdvertiseModalPicker4 = props => {
     </TouchableOpacity>
   );
 };
+
+const AdvertiseModalPicker6 = props => {
+  const onPressItem = option5 => {
+    props.changeModalVisibility(false);
+    props.setData(option5);
+  };
+
+  const option5 = OPTIONS5.map((item, index) => {
+    return (
+      <TouchableOpacity
+        style={styles.option}
+        key={index}
+        onPress={() => onPressItem(item)}>
+        <Text style={styles.text}>{item}</Text>
+      </TouchableOpacity>
+    );
+  });
+  return (
+    <TouchableOpacity
+      onPress={() => props.changeModalVisibility(false)}
+      style={styles.ModalPicker}>
+      <View style={styles.modal}>
+        <ScrollView>{option5}</ScrollView>
+      </View>
+    </TouchableOpacity>
+  );
+};
 const styles = StyleSheet.create({
   ModalPicker: {
     flex: 1,
@@ -470,7 +498,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     margin: 20,
     color: '#000',
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
   },
   centered: {
     flex: 1,
@@ -485,6 +513,7 @@ export {
   AdvertiseModalPicker3,
   AdvertiseModalPicker4,
   AdvertiseModalPicker5,
+  AdvertiseModalPicker6,
   FBAdvertiseModalPicker,
   TKAdvertiseModalPicker,
   YTAdvertiseModalPicker,

@@ -127,7 +127,7 @@ const OnboardingSignUp = ({navigation, route}) => {
       );
 
       const data = await response.json();
-      if (response.status_code === 200 || response.status_code === 201) {
+      if (response.ok && data.status === 'success') {
         await AsyncStorage.setItem(
           'userdatafiles1',
           JSON.stringify({userdata: data.user_data}),
@@ -160,7 +160,7 @@ const OnboardingSignUp = ({navigation, route}) => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
     } finally {
@@ -294,14 +294,14 @@ const styles = StyleSheet.create({
   },
   goBackText: {
     color: '#fff',
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
     position: 'absolute',
     top: 50,
     right: 10,
   },
   heading: {
     fontSize: 32,
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
     marginBottom: 10,
     color: '#fff',
     alignSelf: 'center',
@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
     color: '#B1B1B1',
     alignSelf: 'center',
     textAlign: 'center',
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
   },
   button: {
     backgroundColor: '#CB29BE',
@@ -328,13 +328,13 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 12,
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
   },
   textInput: {
     padding: 12,
     borderRadius: 5,
     color: 'white',
-    fontFamily: 'CamptonLight',
+    fontFamily: 'Manrope-Light',
     width: '80%',
   },
   eyeIcon: {
@@ -345,7 +345,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     width: '98%',
     color: 'white',
-    fontFamily: 'CamptonLight',
+    fontFamily: 'Manrope-Light',
     alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -356,7 +356,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     marginBottom: 5,
     paddingLeft: 8,
-    fontFamily: 'CamptonMedium',
+    fontFamily: 'Manrope-Medium',
     fontSize: 13,
   },
   nameInputContainer: {
@@ -401,7 +401,7 @@ const styles = StyleSheet.create({
   passwordHint: {
     color: '#fff',
     paddingLeft: 8,
-    fontFamily: 'CamptonMedium',
+    fontFamily: 'Manrope-Medium',
     fontSize: 10,
   },
 });

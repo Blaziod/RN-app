@@ -58,7 +58,7 @@ const PaidPostAdvertMenu = () => {
           <View style={styles.Check}>
             <Text
               style={[
-                {color: '#fff', fontFamily: 'CamptonMedium'},
+                {color: '#fff', fontFamily: 'Manrope-Medium'},
                 dynamicStyles.TextColor,
               ]}>
               {' '}
@@ -68,16 +68,16 @@ const PaidPostAdvertMenu = () => {
               style={[
                 {
                   color: '#fff',
-                  fontFamily: 'CamptonBook',
+                  fontFamily: 'Manrope-Regular',
                   paddingTop: 10,
                   fontSize: 12,
                 },
                 dynamicStyles.TextColor,
               ]}>
-              Post adverts of various businesses and top brands on your Twitter
-              page and earn ₦110 per advert past. The more you post, the more
-              you earn. Note that your Twitter page must have at least 500
-              Active Followers to be eligible for this task.
+              Promote advertisements for different businesses and top brands on
+              your X page and earn ₦110 for each post. The more you share, the
+              more you earn. Ensure that your X account has at least 500 active
+              followers to qualify for this task.
             </Text>
             <View
               style={{
@@ -104,7 +104,7 @@ const PaidPostAdvertMenu = () => {
                 <Text
                   style={{
                     color: '#808080',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 12,
                   }}>
                   Earning:
@@ -114,7 +114,7 @@ const PaidPostAdvertMenu = () => {
                 style={[
                   {
                     color: '#fff',
-                    fontFamily: 'Campton Bold',
+                    fontFamily: 'Manrope-ExtraBold',
                     fontSize: 12,
                   },
                   dynamicStyles.TextColor,
@@ -137,7 +137,7 @@ const PaidPostAdvertMenu = () => {
                 <Text
                   style={{
                     color: '#fff',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 10,
                   }}>
                   Generate Task
@@ -198,7 +198,7 @@ const PaidPostAdvertMenu = () => {
           <View style={styles.Check}>
             <Text
               style={[
-                {color: '#fff', fontFamily: 'CamptonMedium'},
+                {color: '#fff', fontFamily: 'Manrope-Medium'},
                 dynamicStyles.TextColor,
               ]}>
               {' '}
@@ -208,16 +208,16 @@ const PaidPostAdvertMenu = () => {
               style={[
                 {
                   color: '#fff',
-                  fontFamily: 'CamptonBook',
+                  fontFamily: 'Manrope-Regular',
                   paddingTop: 10,
                   fontSize: 12,
                 },
                 dynamicStyles.TextColor,
               ]}>
-              Post adverts of various businesses and top brands on your
-              Instagram Page and earn ₦110 per advert . The more you post, the
-              more you earn. Note that your Instagram account must have at least
-              500 Active Followers to be eligible for this task.
+              Promote advertisements for different businesses and top brands on
+              your Instagram page and earn ₦110 for each post. The more you
+              share, the more you earn. Ensure that your Instsagram account has
+              at least 500 active followers to qualify for this task.{' '}
             </Text>
             <View
               style={{
@@ -244,7 +244,7 @@ const PaidPostAdvertMenu = () => {
                 <Text
                   style={{
                     color: '#808080',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 12,
                   }}>
                   Earning:
@@ -254,7 +254,7 @@ const PaidPostAdvertMenu = () => {
                 style={[
                   {
                     color: '#fff',
-                    fontFamily: 'Campton Bold',
+                    fontFamily: 'Manrope-ExtraBold',
                     fontSize: 12,
                   },
                   dynamicStyles.TextColor,
@@ -277,7 +277,7 @@ const PaidPostAdvertMenu = () => {
                 <Text
                   style={{
                     color: '#fff',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 10,
                   }}>
                   Generate Task
@@ -308,7 +308,7 @@ const PaidPostAdvertMenu = () => {
           <View style={styles.Check}>
             <Text
               style={[
-                {color: '#fff', fontFamily: 'CamptonMedium'},
+                {color: '#fff', fontFamily: 'Manrope-Medium'},
                 dynamicStyles.TextColor,
               ]}>
               Post Adverts on Your FaceBook Page
@@ -317,16 +317,16 @@ const PaidPostAdvertMenu = () => {
               style={[
                 {
                   color: '#fff',
-                  fontFamily: 'CamptonBook',
+                  fontFamily: 'Manrope-Regular',
                   paddingTop: 10,
                   fontSize: 12,
                 },
                 dynamicStyles.TextColor,
               ]}>
-              Post adverts of various businesses and top brands on your Facebook
-              Page and earn ₦110 per advert past. The more you post, the more
-              you earn. Note that your Facebook account must have at least 500
-              Active Followers to be eligible for this task.
+              Promote advertisements for different businesses and top brands on
+              your Facebook page and earn ₦110 for each post. The more you
+              share, the more you earn. Ensure that your Facebook account has at
+              least 500 active followers to qualify for this task.
             </Text>
             <View
               style={{
@@ -353,7 +353,7 @@ const PaidPostAdvertMenu = () => {
                 <Text
                   style={{
                     color: '#808080',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 12,
                   }}>
                   Earning:
@@ -363,7 +363,7 @@ const PaidPostAdvertMenu = () => {
                 style={[
                   {
                     color: '#fff',
-                    fontFamily: 'Campton Bold',
+                    fontFamily: 'Manrope-ExtraBold',
                     fontSize: 12,
                   },
                   dynamicStyles.TextColor,
@@ -386,7 +386,7 @@ const PaidPostAdvertMenu = () => {
                 <Text
                   style={{
                     color: '#fff',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 10,
                   }}>
                   Generate Task
@@ -421,7 +421,7 @@ const PaidPostAdvertMenu = () => {
           <View style={styles.Check}>
             <Text
               style={[
-                {color: '#fff', fontFamily: 'CamptonMedium'},
+                {color: '#fff', fontFamily: 'Manrope-Medium'},
                 dynamicStyles.TextColor,
               ]}>
               {' '}
@@ -431,16 +431,16 @@ const PaidPostAdvertMenu = () => {
               style={[
                 {
                   color: '#fff',
-                  fontFamily: 'CamptonBook',
+                  fontFamily: 'Manrope-Regular',
                   paddingTop: 10,
                   fontSize: 12,
                 },
                 dynamicStyles.TextColor,
               ]}>
-              Post adverts of various businesses and top brands on your Tiktok
-              Page and earn ₦110 per advert past. The more you post, the more
-              you earn. Note that your Tiktok account must have at least 500
-              Active Followers to be eligible for this task.
+              Promote advertisements for different businesses and top brands on
+              your TikTok page and earn ₦110 for each post. The more you share,
+              the more you earn. Ensure that your TikTok account has at least
+              500 active followers to qualify for this task.
             </Text>
             <View
               style={{
@@ -467,7 +467,7 @@ const PaidPostAdvertMenu = () => {
                 <Text
                   style={{
                     color: '#808080',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 12,
                   }}>
                   Earning:
@@ -477,7 +477,7 @@ const PaidPostAdvertMenu = () => {
                 style={[
                   {
                     color: '#fff',
-                    fontFamily: 'Campton Bold',
+                    fontFamily: 'Manrope-ExtraBold',
                     fontSize: 12,
                   },
                   dynamicStyles.TextColor,
@@ -500,7 +500,7 @@ const PaidPostAdvertMenu = () => {
                 <Text
                   style={{
                     color: '#fff',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 10,
                   }}>
                   Generate Task
@@ -558,7 +558,7 @@ const PaidPostAdvertMenu = () => {
           <View style={styles.Check}>
             <Text
               style={[
-                {color: '#fff', fontFamily: 'CamptonMedium'},
+                {color: '#fff', fontFamily: 'Manrope-Medium'},
                 dynamicStyles.TextColor,
               ]}>
               {' '}
@@ -568,7 +568,7 @@ const PaidPostAdvertMenu = () => {
               style={[
                 {
                   color: '#fff',
-                  fontFamily: 'CamptonBook',
+                  fontFamily: 'Manrope-Regular',
                   paddingTop: 10,
                   fontSize: 12,
                 },
@@ -603,7 +603,7 @@ const PaidPostAdvertMenu = () => {
                 <Text
                   style={{
                     color: '#808080',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 12,
                   }}>
                   Earning:
@@ -613,7 +613,7 @@ const PaidPostAdvertMenu = () => {
                 style={[
                   {
                     color: '#fff',
-                    fontFamily: 'Campton Bold',
+                    fontFamily: 'Manrope-ExtraBold',
                     fontSize: 12,
                   },
                   dynamicStyles.TextColor,
@@ -636,7 +636,7 @@ const PaidPostAdvertMenu = () => {
                 <Text
                   style={{
                     color: '#fff',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 10,
                   }}>
                   Generate Task
@@ -670,7 +670,7 @@ const PaidPostAdvertMenu = () => {
           <View style={styles.Check}>
             <Text
               style={[
-                {color: '#fff', fontFamily: 'CamptonMedium'},
+                {color: '#fff', fontFamily: 'Manrope-Medium'},
                 dynamicStyles.TextColor,
               ]}>
               {' '}
@@ -680,7 +680,7 @@ const PaidPostAdvertMenu = () => {
               style={[
                 {
                   color: '#fff',
-                  fontFamily: 'CamptonBook',
+                  fontFamily: 'Manrope-Regular',
                   paddingTop: 10,
                   fontSize: 12,
                 },
@@ -716,7 +716,7 @@ const PaidPostAdvertMenu = () => {
                 <Text
                   style={{
                     color: '#808080',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 12,
                   }}>
                   Earning:
@@ -726,7 +726,7 @@ const PaidPostAdvertMenu = () => {
                 style={[
                   {
                     color: '#fff',
-                    fontFamily: 'Campton Bold',
+                    fontFamily: 'Manrope-ExtraBold',
                     fontSize: 12,
                   },
                   dynamicStyles.TextColor,
@@ -749,7 +749,7 @@ const PaidPostAdvertMenu = () => {
                 <Text
                   style={{
                     color: '#fff',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 10,
                   }}>
                   Generate Task

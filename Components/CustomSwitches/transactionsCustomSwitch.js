@@ -76,10 +76,11 @@ const getStyles = (theme, selectionMode) =>
       justifyContent: 'center',
       alignItems: 'center',
       paddingRight: 30,
+      paddingLeft: 10,
     },
     text: {
       fontSize: 13,
-      fontFamily: 'Campton Bold',
+      fontFamily: 'Manrope-ExtraBold',
     },
   });
 

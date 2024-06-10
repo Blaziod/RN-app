@@ -74,7 +74,7 @@ const Advertise1FB = ({navigation}) => {
                   style={[
                     {
                       color: '#B1B1B1',
-                      fontFamily: 'CamptonLight',
+                      fontFamily: 'Manrope-Light',
                       fontSize: 10,
                     },
                     dynamicStyles.TextColor,
@@ -85,7 +85,7 @@ const Advertise1FB = ({navigation}) => {
                   style={[
                     {
                       color: '#fff',
-                      fontFamily: 'CamptonMedium',
+                      fontFamily: 'Manrope-Medium',
                       fontSize: 30,
                     },
                     dynamicStyles.TextColor,
@@ -105,7 +105,7 @@ const Advertise1FB = ({navigation}) => {
                       style={[
                         {
                           color: '#808080',
-                          fontFamily: 'CamptonMedium',
+                          fontFamily: 'Manrope-Medium',
                           fontSize: 12,
                         },
                         dynamicStyles.TextColor,
@@ -117,7 +117,7 @@ const Advertise1FB = ({navigation}) => {
                     style={[
                       {
                         color: '#fff',
-                        fontFamily: 'Campton Bold',
+                        fontFamily: 'Manrope-ExtraBold',
                         fontSize: 12,
                       },
                       dynamicStyles.TextColor,
@@ -129,7 +129,7 @@ const Advertise1FB = ({navigation}) => {
                   style={[
                     {
                       color: '#909090',
-                      fontFamily: 'CamptonBook',
+                      fontFamily: 'Manrope-Regular',
                       fontSize: 12,
                       paddingTop: 10,
                     },
@@ -154,7 +154,7 @@ const Advertise1FB = ({navigation}) => {
                 style={[
                   {
                     color: '#fff',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 25,
                     //   paddingTop: 10,
                   },
@@ -191,18 +191,18 @@ const styles = StyleSheet.create({
   },
   Box2Text: {
     color: 'red',
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     fontSize: 12,
   },
 
   Step: {
     color: '#fff',
-    fontFamily: 'CamptonSemiBold',
+    fontFamily: 'Manrope-Bold',
     fontSize: 12,
   },
   StepText: {
     color: '#fff',
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     fontSize: 12,
   },
   StepView: {

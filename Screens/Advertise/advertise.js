@@ -9,15 +9,17 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import EarnCustomSwitch from '../../Components/CustomSwitches/earnCustomSwitch';
 import {useState} from 'react';
 import Headers from '../../Components/Headers/Headers';
 import AdvertiseMenu from '../../Components/Menus/advertiseMenu';
 import {Svg, Path, Defs, ClipPath, Rect, Mask, G} from 'react-native-svg';
 import EngageAdvertiseMenu from '../../Components/Menus/engageAdvertiseMenu';
 import {useTheme} from '../../Components/Contexts/colorTheme';
+import AdvertiseCustomSwitch from '../../Components/CustomSwitches/advertiseCustomSwitch';
+import {useNavigation} from '@react-navigation/native';
 
 const Advertise = () => {
+  const navigation = useNavigation();
   const [earnMenu, setEarnMenu] = useState(1);
   const {theme} = useTheme();
   const strokeColor = theme === 'dark' ? '#fff' : '#000'; // Choosing color based on theme
@@ -309,7 +311,7 @@ const Advertise = () => {
                   alignItems: 'center',
                   // gap: 5,
                 }}>
-                <EarnCustomSwitch
+                <AdvertiseCustomSwitch
                   selectionMode={1}
                   option1="Post Advert"
                   option2="Engagement Task"
@@ -321,7 +323,8 @@ const Advertise = () => {
                     justifyContent: 'center',
                     alignItems: 'center',
                     // gap: 5,
-                  }}>
+                  }}
+                  onPress={() => navigation.navigate('History')}>
                   <Text style={[styles.EarnText2, dynamicStyles.TextColor]}>
                     History
                   </Text>
@@ -375,7 +378,7 @@ const styles = StyleSheet.create({
   },
   Box1Text: {
     color: 'red',
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     fontSize: 13,
   },
   earnImage1: {
@@ -391,12 +394,12 @@ const styles = StyleSheet.create({
   },
   EarnOnTText: {
     color: '#fff',
-    fontFamily: 'CamptonSemiBold',
+    fontFamily: 'Manrope-Bold',
     paddingBottom: 7,
   },
   EarnOnTText1: {
     color: '#fff',
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     textAlign: 'center',
     fontSize: 12,
   },
@@ -412,12 +415,12 @@ const styles = StyleSheet.create({
   PayButtonLabel: {
     color: '#000000',
     fontSize: 13,
-    fontFamily: 'CamptonMedium',
+    fontFamily: 'Manrope-Medium',
   },
   EarnText: {
     color: '#fff',
     fontSize: 24,
-    fontFamily: 'CamptonMedium',
+    fontFamily: 'Manrope-Medium',
     paddingHorizontal: 10,
     paddingVertical: 20,
     paddingTop: 50,
@@ -425,7 +428,7 @@ const styles = StyleSheet.create({
   EarnText2: {
     color: '#B1B1B1',
     fontSize: 13,
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
   },
   EarnMenu: {
     flexDirection: 'row',
@@ -433,7 +436,7 @@ const styles = StyleSheet.create({
   },
   PostText: {
     color: '#fff',
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
     fontSize: 14,
   },
   EngText: {

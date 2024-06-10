@@ -43,7 +43,6 @@ const Earn = () => {
   const [txRef, setTxRef] = useState(null);
   const [transactionId, setTransactionId] = useState(null);
   const homeScreenUrl = 'https://blaziod.github.io';
-  const strokeColor = theme === 'dark' ? '#fff' : '#000'; // Choosing color based on theme
 
   useEffect(() => {
     const handleUrl = async event => {
@@ -130,7 +129,7 @@ const Earn = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
       } else {
@@ -154,7 +153,7 @@ const Earn = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
         navigation.reset({
@@ -188,7 +187,7 @@ const Earn = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
     } finally {
@@ -239,7 +238,7 @@ const Earn = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
         console.log(response.data);
@@ -272,7 +271,7 @@ const Earn = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
     } finally {
@@ -351,7 +350,7 @@ const Earn = () => {
     if (userAccessToken) {
       try {
         const response = await fetch(
-          `${ApiLink.ENDPOINT_1}/payment/membership-fee`,
+          `${ApiLink.ENDPOINT_1}/profile/membership-status`,
           {
             method: 'POST',
             headers: {
@@ -403,7 +402,7 @@ const Earn = () => {
           throw new Error(data.message);
         }
       } catch (error) {
-        console.error('Error during balance fetch:', error);
+        console.error('Error during membership fetch:', error);
       }
     } else {
       console.log('No access token found');
@@ -423,7 +422,7 @@ const Earn = () => {
         <>
           <Text
             style={{
-              fontFamily: 'CamptonBook',
+              fontFamily: 'Manrope-Regular',
               fontSize: 15,
               color: '#FF6DFB',
               alignSelf: 'center',
@@ -546,7 +545,7 @@ const Earn = () => {
                           style={{
                             color: '#1877F2',
                             fontSize: 12,
-                            fontFamily: 'CamptonBook',
+                            fontFamily: 'Manrope-Regular',
                             paddingVertical: 10,
                             alignSelf: 'center',
                           }}>
@@ -561,7 +560,7 @@ const Earn = () => {
                 </Text>
                 <View
                   style={{
-                    flexDirection: 'row',
+                    // flexDirection: 'row',
                     justifyContent: 'center',
                     alignItems: 'center',
                     // gap: 5,
@@ -572,7 +571,7 @@ const Earn = () => {
                     option2="Engagement Task"
                     onSelectSwitch={onSelectSwitch}
                   />
-                  <TouchableOpacity
+                  {/* <TouchableOpacity
                     style={{
                       flexDirection: 'row',
                       justifyContent: 'center',
@@ -594,7 +593,7 @@ const Earn = () => {
                         stroke-linecap="round"
                       />
                     </Svg>
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
                 </View>
                 {isLoading ? (
                   <ActivityIndicator size="large" color="#fff" />
@@ -740,7 +739,7 @@ const Earn = () => {
                           fontSize: 12,
                           paddingTop: 10,
                           color: '#fff',
-                          fontFamily: 'Campton Bold',
+                          fontFamily: 'Manrope-ExtraBold',
                         }}>
                         Earn on Your Terms:{' '}
                       </Text>
@@ -790,7 +789,7 @@ const Earn = () => {
                           fontSize: 12,
                           paddingTop: 10,
                           color: '#fff',
-                          fontFamily: 'Campton Bold',
+                          fontFamily: 'Manrope-ExtraBold',
                         }}>
                         Boost Your Social Media Presence:
                       </Text>
@@ -858,7 +857,7 @@ const Earn = () => {
                           fontSize: 12,
                           paddingTop: 10,
                           color: '#fff',
-                          fontFamily: 'Campton Bold',
+                          fontFamily: 'Manrope-ExtraBold',
                         }}>
                         More than Just Earnings:
                       </Text>
@@ -925,7 +924,7 @@ const Earn = () => {
                           fontSize: 12,
                           paddingTop: 15,
                           color: '#fff',
-                          fontFamily: 'Campton Bold',
+                          fontFamily: 'Manrope-ExtraBold',
                         }}>
                         Referral Bonuses:
                       </Text>
@@ -968,7 +967,7 @@ const Earn = () => {
                             style={[
                               {
                                 color: '#fff',
-                                fontFamily: 'CamptonBook',
+                                fontFamily: 'Manrope-Regular',
                                 fontSize: 13,
                               },
                             ]}>
@@ -978,7 +977,7 @@ const Earn = () => {
                             style={[
                               {
                                 color: '#fff',
-                                fontFamily: 'CamptonBook',
+                                fontFamily: 'Manrope-Regular',
                                 fontSize: 30,
                               },
                             ]}>
@@ -1000,7 +999,7 @@ const Earn = () => {
                           ) : (
                             <Text
                               style={{
-                                fontFamily: 'CamptonBook',
+                                fontFamily: 'Manrope-Regular',
                                 color: '#fff',
                                 fontSize: 13,
                               }}>
@@ -1038,7 +1037,7 @@ const styles = StyleSheet.create({
   },
   Box1Text: {
     color: 'red',
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     fontSize: 13,
   },
   earnImage1: {
@@ -1054,12 +1053,12 @@ const styles = StyleSheet.create({
   },
   EarnOnTText: {
     color: '#fff',
-    fontFamily: 'CamptonSemiBold',
+    fontFamily: 'Manrope-Bold',
     paddingBottom: 7,
   },
   EarnOnTText1: {
     color: '#fff',
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     textAlign: 'center',
     fontSize: 12,
   },
@@ -1078,19 +1077,19 @@ const styles = StyleSheet.create({
   PayButtonLabel: {
     color: '#FF6DFB',
     fontSize: 13,
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
   },
   EarnText: {
     color: '#fff',
     fontSize: 24,
-    fontFamily: 'CamptonMedium',
+    fontFamily: 'Manrope-Medium',
     paddingHorizontal: 10,
     paddingVertical: 30,
   },
   EarnText2: {
     color: '#B1B1B1',
     fontSize: 13,
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
   },
   EarnMenu: {
     flexDirection: 'row',
@@ -1098,7 +1097,7 @@ const styles = StyleSheet.create({
   },
   PostText: {
     color: '#fff',
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
     fontSize: 14,
   },
   EngText: {

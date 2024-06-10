@@ -61,7 +61,7 @@ const Refer = () => {
               }}>
               <Text
                 style={{
-                  fontFamily: 'Campton Bold',
+                  fontFamily: 'Manrope-ExtraBold',
                   fontSize: 36,
                   justifyContent: 'center',
                   color: '#000',
@@ -71,7 +71,7 @@ const Refer = () => {
               </Text>
               <Text
                 style={{
-                  fontFamily: 'CamptonMedium',
+                  fontFamily: 'Manrope-Medium',
                   fontSize: 14,
                   justifyContent: 'center',
                   paddingBottom: 10,
@@ -101,7 +101,7 @@ const Refer = () => {
                   }}>
                   <Text
                     style={{
-                      fontFamily: 'CamptonBook',
+                      fontFamily: 'Manrope-Regular',
                       fontSize: 13,
                       color: '#000',
                     }}>
@@ -173,7 +173,7 @@ const Refer = () => {
             style={[
               {
                 color: '#fff',
-                fontFamily: 'CamptonMedium',
+                fontFamily: 'Manrope-Medium',
                 fontSize: 24,
                 paddingVertical: 30,
                 paddingLeft: '5%',
@@ -243,7 +243,7 @@ const Refer = () => {
                   {
                     color: '#fff',
                     paddingTop: 12,
-                    fontFamily: 'Campton Bold',
+                    fontFamily: 'Manrope-ExtraBold',
                     fontSize: 14,
                   },
                   dynamicStyles.TextColor,
@@ -254,7 +254,7 @@ const Refer = () => {
                 style={{
                   color: 'grey',
                   textAlign: 'center',
-                  fontFamily: 'CamptonBook',
+                  fontFamily: 'Manrope-Regular',
                   fontSize: 12,
                   paddingBottom: 200,
                 }}>

@@ -43,6 +43,7 @@ import Earn2X from '../Screens/Earn/earn2X';
 import Earn1TK from '../Screens/Earn/earn1TK';
 import Earn2TK from '../Screens/Earn/earn2TK';
 import Earn1TR from '../Screens/Earn/earn1TR';
+import History from '../Screens/Advertise/history';
 
 const Tab = createBottomTabNavigator();
 const MoreStack = createStackNavigator();
@@ -98,6 +99,7 @@ function AdvertiseStackScreen() {
       <AdvertiseStack.Screen name="Advertise1FS" component={Advertise1FS} />
       <AdvertiseStack.Screen name="Advertise1GP" component={Advertise1GP} />
       <AdvertiseStack.Screen name="Advertise1SP" component={Advertise1SP} />
+      <AdvertiseStack.Screen name="History" component={History} />
     </AdvertiseStack.Navigator>
   );
 }
@@ -158,7 +160,7 @@ const TabNavigation = () => {
               <Text
                 style={{
                   color: iconTintColor(focused),
-                  fontFamily: 'CamptonLight',
+                  fontFamily: 'Manrope-Light',
                 }}>
                 Home
               </Text>
@@ -192,7 +194,7 @@ const TabNavigation = () => {
               <Text
                 style={{
                   color: iconTintColor(focused),
-                  fontFamily: 'CamptonLight',
+                  fontFamily: 'Manrope-Light',
                 }}>
                 Earn
               </Text>
@@ -228,7 +230,7 @@ const TabNavigation = () => {
               </Svg>
               <Text
                 style={{
-                  fontFamily: 'CamptonLight',
+                  fontFamily: 'Manrope-Light',
                   color: iconTintColor(focused),
                 }}>
                 Advertise
@@ -266,7 +268,7 @@ const TabNavigation = () => {
               <Text
                 style={{
                   color: iconTintColor(focused),
-                  fontFamily: 'CamptonLight',
+                  fontFamily: 'Manrope-Light',
                 }}>
                 Resell
               </Text>
@@ -302,7 +304,7 @@ const TabNavigation = () => {
               <Text
                 style={{
                   color: iconTintColor(focused),
-                  fontFamily: 'CamptonLight',
+                  fontFamily: 'Manrope-Light',
                 }}>
                 More
               </Text>

@@ -283,7 +283,7 @@ const Earn1Menu = () => {
             text2Style: {
               color: 'green',
               fontSize: 12,
-              fontFamily: 'Campton Bold',
+              fontFamily: 'Manrope-ExtraBold',
             },
           });
         } else {
@@ -315,7 +315,7 @@ const Earn1Menu = () => {
               text2Style: {
                 color: 'green',
                 fontSize: 12,
-                fontFamily: 'Campton Bold',
+                fontFamily: 'Manrope-ExtraBold',
               },
             });
             navigation.reset({
@@ -352,7 +352,7 @@ const Earn1Menu = () => {
           text2Style: {
             color: 'green',
             fontSize: 12,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
       }
@@ -404,7 +404,7 @@ const Earn1Menu = () => {
             text2Style: {
               color: 'green',
               fontSize: 12,
-              fontFamily: 'Campton Bold',
+              fontFamily: 'Manrope-ExtraBold',
             },
           });
           AsyncStorage.setItem(
@@ -442,7 +442,7 @@ const Earn1Menu = () => {
               text2Style: {
                 color: 'green',
                 fontSize: 12,
-                fontFamily: 'Campton Bold',
+                fontFamily: 'Manrope-ExtraBold',
               },
             });
             await AsyncStorage.removeItem('userbalance');
@@ -484,7 +484,7 @@ const Earn1Menu = () => {
           text2Style: {
             color: 'green',
             fontSize: 12,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
         console.error('Error during Tasks Generation:', error);
@@ -547,7 +547,7 @@ const Earn1Menu = () => {
                     fontSize: 13,
                     color: '#fff',
                     paddingTop: 10,
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                   }}>
                   {tasks.caption}
                 </Text>
@@ -561,7 +561,7 @@ const Earn1Menu = () => {
                   <Text
                     style={{
                       color: '#fff',
-                      fontFamily: 'Campton Bold',
+                      fontFamily: 'Manrope-ExtraBold',
                       fontSize: 12,
                     }}>
                     ₦{tasks && tasks.platform && platformPrices[tasks.platform]}{' '}
@@ -597,7 +597,7 @@ const Earn1Menu = () => {
               <Text
                 style={{
                   color: '#fff',
-                  fontFamily: 'Campton Bold',
+                  fontFamily: 'Manrope-ExtraBold',
                   paddingTop: 15,
                 }}>
                 Need quick cash to earn?
@@ -605,7 +605,7 @@ const Earn1Menu = () => {
               <Text
                 style={{
                   color: '#B1B1B1',
-                  fontFamily: 'CamptonBook',
+                  fontFamily: 'Manrope-Regular',
                   paddingTop: 7,
                   fontSize: 12,
                   textAlign: 'center',
@@ -631,7 +631,7 @@ const Earn1Menu = () => {
                   <Text
                     style={{
                       color: '#000000',
-                      fontFamily: 'CamptonMedium',
+                      fontFamily: 'Manrope-Medium',
                       fontSize: 13,
                     }}>
                     Generate Task
@@ -711,7 +711,7 @@ const Earn1Menu = () => {
                               style={{
                                 color: '#fff',
                                 fontSize: 14,
-                                fontFamily: 'Campton Bold',
+                                fontFamily: 'Manrope-ExtraBold',
                                 paddingBottom: 10,
                                 paddingTop: 20,
                               }}>
@@ -722,7 +722,7 @@ const Earn1Menu = () => {
                                 color: '#fff',
                                 fontSize: 12,
                                 fontWeight: 400,
-                                fontFamily: 'CamptonBook',
+                                fontFamily: 'Manrope-Regular',
                                 textAlign: 'center',
                                 paddingHorizontal: 20,
                               }}>
@@ -750,7 +750,7 @@ const Earn1Menu = () => {
                                 <Text
                                   style={{
                                     color: '#fff',
-                                    fontFamily: 'CamptonBook',
+                                    fontFamily: 'Manrope-Regular',
                                     fontSize: 14,
                                   }}>
                                   Confirm

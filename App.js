@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, {useEffect} from 'react';
+import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import TabNavigation from './Navigation/tabNavigation';
@@ -15,21 +15,21 @@ import SignUp from './Screens/Auth/signUp';
 import VerifyEmailScreen from './Screens/Auth/otp';
 import OnboardingSignUp from './Screens/Auth/onBoarding';
 import ContinueSignUp from './Screens/Auth/continueSignUp';
-import BootSplash from 'react-native-bootsplash';
 import ResetPassword from './Screens/Auth/resetPassword';
 import ResetOtp from './Screens/Auth/reset-otp';
-// import SplashScreen from 'react-native-splash-screen';/
+import SplashScreen from './Screens/Splash/splashScreen';
 
 const Stack = createNativeStackNavigator();
 function StackNavigator() {
   return (
     <Stack.Navigator
       screenOptions={{headerShown: false}}
-      initialRouteName="SignIn">
+      initialRouteName="Splash">
       <Stack.Screen name="Tabs" component={TabNavigation} />
       <Stack.Screen name="Test1" component={Test1} />
       <Stack.Screen name="Test2" component={Test2} />
       <Stack.Screen name="Test3" component={Test3} />
+      <Stack.Screen name="Splash" component={SplashScreen} />
       <Stack.Screen name="SignIn" component={SignIn} />
       <Stack.Screen name="SignUp" component={SignUp} />
       <Stack.Screen name="VerifyEmail" component={VerifyEmailScreen} />
@@ -48,16 +48,6 @@ const config = {
   },
 };
 const App = () => {
-  useEffect(() => {
-    const init = async () => {
-      // …do multiple sync or async tasks
-    };
-
-    init().finally(async () => {
-      await BootSplash.hide({fade: true});
-      console.log('BootSplash has been hidden successfully');
-    });
-  }, []);
   return (
     <ThemeProvider>
       <NavigationContainer

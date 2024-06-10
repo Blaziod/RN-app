@@ -189,7 +189,7 @@ const Advertise1SPMenu = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
       console.log(data);
@@ -214,7 +214,7 @@ const Advertise1SPMenu = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
       if (error) {
@@ -232,7 +232,8 @@ const Advertise1SPMenu = () => {
           flexDirection: 'column',
           gap: 10,
         }}>
-        <Text style={{color: '#fff', fontFamily: 'CamptonBook', fontSize: 13}}>
+        <Text
+          style={{color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13}}>
           Select Platform
         </Text>
         <TouchableOpacity
@@ -248,7 +249,11 @@ const Advertise1SPMenu = () => {
           <Text style={styles.text}>{choosePlatform}</Text>
         </TouchableOpacity>
         <Text
-          style={{color: '#B1B1B1', fontSize: 10, fontFamily: 'CamptonBook'}}>
+          style={{
+            color: '#B1B1B1',
+            fontSize: 10,
+            fontFamily: 'Manrope-Regular',
+          }}>
           Please select the social media or App Store platform where you want to
           perform this action
         </Text>
@@ -270,7 +275,8 @@ const Advertise1SPMenu = () => {
           flexDirection: 'column',
           gap: 10,
         }}>
-        <Text style={{color: '#fff', fontFamily: 'CamptonBook', fontSize: 13}}>
+        <Text
+          style={{color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13}}>
           Select Location
         </Text>
         <TouchableOpacity
@@ -286,7 +292,11 @@ const Advertise1SPMenu = () => {
           <Text style={styles.text}>{chooseLocation}</Text>
         </TouchableOpacity>
         <Text
-          style={{color: '#B1B1B1', fontSize: 10, fontFamily: 'CamptonBook'}}>
+          style={{
+            color: '#B1B1B1',
+            fontSize: 10,
+            fontFamily: 'Manrope-Regular',
+          }}>
           Please select the social media or App Store platform where you want to
           perform this action
         </Text>
@@ -308,7 +318,8 @@ const Advertise1SPMenu = () => {
           flexDirection: 'column',
           gap: 10,
         }}>
-        <Text style={{color: '#fff', fontFamily: 'CamptonBook', fontSize: 13}}>
+        <Text
+          style={{color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13}}>
           Number of Followers you want
         </Text>
         <TouchableOpacity
@@ -328,7 +339,11 @@ const Advertise1SPMenu = () => {
           />
         </TouchableOpacity>
         <Text
-          style={{color: '#B1B1B1', fontSize: 10, fontFamily: 'CamptonBook'}}>
+          style={{
+            color: '#B1B1B1',
+            fontSize: 10,
+            fontFamily: 'Manrope-Regular',
+          }}>
           Enter the number of Followers you want us to get for you{' '}
         </Text>
         <Modal
@@ -341,7 +356,8 @@ const Advertise1SPMenu = () => {
             setData3={setData3}
           />
         </Modal>
-        <Text style={{color: '#fff', fontFamily: 'CamptonBook', fontSize: 13}}>
+        <Text
+          style={{color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13}}>
           Select Gender
         </Text>
         <TouchableOpacity
@@ -367,11 +383,16 @@ const Advertise1SPMenu = () => {
           />
         </Modal>
         <Text
-          style={{color: '#B1B1B1', fontSize: 10, fontFamily: 'CamptonBook'}}>
+          style={{
+            color: '#B1B1B1',
+            fontSize: 10,
+            fontFamily: 'Manrope-Regular',
+          }}>
           you can select the kind of gender whether male or female that you want
           to see your task or “All Gender” if you want to target all genders
         </Text>
-        <Text style={{color: '#fff', fontFamily: 'CamptonBook', fontSize: 13}}>
+        <Text
+          style={{color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13}}>
           Select Religion
         </Text>
         <TouchableOpacity
@@ -397,12 +418,17 @@ const Advertise1SPMenu = () => {
           />
         </Modal>
         <Text
-          style={{color: '#B1B1B1', fontSize: 10, fontFamily: 'CamptonBook'}}>
+          style={{
+            color: '#B1B1B1',
+            fontSize: 10,
+            fontFamily: 'Manrope-Regular',
+          }}>
           You can target people of a particular religion or belief. Your advert
           and task will be shown to the particular religion you select. Select
           'All Religion' if you want to target all religion
         </Text>
-        <Text style={{color: '#fff', fontFamily: 'CamptonBook', fontSize: 13}}>
+        <Text
+          style={{color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13}}>
           The Link to Your Spotify Account
         </Text>
         <TouchableOpacity
@@ -421,7 +447,11 @@ const Advertise1SPMenu = () => {
           />
         </TouchableOpacity>
         <Text
-          style={{color: '#B1B1B1', fontSize: 10, fontFamily: 'CamptonBook'}}>
+          style={{
+            color: '#B1B1B1',
+            fontSize: 10,
+            fontFamily: 'Manrope-Regular',
+          }}>
           Enter the link to the account you want people to follow. ensure the
           link you paste here is the link to your page
         </Text>
@@ -441,7 +471,7 @@ const Advertise1SPMenu = () => {
           <Text
             style={{
               color: '#fff',
-              fontFamily: 'CamptonBook',
+              fontFamily: 'Manrope-Regular',
               fontSize: 13,
             }}>
             Total pay
@@ -449,7 +479,7 @@ const Advertise1SPMenu = () => {
           <Text
             style={{
               color: '#fff',
-              fontFamily: 'CamptonBook',
+              fontFamily: 'Manrope-Regular',
               fontSize: 30,
             }}>
             {userData1?.userdata?.wallet?.currency_symbol}{' '}
@@ -468,7 +498,7 @@ const Advertise1SPMenu = () => {
           onPress={() => setIsModalVisible(true)}>
           <Text
             style={{
-              fontFamily: 'CamptonBook',
+              fontFamily: 'Manrope-Regular',
               color: '#fff',
               fontSize: 13,
             }}>
@@ -548,7 +578,7 @@ const Advertise1SPMenu = () => {
                       style={{
                         color: '#fff',
                         fontSize: 14,
-                        fontFamily: 'Campton Bold',
+                        fontFamily: 'Manrope-ExtraBold',
                         paddingBottom: 10,
                       }}>
                       How would you like to pay?
@@ -589,7 +619,7 @@ const Advertise1SPMenu = () => {
                           style={{
                             color: '#fff',
                             fontSize: 14,
-                            fontFamily: 'CamptonSemiBold',
+                            fontFamily: 'Manrope-Bold',
                           }}>
                           100% Secure payment
                         </Text>
@@ -597,7 +627,7 @@ const Advertise1SPMenu = () => {
                           style={{
                             color: '#909090',
                             fontSize: 12,
-                            fontFamily: 'CamptonBook',
+                            fontFamily: 'Manrope-Regular',
                           }}>
                           Pay through our highly secured online payment partner
                           using your VISA/Mastercard/Verve card. Or Bank
@@ -659,7 +689,7 @@ const Advertise1SPMenu = () => {
                           style={{
                             color: '#fff',
                             fontSize: 14,
-                            fontFamily: 'CamptonSemiBold',
+                            fontFamily: 'Manrope-Bold',
                           }}>
                           Pay from your Trendit Wallet
                         </Text>
@@ -667,10 +697,10 @@ const Advertise1SPMenu = () => {
                           style={{
                             color: '#909090',
                             fontSize: 12,
-                            fontFamily: 'CamptonBook',
+                            fontFamily: 'Manrope-Regular',
                           }}>
                           Wallet Balance:
-                          {userData?.userdata?.wallet?.currency_symbol}{' '}
+                          {userData?.userdata?.wallet?.currency_symbol}
                           {userBalance?.balance}
                         </Text>
                       </View>
@@ -727,7 +757,7 @@ const Advertise1SPMenu = () => {
                           style={{
                             color: '#fff',
                             fontSize: 14,
-                            fontFamily: 'CamptonSemiBold',
+                            fontFamily: 'Manrope-Bold',
                           }}>
                           Pay with Crypto
                         </Text>
@@ -735,7 +765,7 @@ const Advertise1SPMenu = () => {
                           style={{
                             color: '#909090',
                             fontSize: 12,
-                            fontFamily: 'CamptonBook',
+                            fontFamily: 'Manrope-Regular',
                           }}>
                           Pay with BTC to our BTC address
                         </Text>
@@ -834,7 +864,7 @@ const Advertise1SPMenu = () => {
                       style={{
                         color: '#fff',
                         fontSize: 14,
-                        fontFamily: 'Campton Bold',
+                        fontFamily: 'Manrope-ExtraBold',
                         paddingBottom: 10,
                         paddingTop: 20,
                       }}>
@@ -866,7 +896,7 @@ const Advertise1SPMenu = () => {
                           style={{
                             color: '#fff',
                             alignSelf: 'center',
-                            fontFamily: 'CamptonBook',
+                            fontFamily: 'Manrope-Regular',
                           }}>
                           Total Pay
                         </Text>
@@ -874,7 +904,7 @@ const Advertise1SPMenu = () => {
                           style={{
                             color: '#fff',
                             fontSize: 30,
-                            fontFamily: 'CamptonMedium',
+                            fontFamily: 'Manrope-Medium',
                           }}>
                           {/* {userData1?.userdata?.wallet?.currency_symbol}{' '} */}
                           {isNaN(Number(chooseNumber))
@@ -890,7 +920,7 @@ const Advertise1SPMenu = () => {
                         <Text
                           style={{
                             fontSize: 13,
-                            fontFamily: 'CamptonBook',
+                            fontFamily: 'Manrope-Regular',
                             color: '#B1B1B1',
                           }}>
                           Amount due to task
@@ -899,7 +929,7 @@ const Advertise1SPMenu = () => {
                           style={{
                             fontSize: 13,
                             color: '#B1B1B1',
-                            fontFamily: 'CamptonBook',
+                            fontFamily: 'Manrope-Regular',
                           }}>
                           {/* {userData1?.userdata?.wallet?.currency_symbol}{' '} */}
                           {isNaN(Number(chooseNumber))
@@ -916,7 +946,7 @@ const Advertise1SPMenu = () => {
                         <Text
                           style={{
                             fontSize: 13,
-                            fontFamily: 'CamptonBook',
+                            fontFamily: 'Manrope-Regular',
                             color: '#B1B1B1',
                           }}>
                           Wallet balance after this payment
@@ -924,7 +954,7 @@ const Advertise1SPMenu = () => {
                         <Text
                           style={{
                             fontSize: 13,
-                            fontFamily: 'CamptonBook',
+                            fontFamily: 'Manrope-Regular',
                             color: '#B1B1B1',
                           }}>
                           {result}
@@ -955,7 +985,7 @@ const Advertise1SPMenu = () => {
                       <Text
                         style={{
                           color: '#fff',
-                          fontFamily: 'CamptonBook',
+                          fontFamily: 'Manrope-Regular',
                           fontSize: 14,
                         }}>
                         proceed
@@ -1132,7 +1162,7 @@ const Advertise1SPMenu = () => {
                       style={{
                         color: '#fff',
                         fontSize: 14,
-                        fontFamily: 'Campton Bold',
+                        fontFamily: 'Manrope-ExtraBold',
                         paddingBottom: 10,
                         paddingTop: 20,
                       }}>
@@ -1143,7 +1173,7 @@ const Advertise1SPMenu = () => {
                         color: '#fff',
                         fontSize: 12,
                         // fontWeight: 400,
-                        fontFamily: 'CamptonBook',
+                        fontFamily: 'Manrope-Regular',
                         textAlign: 'center',
                         paddingHorizontal: 20,
                       }}>
@@ -1181,7 +1211,7 @@ const Advertise1SPMenu = () => {
                       <Text
                         style={{
                           color: '#fff',
-                          fontFamily: 'CamptonBook',
+                          fontFamily: 'Manrope-Regular',
                           fontSize: 14,
                         }}>
                         Go Home
@@ -1201,7 +1231,7 @@ const Advertise1SPMenu = () => {
 const styles = StyleSheet.create({
   text: {
     color: '#fff',
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     fontSize: 13,
   },
   nameInput: {

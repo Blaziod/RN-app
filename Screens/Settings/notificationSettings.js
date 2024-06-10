@@ -137,7 +137,7 @@ const NotificationSettings = () => {
 const styles = StyleSheet.create({
   Header: {
     fontSize: 14,
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
     color: '#fff',
   },
   container: {
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
   },
   Header2: {
     fontSize: 14,
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
     color: '#fff',
     paddingVertical: 10,
   },
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
   },
   InputLabel: {
     fontSize: 12,
-    fontFamily: 'CamptonMedium',
+    fontFamily: 'Manrope-Medium',
     color: '#fff',
   },
   Input: {

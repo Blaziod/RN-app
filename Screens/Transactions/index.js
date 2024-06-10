@@ -212,14 +212,53 @@ const Transactions = () => {
         <View>
           <Headers />
           <View style={{paddingBottom: 20}}>
-            <TransactionsTopCustomSwitch
-              selectionMode={1}
-              option1="Overview"
-              option2="Earned"
-              option3="Orders"
-              option4="Export"
-              onSelectSwitch={onSelectTopSwitch}
-            />
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                gap: 5,
+                width: '90%',
+                alignSelf: 'center',
+                alignContent: 'center',
+              }}>
+              <TransactionsTopCustomSwitch
+                selectionMode={1}
+                option1="Overview"
+                option2="Earned"
+                option3="Orders"
+                onSelectSwitch={onSelectTopSwitch}
+              />
+              <TouchableOpacity
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: 5,
+                }}>
+                <TouchableOpacity
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: 5,
+                  }}>
+                  <Svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none">
+                    <Path
+                      d="M8.0013 9.33291L8.0013 3.33291M5.33464 5.33291L7.5299 3.13764C7.79025 2.8773 8.21236 2.8773 8.47271 3.13765L10.668 5.33291M2.66797 13.3329L13.3346 13.3329"
+                      stroke="#FF6DFB"
+                      stroke-linecap="round"
+                    />
+                  </Svg>
+                  <Text style={[styles.EarnText2]}>Export</Text>
+                </TouchableOpacity>
+              </TouchableOpacity>
+            </View>
             {transactionTopMenu === 1 && (
               <View style={{paddingVertical: 15}}>
                 <TransactionTopMenu />
@@ -247,7 +286,7 @@ const Transactions = () => {
                 {
                   color: '#fff',
                   fontSize: 25,
-                  fontFamily: 'Campton Bold',
+                  fontFamily: 'Manrope-ExtraBold',
                   paddingVertical: 20,
                   paddingLeft: 20,
                 },
@@ -386,15 +425,20 @@ const styles = StyleSheet.create({
   fundText: {
     fontSize: 12.8,
     color: '#000',
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
+  },
+  EarnText2: {
+    color: '#FF6DFB',
+    fontSize: 13,
+    fontFamily: 'Manrope-ExtraBold',
   },
   withdrawText: {
     fontSize: 12.8,
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
     color: '#000',
   },
   WalletAmount: {
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     fontSize: 40,
     color: '#FFD0FE',
   },

@@ -10,6 +10,7 @@ import {
   ScrollView,
   ActivityIndicator,
   SafeAreaView,
+  Image,
 } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import axios from 'axios';
@@ -18,6 +19,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import {ApiLink} from '../../enums/apiLink';
+import {launchImageLibrary} from 'react-native-image-picker';
+import {Svg, Path} from 'react-native-svg';
 
 const ContinueSignUp = () => {
   const [userData, setUserData] = useState(null);
@@ -33,6 +36,7 @@ const ContinueSignUp = () => {
   const [selectedLga, setSelectedLga] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
+  const [uploadedImage, setUploadedImage] = useState(null);
 
   useEffect(() => {
     fetch(`${ApiLink.ENDPOINT_1}/countries`)
@@ -112,6 +116,11 @@ const ContinueSignUp = () => {
     formData.append('state', selectedState);
     formData.append('local_government', selectedLga);
     formData.append('user_id', userData?.userdata?.id);
+    formData.append('profile_picture', {
+      name: 'image.jpg', // You might need to handle the name dynamically
+      type: 'image/jpeg', // Adjust the MIME type according to your image type
+      uri: uploadedImage.uri,
+    });
     console.log('start', userData?.userdata?.id);
 
     try {
@@ -145,7 +154,7 @@ const ContinueSignUp = () => {
             text2Style: {
               color: 'green',
               fontSize: 14,
-              fontFamily: 'Campton Bold',
+              fontFamily: 'Manrope-ExtraBold',
             },
           });
           navigation.navigate('Tabs', {screen: 'Home'});
@@ -171,7 +180,7 @@ const ContinueSignUp = () => {
             text2Style: {
               color: 'green',
               fontSize: 14,
-              fontFamily: 'Campton Bold',
+              fontFamily: 'Manrope-ExtraBold',
             },
           });
         })
@@ -181,6 +190,28 @@ const ContinueSignUp = () => {
     } catch (error) {
       console.error('Error Main :', error);
     }
+  };
+  const openImagePicker = () => {
+    const options = {
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+
+    launchImageLibrary(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else {
+        const source = {uri: response.assets[0].uri}; // Adjusted for the typical response structure
+        setUploadedImage(source); // Assuming setUploadedImage is a state setter function
+        console.log('Image picked:', source);
+      }
+    });
   };
 
   return (
@@ -205,6 +236,66 @@ const ContinueSignUp = () => {
               Hi , we are excited to have you onboard! Finish up your profile
               set up.
             </Text>
+            <View style={[{paddingVertical: 20}]}>
+              <TouchableOpacity
+                style={{
+                  width: 66,
+                  height: 66,
+                  backgroundColor: 'rgba(203, 41, 190, 0.38)',
+                  borderRadius: 10,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  alignSelf: 'center',
+                }}
+                onPress={() => openImagePicker()}>
+                {uploadedImage ? (
+                  <Image
+                    source={uploadedImage}
+                    style={{width: '100%', height: '100%'}}
+                  />
+                ) : (
+                  <Svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none">
+                    <Path
+                      d="M3 21H21"
+                      stroke="white"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <Path
+                      d="M7 17V13L17 3L21 7L11 17H7Z"
+                      stroke="white"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <Path
+                      d="M14 6L18 10"
+                      stroke="white"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </Svg>
+                )}
+              </TouchableOpacity>
+              <Text
+                style={[
+                  {
+                    color: '#b1b1b1',
+                    fontSize: 11,
+                    fontFamily: 'Manrope-Regular',
+                    alignSelf: 'center',
+                  },
+                ]}>
+                Upload Photo
+              </Text>
+            </View>
             <Text style={styles.label}>Select Gender</Text>
             <TouchableOpacity
               style={{
@@ -449,7 +540,7 @@ const ContinueSignUp = () => {
               <Text
                 style={{
                   color: 'grey',
-                  fontFamily: 'CamptonBook',
+                  fontFamily: 'Manrope-Regular',
                   fontSize: 13,
                 }}
                 onPress={() => navigation.navigate('Tabs', {screen: 'Home'})}>
@@ -458,7 +549,7 @@ const ContinueSignUp = () => {
               <Text
                 style={{
                   color: '#FF6DFB',
-                  fontFamily: 'CamptonBook',
+                  fontFamily: 'Manrope-Regular',
                   fontSize: 14,
                   paddingBottom: 100,
                 }}
@@ -481,14 +572,14 @@ const styles = StyleSheet.create({
   },
   goBackText: {
     color: '#fff',
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
     position: 'absolute',
     top: 50,
     right: 10,
   },
   heading: {
     fontSize: 32,
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
     marginBottom: 10,
     color: '#fff',
     alignSelf: 'center',
@@ -501,7 +592,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     textAlign: 'center',
     paddingHorizontal: 20,
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
   },
   button: {
     backgroundColor: '#CB29BE',
@@ -516,19 +607,19 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 12,
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
   },
   textInput: {
     padding: 12,
     borderRadius: 5,
     color: 'white',
-    fontFamily: 'CamptonLight',
+    fontFamily: 'Manrope-Light',
   },
   label: {
     color: '#fff',
     marginBottom: 5,
     paddingLeft: 8,
-    fontFamily: 'CamptonMedium',
+    fontFamily: 'Manrope-Medium',
     fontSize: 13,
   },
   nameInputContainer: {
@@ -552,7 +643,7 @@ const styles = StyleSheet.create({
   passwordHint: {
     color: '#fff',
     paddingLeft: 8,
-    fontFamily: 'CamptonMedium',
+    fontFamily: 'Manrope-Medium',
     fontSize: 10,
   },
 });

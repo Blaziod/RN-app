@@ -1,14 +1,19 @@
 /* eslint-disable prettier/prettier */
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, TextInput, StyleSheet, Switch} from 'react-native';
-import {useState} from 'react';
 import {useTheme} from '../../Components/Contexts/colorTheme';
 
 const PreferencesSettings = () => {
-  const [isDarkEnabled, setDarkEnabled] = useState(false);
-  const [isLightEnabled, setLightEnabled] = useState(false);
-  const [isSystemEnabled, setSystemEnabled] = useState(false);
-  const {theme, toggleTheme} = useTheme();
+  const {theme, setAppTheme} = useTheme();
+  const [isDarkEnabled, setDarkEnabled] = useState(theme === 'dark');
+  const [isLightEnabled, setLightEnabled] = useState(theme === 'light');
+  const [isSystemEnabled, setSystemEnabled] = useState(theme === 'system');
+
+  useEffect(() => {
+    setDarkEnabled(theme === 'dark');
+    setLightEnabled(theme === 'light');
+    setSystemEnabled(theme === 'system');
+  }, [theme]);
 
   const dynamicStyles = StyleSheet.create({
     AppContainer: {
@@ -31,6 +36,33 @@ const PreferencesSettings = () => {
     },
   });
 
+  const handleDarkToggle = newValue => {
+    setDarkEnabled(newValue);
+    if (newValue) {
+      setLightEnabled(false);
+      setSystemEnabled(false);
+      setAppTheme('dark');
+    }
+  };
+
+  const handleLightToggle = newValue => {
+    setLightEnabled(newValue);
+    if (newValue) {
+      setDarkEnabled(false);
+      setSystemEnabled(false);
+      setAppTheme('light');
+    }
+  };
+
+  const handleSystemToggle = newValue => {
+    setSystemEnabled(newValue);
+    if (newValue) {
+      setDarkEnabled(false);
+      setLightEnabled(false);
+      setAppTheme('system');
+    }
+  };
+
   return (
     <View style={[styles.container, dynamicStyles.AppContainer]}>
       <Text style={[styles.Header2, dynamicStyles.TextColor]}>Appearance</Text>
@@ -47,40 +79,23 @@ const PreferencesSettings = () => {
             trackColor={{false: '#767577', true: '#81b0ff'}}
             thumbColor={isDarkEnabled ? '#f5dd4b' : '#f4f3f4'}
             ios_backgroundColor="#3e3e3e"
-            onValueChange={newValue => {
-              setDarkEnabled(newValue);
-              if (newValue) {
-                setLightEnabled(false);
-                setSystemEnabled(false);
-              }
-            }}
+            onValueChange={handleDarkToggle}
             value={isDarkEnabled}
-            onPress={toggleTheme}
           />
         </View>
-        <View
-          style={[styles.row2, dynamicStyles.DivContainer]}
-          onPress={toggleTheme}>
+        <View style={[styles.row2, dynamicStyles.DivContainer]}>
           <TextInput
             style={[styles.Input2, dynamicStyles.TextColor]}
             placeholder="Light Mode"
             placeholderTextColor={theme === 'dark' ? '#FFFFFF' : '#000000'}
             editable={isLightEnabled}
-            onPress={toggleTheme}
           />
           <Switch
             trackColor={{false: '#767577', true: '#81b0ff'}}
             thumbColor={isLightEnabled ? '#f5dd4b' : '#f4f3f4'}
             ios_backgroundColor="#3e3e3e"
-            onValueChange={newValue => {
-              setLightEnabled(newValue);
-              if (newValue) {
-                setDarkEnabled(false);
-                setSystemEnabled(false);
-              }
-            }}
+            onValueChange={handleLightToggle}
             value={isLightEnabled}
-            onPress={toggleTheme}
           />
         </View>
         <View style={[styles.row2, dynamicStyles.DivContainer]}>
@@ -94,13 +109,7 @@ const PreferencesSettings = () => {
             trackColor={{false: '#767577', true: '#81b0ff'}}
             thumbColor={isSystemEnabled ? '#f5dd4b' : '#f4f3f4'}
             ios_backgroundColor="#3e3e3e"
-            onValueChange={newValue => {
-              setSystemEnabled(newValue);
-              if (newValue) {
-                setDarkEnabled(false);
-                setLightEnabled(false);
-              }
-            }}
+            onValueChange={handleSystemToggle}
             value={isSystemEnabled}
           />
         </View>
@@ -112,7 +121,7 @@ const PreferencesSettings = () => {
 const styles = StyleSheet.create({
   Header: {
     fontSize: 14,
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
     color: '#fff',
   },
   container: {
@@ -135,7 +144,7 @@ const styles = StyleSheet.create({
   },
   Header2: {
     fontSize: 14,
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
     color: '#fff',
     paddingVertical: 20,
   },
@@ -144,7 +153,7 @@ const styles = StyleSheet.create({
   },
   InputLabel: {
     fontSize: 12,
-    fontFamily: 'CamptonMedium',
+    fontFamily: 'Manrope-Medium',
     color: '#fff',
   },
   Input: {

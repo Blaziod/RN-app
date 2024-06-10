@@ -89,7 +89,7 @@ const getStyles = (theme, selectionMode) =>
     },
     text: {
       fontSize: 13,
-      fontFamily: 'Campton Bold',
+      fontFamily: 'Manrope-ExtraBold',
       paddingRight: 20,
     },
   });

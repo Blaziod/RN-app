@@ -105,7 +105,7 @@ const More = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
 
@@ -135,7 +135,7 @@ const More = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
       <ActivityIndicator />;
@@ -191,7 +191,7 @@ const More = () => {
 
               <Text
                 style={[
-                  {color: '#B1B1B1', fontSize: 14},
+                  {color: '#B1B1B1', fontSize: 14, fontFamily: 'Manrope-Bold'},
                   dynamicStyles.TextColor,
                 ]}>
                 Transactions
@@ -224,7 +224,7 @@ const More = () => {
               </Svg>
               <Text
                 style={[
-                  {color: '#B1B1B1', fontSize: 14},
+                  {color: '#B1B1B1', fontSize: 14, fontFamily: 'Manrope-Bold'},
                   dynamicStyles.TextColor,
                 ]}>
                 Refer Link
@@ -257,7 +257,7 @@ const More = () => {
 
               <Text
                 style={[
-                  {color: '#B1B1B1', fontSize: 14},
+                  {color: '#B1B1B1', fontSize: 14, fontFamily: 'Manrope-Bold'},
                   dynamicStyles.TextColor,
                 ]}>
                 Settings
@@ -289,7 +289,7 @@ const More = () => {
 
               <Text
                 style={[
-                  {color: '#B1B1B1', fontSize: 14},
+                  {color: '#B1B1B1', fontSize: 14, fontFamily: 'Manrope-Bold'},
                   dynamicStyles.TextColor,
                 ]}>
                 Support
@@ -327,7 +327,7 @@ const More = () => {
                     text2Style: {
                       color: 'green',
                       fontSize: 20,
-                      fontFamily: 'Campton Bold',
+                      fontFamily: 'Manrope-ExtraBold',
                     },
                   });
 
@@ -352,7 +352,14 @@ const More = () => {
                 </G>
               </Svg>
 
-              <Text style={{color: '#FF3D00', fontSize: 14}}>Sign Out</Text>
+              <Text
+                style={{
+                  color: '#FF3D00',
+                  fontSize: 14,
+                  fontFamily: 'Manrope-Bold',
+                }}>
+                Sign Out
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={{backgroundColor: '#fff', width: 100, height: 50}}

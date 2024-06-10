@@ -240,7 +240,7 @@ const FailedEarnersTasks = () => {
             text2Style: {
               color: 'green',
               fontSize: 12,
-              fontFamily: 'Campton Bold',
+              fontFamily: 'Manrope-ExtraBold',
             },
           });
         } else {
@@ -272,7 +272,7 @@ const FailedEarnersTasks = () => {
               text2Style: {
                 color: 'green',
                 fontSize: 12,
-                fontFamily: 'Campton Bold',
+                fontFamily: 'Manrope-ExtraBold',
               },
             });
             navigation.reset({
@@ -309,7 +309,7 @@ const FailedEarnersTasks = () => {
           text2Style: {
             color: 'green',
             fontSize: 12,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
       }
@@ -370,7 +370,7 @@ const FailedEarnersTasks = () => {
                   fontSize: 13,
                   color: '#fff',
                   paddingTop: 10,
-                  fontFamily: 'CamptonMedium',
+                  fontFamily: 'Manrope-Medium',
                 }}>
                 {tasks.caption}
               </Text>
@@ -384,7 +384,7 @@ const FailedEarnersTasks = () => {
                 <Text
                   style={{
                     color: '#fff',
-                    fontFamily: 'Campton Bold',
+                    fontFamily: 'Manrope-ExtraBold',
                     fontSize: 12,
                   }}>
                   ₦{tasks && tasks.platform && platformPrices[tasks.platform]}{' '}

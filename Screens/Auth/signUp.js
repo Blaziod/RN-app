@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-unused-vars */
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
@@ -28,7 +28,6 @@ const SignUp = () => {
   const [signupToken, setSignupToken] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
-  const [isFocused1, setIsFocused1] = useState(false);
   const navigation = useNavigation();
   const [ggToken, setGgToken] = useState(null);
 
@@ -106,7 +105,7 @@ const SignUp = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
       }
@@ -131,7 +130,7 @@ const SignUp = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
     } finally {
@@ -186,7 +185,7 @@ const SignUp = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
         navigation.reset({
@@ -227,7 +226,7 @@ const SignUp = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
         navigation.navigate('SignIn');
@@ -252,7 +251,7 @@ const SignUp = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
       }
@@ -278,7 +277,7 @@ const SignUp = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
     } finally {
@@ -345,7 +344,7 @@ const SignUp = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
     };
@@ -411,7 +410,7 @@ const SignUp = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
       }
@@ -436,7 +435,7 @@ const SignUp = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
     } finally {
@@ -470,7 +469,7 @@ const SignUp = () => {
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
             />
-            <TextInput
+            {/* <TextInput
               style={[styles.textInput, isFocused1 && styles.focused]}
               placeholder="Referral code/Username(Optional)"
               placeholderTextColor="#888"
@@ -480,7 +479,7 @@ const SignUp = () => {
               value={referral}
               onFocus={() => setIsFocused1(true)}
               onBlur={() => setIsFocused1(false)}
-            />
+            /> */}
             <TouchableOpacity
               style={styles.continueButton}
               onPress={handleSignUp}
@@ -531,7 +530,7 @@ const SignUp = () => {
           style={{
             color: '#fff',
             fontSize: 14,
-            fontFamily: 'CamptonBook',
+            fontFamily: 'Manrope-Regular',
           }}>
           Already have an account?
         </Text>
@@ -540,7 +539,7 @@ const SignUp = () => {
             style={{
               color: 'red',
               fontSize: 14,
-              fontFamily: 'CamptonBook',
+              fontFamily: 'Manrope-Regular',
             }}
             onPress={() => navigation.navigate('SignIn')}>
             Sign In
@@ -560,7 +559,7 @@ const SignUp = () => {
           style={{
             color: '#b1b1b1',
             fontSize: 14,
-            fontFamily: 'CamptonBook',
+            fontFamily: 'Manrope-Regular',
           }}>
           By signing up, you agree to our
         </Text>
@@ -569,7 +568,7 @@ const SignUp = () => {
             style={{
               color: '#fff',
               fontSize: 14,
-              fontFamily: 'Campton Bold',
+              fontFamily: 'Manrope-ExtraBold',
             }}>
             Terms and Privacy Policy
           </Text>
@@ -607,13 +606,13 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     textAlign: 'center',
     marginTop: 100,
-    fontFamily: 'CamptonSemiBold',
+    fontFamily: 'Manrope-Bold',
   },
   welcomeText2: {
     fontSize: 32,
     color: '#FFFFFF',
     textAlign: 'center',
-    fontFamily: 'CamptonSemiBold',
+    fontFamily: 'Manrope-Bold',
   },
   focused: {
     borderColor: '#CB29BE',
@@ -623,7 +622,7 @@ const styles = StyleSheet.create({
     color: '#B1B1B1',
     textAlign: 'center',
     marginTop: 5,
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
   },
   formContainer: {
     marginTop: 5,
@@ -636,7 +635,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     width: '92%',
     color: 'white',
-    fontFamily: 'CamptonLight',
+    fontFamily: 'Manrope-Light',
     borderWidth: 2,
   },
   continueButton: {
@@ -651,7 +650,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: 'normal',
-    fontFamily: 'CamptonLight',
+    fontFamily: 'Manrope-Light',
   },
   socialLogins: {
     marginTop: 20,
@@ -662,7 +661,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: 'center',
     color: '#B1B1B1',
-    fontFamily: 'CamptonLight',
+    fontFamily: 'Manrope-Light',
   },
   buttonRow: {
     flexDirection: 'row',
@@ -689,7 +688,7 @@ const styles = StyleSheet.create({
   socialButtonText: {
     fontSize: 15,
     color: '#000',
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
   },
 });
 

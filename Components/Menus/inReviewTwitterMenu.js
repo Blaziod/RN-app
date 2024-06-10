@@ -241,7 +241,7 @@ const InReviewTwitterMenu = () => {
             text2Style: {
               color: 'green',
               fontSize: 12,
-              fontFamily: 'Campton Bold',
+              fontFamily: 'Manrope-ExtraBold',
             },
           });
         } else {
@@ -273,7 +273,7 @@ const InReviewTwitterMenu = () => {
               text2Style: {
                 color: 'green',
                 fontSize: 12,
-                fontFamily: 'Campton Bold',
+                fontFamily: 'Manrope-ExtraBold',
               },
             });
             navigation.reset({
@@ -310,7 +310,7 @@ const InReviewTwitterMenu = () => {
           text2Style: {
             color: 'green',
             fontSize: 12,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
       }
@@ -372,7 +372,7 @@ const InReviewTwitterMenu = () => {
                   fontSize: 13,
                   color: '#fff',
                   paddingTop: 10,
-                  fontFamily: 'CamptonMedium',
+                  fontFamily: 'Manrope-Medium',
                 }}>
                 {task.task.caption}
               </Text>
@@ -386,7 +386,7 @@ const InReviewTwitterMenu = () => {
                 <Text
                   style={{
                     color: '#fff',
-                    fontFamily: 'Campton Bold',
+                    fontFamily: 'Manrope-ExtraBold',
                     fontSize: 12,
                   }}>
                   ₦{tasks && tasks.platform && platformPrices[tasks.platform]}{' '}

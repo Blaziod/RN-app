@@ -273,7 +273,7 @@ const TransactionTopMenu = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
       } else {
@@ -297,7 +297,7 @@ const TransactionTopMenu = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
       }
@@ -323,7 +323,7 @@ const TransactionTopMenu = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
     } finally {
@@ -380,7 +380,7 @@ const TransactionTopMenu = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
         console.log(response.data);
@@ -413,7 +413,7 @@ const TransactionTopMenu = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
     } finally {
@@ -496,7 +496,7 @@ const TransactionTopMenu = () => {
                     style={{
                       color: '#fff',
                       fontSize: 24,
-                      fontFamily: 'Campton Bold',
+                      fontFamily: 'Manrope-ExtraBold',
                       paddingBottom: 10,
                       paddingTop: 20,
                     }}>
@@ -507,7 +507,7 @@ const TransactionTopMenu = () => {
                       color: '#b1b1b1',
                       fontSize: 12,
                       fontWeight: 400,
-                      fontFamily: 'CamptonBook',
+                      fontFamily: 'Manrope-Regular',
                       textAlign: 'center',
                       paddingHorizontal: 20,
                     }}>
@@ -553,7 +553,7 @@ const TransactionTopMenu = () => {
                     <Text
                       style={{
                         color: '#fff',
-                        fontFamily: 'CamptonBook',
+                        fontFamily: 'Manrope-Regular',
                         fontSize: 14,
                       }}>
                       Fund Wallet
@@ -599,7 +599,7 @@ const TransactionTopMenu = () => {
                   {
                     color: '#b1b1b1',
                     fontSize: 14,
-                    fontFamily: 'CamptonBook',
+                    fontFamily: 'Manrope-Regular',
                   },
                   dynamicStyles.TextColor,
                 ]}>
@@ -618,7 +618,7 @@ const TransactionTopMenu = () => {
                   {
                     color: '#b1b1b1',
                     fontSize: 14,
-                    fontFamily: 'CamptonBook',
+                    fontFamily: 'Manrope-Regular',
                   },
                   dynamicStyles.TextColor,
                 ]}>
@@ -629,7 +629,7 @@ const TransactionTopMenu = () => {
                   {
                     color: '#b1b1b1',
                     fontSize: 14,
-                    fontFamily: 'CamptonBook',
+                    fontFamily: 'Manrope-Regular',
                   },
                   dynamicStyles.TextColor,
                 ]}>
@@ -638,7 +638,7 @@ const TransactionTopMenu = () => {
             </View>
           </View>
           <Text style={styles.WalletAmount}>
-            {userData?.userdata?.wallet?.currency_symbol}{' '}
+            {userData?.userdata?.wallet?.currency_symbol}
             {isLoading ? (
               <ActivityIndicator size="small" color="#0000ff" />
             ) : (
@@ -740,15 +740,15 @@ const styles = StyleSheet.create({
   fundText: {
     fontSize: 12.8,
     color: '#000',
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
   },
   withdrawText: {
     fontSize: 12.8,
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
     color: '#000',
   },
   WalletAmount: {
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     fontSize: 40,
     color: '#FF6DFB',
   },

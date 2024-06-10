@@ -106,7 +106,7 @@ const ResetOtp = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
       } else {
@@ -131,7 +131,7 @@ const ResetOtp = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
       }
@@ -157,7 +157,7 @@ const ResetOtp = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
     }
@@ -190,7 +190,7 @@ const ResetOtp = () => {
                   <Text
                     style={{
                       color: '#fff',
-                      fontFamily: 'Campton Bold',
+                      fontFamily: 'Manrope-ExtraBold',
                       fontSize: 12,
                     }}>
                     Enter the OTP sent to you
@@ -216,7 +216,7 @@ const ResetOtp = () => {
                   <Text
                     style={{
                       color: '#fff',
-                      fontFamily: 'Campton Bold',
+                      fontFamily: 'Manrope-ExtraBold',
                       fontSize: 12,
                     }}>
                     Enter your new Password
@@ -272,7 +272,7 @@ const ResetOtp = () => {
                       style={{
                         color: '#fff',
                         fontSize: 14,
-                        fontFamily: 'Campton Bold',
+                        fontFamily: 'Manrope-ExtraBold',
                       }}>
                       Continue
                     </Text>
@@ -308,7 +308,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 32,
     paddingBottom: 25,
-    fontFamily: 'CamptonSemiBold',
+    fontFamily: 'Manrope-Bold',
   },
   subHeaderText: {
     textAlign: 'center',
@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'normal',
     lineHeight: 18.72,
-    fontFamily: 'CamptonLight',
+    fontFamily: 'Manrope-Light',
   },
   subHeaderText2: {
     textAlign: 'center',
@@ -325,7 +325,7 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',
     lineHeight: 18.72,
     paddingBottom: 20,
-    fontFamily: 'CamptonLight',
+    fontFamily: 'Manrope-Light',
   },
   codeInputContainer: {
     flexDirection: 'column',
@@ -342,7 +342,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     width: '94%',
     color: 'white',
-    fontFamily: 'CamptonLight',
+    fontFamily: 'Manrope-Light',
     alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -386,7 +386,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#9CA3AF',
     fontSize: 12.83,
-    fontFamily: 'CamptonLight',
+    fontFamily: 'Manrope-Light',
     fontWeight: 'normal',
   },
   resendCodeButton: {
@@ -395,14 +395,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     gap: 1,
-    fontFamily: 'CamptonSemiBold',
+    fontFamily: 'Manrope-Bold',
   },
   resendCodeButtonText: {
     textAlign: 'center',
     color: '#FF6DFB',
     fontSize: 12.83,
     marginLeft: 10,
-    fontFamily: 'CamptonSemiBold',
+    fontFamily: 'Manrope-Bold',
   },
 
   goBackButton: {
@@ -418,7 +418,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'white',
     fontSize: 12.83,
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
   },
 });
 

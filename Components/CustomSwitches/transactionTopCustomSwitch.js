@@ -10,7 +10,6 @@ const TransactionTopCustomSwitch = ({
   option1,
   option2,
   option3,
-  option4,
   onSelectSwitch,
 }) => {
   const [getSelectionMode, setSelectionMode] = useState(selectionMode);
@@ -26,7 +25,7 @@ const TransactionTopCustomSwitch = ({
 
   return (
     <View style={styles.container}>
-      {[option1, option2, option3, option4].map((option, index) => (
+      {[option1, option2, option3].map((option, index) => (
         <TouchableOpacity
           key={index}
           activeOpacity={1}
@@ -73,14 +72,14 @@ const getStyles = (theme, selectionMode) =>
       justifyContent: 'space-around',
     },
     button: {
-      flex: 1,
+      paddingRight: 30,
       borderBottomWidth: 0.5,
       justifyContent: 'center',
       alignItems: 'center',
     },
     text: {
       fontSize: 13,
-      fontFamily: 'Campton Bold',
+      fontFamily: 'Manrope-ExtraBold',
     },
   });
 

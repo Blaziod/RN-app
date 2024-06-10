@@ -25,7 +25,7 @@ const EarnCustomSwitch = ({
 
   return (
     <View style={styles.container}>
-      {[option1, option2, option3].map((option, index) => (
+      {[option1, option2].map((option, index) => (
         <TouchableOpacity
           key={index}
           activeOpacity={1}
@@ -69,17 +69,19 @@ const getStyles = (theme, selectionMode) =>
       height: 44,
       backgroundColor: theme === 'dark' ? '#121212' : '#FFFFFF',
       flexDirection: 'row',
-      justifyContent: 'space-around',
+      justifyContent: 'space-between',
     },
     button: {
+      flex: 1,
       borderBottomWidth: 0.5,
       justifyContent: 'center',
       alignItems: 'center',
-      paddingRight: 30,
+      // alignSelf: 'center',
     },
     text: {
       fontSize: 13,
-      fontFamily: 'Campton Bold',
+      fontFamily: 'Manrope-ExtraBold',
+      alignSelf: 'center',
     },
   });
 

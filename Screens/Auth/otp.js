@@ -20,6 +20,7 @@ const VerifyEmailScreen = () => {
   const [otp, setOtp] = useState(new Array(6).fill(''));
   const [userEmail, setUserEmail] = useState('');
   const [lastAttemptedOTP, setLastAttemptedOTP] = useState('');
+  const [clipboardOtp, setClipboardOtp] = useState('');
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
   const route = useRoute();
@@ -32,7 +33,7 @@ const VerifyEmailScreen = () => {
       setUserEmail(email);
     };
     fetchEmail();
-    const intervalId = setInterval(checkClipboardForOTP, 9000); // Check clipboard every 3 seconds
+    const intervalId = setInterval(checkClipboardForOTP, 9000);
     return () => clearInterval(intervalId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -43,8 +44,10 @@ const VerifyEmailScreen = () => {
       clipboardContent &&
       clipboardContent.length === 6 &&
       /^\d+$/.test(clipboardContent) &&
-      clipboardContent !== lastAttemptedOTP
+      clipboardContent !== lastAttemptedOTP &&
+      clipboardContent !== clipboardOtp
     ) {
+      setClipboardOtp(clipboardContent);
       const newOtp = clipboardContent.split('');
       setOtp(newOtp);
       applyOTPToInputs(newOtp);
@@ -73,10 +76,16 @@ const VerifyEmailScreen = () => {
     if (value === '' && index > 0) {
       inputRefs.current[index - 1]?.current?.focus();
     }
+
+    if (newOtp.join('').length === 6) {
+      verifyEmail(newOtp.join(''));
+    }
   };
 
   const verifyEmail = async otpString => {
-    setLastAttemptedOTP(otpString); // Save the OTP attempted to prevent re-attempts with the same OTP
+    setLastAttemptedOTP(otpString);
+    setClipboardOtp('');
+    setOtp(otpString.split(''));
     setIsLoading(true);
     try {
       const response = await axios.post(`${ApiLink.ENDPOINT_1}/verify-email`, {
@@ -110,7 +119,7 @@ const VerifyEmailScreen = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
     } finally {

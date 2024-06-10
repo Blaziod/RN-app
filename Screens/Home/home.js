@@ -173,7 +173,7 @@ const Home = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
       } else if (response.status === 401) {
@@ -205,7 +205,7 @@ const Home = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
         navigation.navigate('SignIn');
@@ -230,7 +230,7 @@ const Home = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
       }
@@ -256,7 +256,7 @@ const Home = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
     } finally {
@@ -313,7 +313,7 @@ const Home = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
         console.log(response.data);
@@ -350,7 +350,7 @@ const Home = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
         navigation.navigate('SignIn');
@@ -379,7 +379,7 @@ const Home = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
     } finally {
@@ -729,9 +729,7 @@ const Home = () => {
                   <View style={{paddingTop: 10}} />
                   <TouchableOpacity
                     style={[styles.GotoButton, dynamicStyles.Button]}
-                    onPress={() =>
-                      navigation.navigate('More', {screen: 'Settings'})
-                    }>
+                    onPress={() => navigation.navigate('More')}>
                     <Svg
                       width="20"
                       height="20"
@@ -785,7 +783,10 @@ const Home = () => {
                   <View style={{paddingTop: 10}} />
 
                   <TouchableOpacity
-                    style={[styles.GotoButton2, dynamicStyles.Button]}>
+                    style={[styles.GotoButton2, dynamicStyles.Button]}
+                    onPress={() =>
+                      navigation.navigate('EarnPage', {screen: 'Earn1IG'})
+                    }>
                     <Svg
                       width="20"
                       height="20"
@@ -941,7 +942,7 @@ const Home = () => {
                     style={{
                       color: '#fff',
                       fontSize: 24,
-                      fontFamily: 'Campton Bold',
+                      fontFamily: 'Manrope-ExtraBold',
                       paddingBottom: 10,
                       paddingTop: 20,
                     }}>
@@ -952,7 +953,7 @@ const Home = () => {
                       color: '#b1b1b1',
                       fontSize: 12,
                       fontWeight: 400,
-                      fontFamily: 'CamptonBook',
+                      fontFamily: 'Manrope-Regular',
                       textAlign: 'center',
                       paddingHorizontal: 20,
                     }}>
@@ -998,7 +999,7 @@ const Home = () => {
                     <Text
                       style={{
                         color: '#fff',
-                        fontFamily: 'CamptonBook',
+                        fontFamily: 'Manrope-Regular',
                         fontSize: 14,
                       }}>
                       Fund Wallet
@@ -1064,21 +1065,21 @@ const styles = StyleSheet.create({
   fundText: {
     fontSize: 12.8,
     color: '#000',
-    fontFamily: 'Manrope-Bold',
+    fontFamily: 'Manrope-ExtraBold',
   },
   withdrawText: {
     fontSize: 12.8,
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
     color: '#000',
   },
   WalletBalance: {
     fontSize: 14,
     paddingBottom: 10,
-    fontFamily: 'CamptonMedium',
+    fontFamily: 'Manrope-Medium',
     color: '#000',
   },
   WalletAmount: {
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     fontSize: 40,
     color: '#000',
   },
@@ -1102,7 +1103,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   advertText: {
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
     fontSize: 16,
     padding: 5,
     paddingTop: 50,
@@ -1110,7 +1111,7 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   advertSubText: {
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     padding: 5,
     fontSize: 13,
     paddingLeft: 10,
@@ -1147,7 +1148,7 @@ const styles = StyleSheet.create({
   WhatText: {
     color: '#fff',
     fontSize: 26,
-    fontFamily: 'CamptonMedium',
+    fontFamily: 'Manrope-Medium',
     paddingHorizontal: 20,
     paddingVertical: 20,
   },
@@ -1159,13 +1160,13 @@ const styles = StyleSheet.create({
   },
   SetUpText: {
     color: '#fff',
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
     fontSize: 17,
     paddingBottom: 10,
   },
   SetUpSubText: {
     color: '#fff',
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     fontSize: 13,
     width: '100%',
   },
@@ -1203,7 +1204,7 @@ const styles = StyleSheet.create({
   },
   GotoText: {
     color: '#fff',
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
   },
   InstagramContainer: {
     width: '91%',

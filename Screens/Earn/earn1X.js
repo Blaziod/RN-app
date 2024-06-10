@@ -100,7 +100,7 @@ const Earn1X = ({navigation}) => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
         setIsModalVisible(false);
@@ -135,7 +135,7 @@ const Earn1X = ({navigation}) => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
         navigation.navigate('SignIn');
@@ -160,7 +160,7 @@ const Earn1X = ({navigation}) => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
       }
@@ -186,7 +186,7 @@ const Earn1X = ({navigation}) => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
     } finally {
@@ -401,7 +401,7 @@ const Earn1X = ({navigation}) => {
                       color: '#fff',
                       fontSize: 14,
                       fontWeight: 400,
-                      fontFamily: 'CamptonBook',
+                      fontFamily: 'Manrope-Regular',
                       textAlign: 'center',
                       paddingHorizontal: 20,
                       paddingVertical: 20,
@@ -487,7 +487,7 @@ const Earn1X = ({navigation}) => {
                       <Text
                         style={{
                           color: '#fff',
-                          fontFamily: 'CamptonBook',
+                          fontFamily: 'Manrope-Regular',
                           fontSize: 14,
                         }}>
                         Link Account
@@ -515,10 +515,11 @@ const Earn1X = ({navigation}) => {
             <View
               style={{
                 backgroundColor: '#fff',
-                height: 240,
+                height: 'auto',
                 alignItems: 'center',
                 justifyContent: 'center',
                 position: 'relative',
+                paddingVertical: 20,
               }}>
               <View style={{position: 'absolute', top: 0}}>
                 <Earn1Image />
@@ -546,7 +547,7 @@ const Earn1X = ({navigation}) => {
                 }}>
                 <Text
                   style={{
-                    fontFamily: 'Campton Bold',
+                    fontFamily: 'Manrope-ExtraBold',
                     textAlign: 'center',
                     paddingBottom: 5,
                     color: '#000',
@@ -555,7 +556,7 @@ const Earn1X = ({navigation}) => {
                 </Text>
                 <Text
                   style={{
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     textAlign: 'center',
                     fontSize: 12,
                     color: '#000',
@@ -718,13 +719,13 @@ const styles = StyleSheet.create({
   },
   SetUpText: {
     color: '#fff',
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
     fontSize: 17,
     paddingBottom: 10,
   },
   SetUpSubText: {
     color: '#fff',
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     fontSize: 13,
   },
   IconAA: {
@@ -773,16 +774,16 @@ const styles = StyleSheet.create({
   },
   GotoText: {
     color: '#000',
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
   },
   GotoText3: {
     color: '#4CAF50',
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
     fontSize: 10,
   },
   GotoText2: {
     color: '#000',
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
     fontSize: 10,
   },
 });

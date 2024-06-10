@@ -243,7 +243,7 @@ const Earn2WB = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
         navigation.navigate('Earn1WA');
@@ -278,7 +278,7 @@ const Earn2WB = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
         navigation.navigate('SignIn');
@@ -305,7 +305,7 @@ const Earn2WB = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
       }
@@ -330,7 +330,7 @@ const Earn2WB = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
     }
@@ -380,7 +380,7 @@ const Earn2WB = () => {
       text2Style: {
         color: 'green',
         fontSize: 14,
-        fontFamily: 'Campton Bold',
+        fontFamily: 'Manrope-ExtraBold',
       },
     });
   };
@@ -416,7 +416,7 @@ const Earn2WB = () => {
                 <Text
                   style={{
                     color: '#FFF',
-                    fontFamily: 'CamptonLight',
+                    fontFamily: 'Manrope-Light',
                     fontSize: 10,
                   }}>
                   {currentDateTime}
@@ -424,7 +424,7 @@ const Earn2WB = () => {
                 <Text
                   style={{
                     color: '#fff',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 30,
                   }}>
                   Post an Advert on your Whatsapp status
@@ -441,7 +441,7 @@ const Earn2WB = () => {
                     <Text
                       style={{
                         color: '#808080',
-                        fontFamily: 'CamptonMedium',
+                        fontFamily: 'Manrope-Medium',
                         fontSize: 12,
                       }}>
                       Earning:
@@ -450,7 +450,7 @@ const Earn2WB = () => {
                   <Text
                     style={{
                       color: '#fff',
-                      fontFamily: 'Campton Bold',
+                      fontFamily: 'Manrope-ExtraBold',
                       fontSize: 12,
                     }}>
                     ₦60 Per Advert Post
@@ -477,7 +477,7 @@ const Earn2WB = () => {
                 }}>
                 <Text
                   style={{
-                    fontFamily: 'CamptonBook',
+                    fontFamily: 'Manrope-Regular',
                     fontSize: 12,
                     color: 'blue',
                   }}>
@@ -500,7 +500,7 @@ const Earn2WB = () => {
                   alignItems: 'center',
                 }}>
                 <View style={{paddingBottom: 5}} />
-                <Text style={{fontFamily: 'Campton Bold', fontSize: 15}}>
+                <Text style={{fontFamily: 'Manrope-ExtraBold', fontSize: 15}}>
                   {`${minutes.toString().padStart(2, '0')}:${seconds
                     .toString()
                     .padStart(2, '0')}`}
@@ -522,7 +522,7 @@ const Earn2WB = () => {
                 <Text
                   style={{
                     color: '#fff',
-                    fontFamily: 'CamptonSemiBold',
+                    fontFamily: 'Manrope-Bold',
                     fontSize: 22,
                     paddingTop: 20,
                   }}>
@@ -532,7 +532,7 @@ const Earn2WB = () => {
                   <Text
                     style={{
                       color: '#fff',
-                      fontFamily: 'CamptonSemiBold',
+                      fontFamily: 'Manrope-Bold',
                       fontSize: 12,
                       paddingBottom: 10,
                       paddingTop: 60,
@@ -590,7 +590,7 @@ const Earn2WB = () => {
                     <Text
                       style={{
                         color: 'white',
-                        fontFamily: 'CamptonBook',
+                        fontFamily: 'Manrope-Regular',
                         fontSize: 13,
                       }}>
                       {GeneratedTasks?.performed_task?.task?.caption}
@@ -617,7 +617,7 @@ const Earn2WB = () => {
                       <Text
                         style={{
                           color: '#FF6DFB',
-                          fontFamily: 'CamptonBook',
+                          fontFamily: 'Manrope-Regular',
                           fontSize: 13,
                         }}>
                         Copy text
@@ -658,7 +658,7 @@ const Earn2WB = () => {
                 <Text
                   style={{
                     color: '#fff',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 24,
                     alignSelf: 'center',
                   }}>
@@ -684,7 +684,7 @@ const Earn2WB = () => {
                     )}
                   </TouchableOpacity>
                 </View>
-                <Text style={{color: '#fff', fontFamily: 'CamptonSemiBold'}}>
+                <Text style={{color: '#fff', fontFamily: 'Manrope-Bold'}}>
                   Please enter the WhatsApp Phone Number that performed this
                   task
                 </Text>
@@ -701,7 +701,7 @@ const Earn2WB = () => {
                     <Text
                       style={{
                         color: 'white',
-                        fontFamily: 'CamptonBook',
+                        fontFamily: 'Manrope-Regular',
                         fontSize: 13,
                       }}>
                       Blaziod
@@ -729,7 +729,7 @@ const Earn2WB = () => {
                     <Text
                       style={{
                         color: '#fff',
-                        fontFamily: 'CamptonBook',
+                        fontFamily: 'Manrope-Regular',
                         fontSize: 12,
                       }}>
                       Upload Proof
@@ -753,7 +753,7 @@ const Earn2WB = () => {
                   ) : (
                     <Text
                       style={{
-                        fontFamily: 'CamptonMedium',
+                        fontFamily: 'Manrope-Medium',
                         justifyContent: 'center',
                         alignItems: 'center',
                         color: '#000',
@@ -785,18 +785,18 @@ const styles = StyleSheet.create({
   },
   Box2Text: {
     color: 'red',
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     fontSize: 12,
   },
 
   Step: {
     color: '#fff',
-    fontFamily: 'CamptonSemiBold',
+    fontFamily: 'Manrope-Bold',
     fontSize: 12,
   },
   StepText: {
     color: '#fff',
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     fontSize: 12,
   },
   StepView: {

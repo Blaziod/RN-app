@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
   Headers: {
     color: '#fff',
     fontSize: 24,
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     marginBottom: 20,
   },
   box: {width: '93%', marginTop: 20, alignSelf: 'center'},

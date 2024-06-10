@@ -61,7 +61,7 @@ const Advertise1LS = ({navigation}) => {
                 <Text
                   style={{
                     color: '#FFF',
-                    fontFamily: 'CamptonLight',
+                    fontFamily: 'Manrope-Light',
                     fontSize: 10,
                   }}>
                   {currentDateTime}
@@ -69,7 +69,7 @@ const Advertise1LS = ({navigation}) => {
                 <Text
                   style={{
                     color: '#fff',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 30,
                   }}>
                   Get People to Like Your Post on different Social Media
@@ -87,7 +87,7 @@ const Advertise1LS = ({navigation}) => {
                     <Text
                       style={{
                         color: '#808080',
-                        fontFamily: 'CamptonMedium',
+                        fontFamily: 'Manrope-Medium',
                         fontSize: 12,
                       }}>
                       Pricing:
@@ -96,7 +96,7 @@ const Advertise1LS = ({navigation}) => {
                   <Text
                     style={{
                       color: '#fff',
-                      fontFamily: 'Campton Bold',
+                      fontFamily: 'Manrope-ExtraBold',
                       fontSize: 12,
                     }}>
                     ₦5 per like
@@ -106,7 +106,7 @@ const Advertise1LS = ({navigation}) => {
                 <Text
                   style={{
                     color: '#909090',
-                    fontFamily: 'CamptonBook',
+                    fontFamily: 'Manrope-Regular',
                     fontSize: 12,
                     paddingTop: 10,
                   }}>
@@ -127,7 +127,7 @@ const Advertise1LS = ({navigation}) => {
               <Text
                 style={{
                   color: '#fff',
-                  fontFamily: 'CamptonMedium',
+                  fontFamily: 'Manrope-Medium',
                   fontSize: 25,
                   //   paddingTop: 10,
                 }}>
@@ -162,18 +162,18 @@ const styles = StyleSheet.create({
   },
   Box2Text: {
     color: 'red',
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     fontSize: 12,
   },
 
   Step: {
     color: '#fff',
-    fontFamily: 'CamptonSemiBold',
+    fontFamily: 'Manrope-Bold',
     fontSize: 12,
   },
   StepText: {
     color: '#fff',
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     fontSize: 12,
   },
   StepView: {

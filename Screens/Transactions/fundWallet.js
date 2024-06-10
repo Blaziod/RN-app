@@ -278,7 +278,7 @@ const FundWallet = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
       } else {
@@ -302,7 +302,7 @@ const FundWallet = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
       }
@@ -328,7 +328,7 @@ const FundWallet = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
     } finally {
@@ -385,7 +385,7 @@ const FundWallet = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
         console.log(response.data);
@@ -418,7 +418,7 @@ const FundWallet = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
     } finally {
@@ -485,7 +485,7 @@ const FundWallet = () => {
                 style={{
                   color: '#FFD0FE',
                   fontSize: 14,
-                  fontFamily: 'CamptonBook',
+                  fontFamily: 'Manrope-Regular',
                 }}>
                 Go back
               </Text>
@@ -513,7 +513,7 @@ const FundWallet = () => {
                   style={{
                     color: '#fff',
                     fontSize: 14,
-                    fontFamily: 'CamptonBook',
+                    fontFamily: 'Manrope-Regular',
                   }}>
                   Fund wallet
                 </Text>
@@ -522,13 +522,13 @@ const FundWallet = () => {
                 style={{
                   color: '#b1b1b1',
                   fontSize: 12,
-                  fontFamily: 'CamptonBook',
+                  fontFamily: 'Manrope-Regular',
                 }}>
                 Wallet balance
               </Text>
               <View style={{justifyContent: 'center'}}>
                 <Text style={styles.WalletAmount}>
-                  {userData?.userdata?.wallet?.currency_symbol}{' '}
+                  {userData?.userdata?.wallet?.currency_symbol}
                   {isLoading ? (
                     <ActivityIndicator
                       size="medium"
@@ -582,7 +582,7 @@ const FundWallet = () => {
               style={{
                 color: '#b1b1b1',
                 paddingLeft: 20,
-                fontFamily: 'CamptonBook',
+                fontFamily: 'Manrope-Regular',
                 fontSize: 14,
                 paddingTop: 10,
               }}>
@@ -596,7 +596,7 @@ const FundWallet = () => {
               style={{
                 color: '#fff',
                 fontSize: 25,
-                fontFamily: 'CamptonMedium',
+                fontFamily: 'Manrope-Medium',
                 paddingVertical: 10,
                 paddingLeft: 20,
               }}>
@@ -701,15 +701,15 @@ const styles = StyleSheet.create({
   fundText: {
     fontSize: 12.8,
     color: '#000',
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
   },
   withdrawText: {
     fontSize: 13,
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     color: '#fff',
   },
   WalletAmount: {
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     fontSize: 40,
     color: '#FFD0FE',
   },

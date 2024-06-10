@@ -28,12 +28,12 @@ const GeneralSettings = () => {
   const navigation = useNavigation();
   const [userData, setUserData] = useState(null);
   const [userAccessToken, setUserAccessToken] = useState(null);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
+  const [firstName, setFirstName] = useState(userData?.userdata?.firstname);
+  const [lastName, setLastName] = useState(userData?.userdata?.lastname);
+  const [username, setUsername] = useState(userData?.userdata?.username);
+  const [email, setEmail] = useState(userData?.userdata?.email);
   const [number, setNummber] = useState('');
-  const [gender, setGender] = useState('');
+  const [gender, setGender] = useState(userData?.userdata?.gender);
   const [day, setDay] = useState('');
   const [month, setMonth] = useState('');
   const [year, setYear] = useState('');
@@ -59,23 +59,24 @@ const GeneralSettings = () => {
       });
   }, []);
 
+  // Fetch states when selectedCountry changes
   useEffect(() => {
     if (selectedCountry !== null) {
-      // setIsLoading(true);
       axios
         .post(`${ApiLink.ENDPOINT_1}/states`, {
           country: selectedCountry,
         })
         .then(response => {
           setState(response.data.states || []);
-          // setIsLoading(false);
         })
         .catch(error => {
           console.error('Error fetching states:', error);
-          // setIsLoading(false);
         });
+    } else {
+      setState([]); // Clear states when no country is selected
     }
   }, [selectedCountry]);
+
   useEffect(() => {
     // Your code to run on screen focus
     AsyncStorage.getItem('accesstoken')
@@ -128,6 +129,13 @@ const GeneralSettings = () => {
     .then(data => {
       const userData = JSON.parse(data);
       setUserData(userData);
+      setFirstName(userData?.userdata?.firstname || '');
+      setLastName(userData?.userdata?.lastname || '');
+      setUsername(userData?.userdata?.username || '');
+      setEmail(userData?.userdata?.email || '');
+      setGender(userData?.userdata?.gender || '');
+      setSelectedCountry(userData?.userdata?.country || null);
+      setSelectedState(userData?.userdata?.state || null);
     })
     .catch(error => {
       console.error('Error retrieving user data:', error);
@@ -239,7 +247,7 @@ const GeneralSettings = () => {
                 text2Style: {
                   color: 'green',
                   fontSize: 14,
-                  fontFamily: 'Campton Bold',
+                  fontFamily: 'Manrope-ExtraBold',
                 },
               });
             })
@@ -264,7 +272,7 @@ const GeneralSettings = () => {
                 text2Style: {
                   color: 'green',
                   fontSize: 14,
-                  fontFamily: 'Campton Bold',
+                  fontFamily: 'Manrope-ExtraBold',
                 },
               });
             })
@@ -357,7 +365,7 @@ const GeneralSettings = () => {
             text2Style: {
               color: 'green',
               fontSize: 14,
-              fontFamily: 'Campton Bold',
+              fontFamily: 'Manrope-ExtraBold',
             },
           });
         })
@@ -382,7 +390,7 @@ const GeneralSettings = () => {
             text2Style: {
               color: 'green',
               fontSize: 14,
-              fontFamily: 'Campton Bold',
+              fontFamily: 'Manrope-ExtraBold',
             },
           });
         })
@@ -440,7 +448,7 @@ const GeneralSettings = () => {
         </TouchableOpacity>
         <Text
           style={[
-            {color: '#b1b1b1', fontSize: 11, fontFamily: 'CamptonBook'},
+            {color: '#b1b1b1', fontSize: 11, fontFamily: 'Manrope-Regular'},
             dynamicStyles.TextColor,
           ]}>
           Upload Photo
@@ -630,7 +638,9 @@ const GeneralSettings = () => {
           selectedValue={selectedCountry}
           onValueChange={itemValue => {
             setSelectedCountry(itemValue); // Update selected country
-            setLga(null); // Reset selected LGA to null
+            setSelectedState(null); // Reset selected state
+            setLga([]);
+            setState([]); // Reset LGA
           }}
           style={{
             height: '100%',
@@ -672,15 +682,17 @@ const GeneralSettings = () => {
             <Picker
               selectedValue={selectedState}
               onValueChange={itemValue => {
-                setSelectedState(itemValue); // Update selected country
-                setSelectedLga(); // Reset selected LGA to null
+                setSelectedState(itemValue); // Update selected state
+                setSelectedLga(null); // Reset selected LGA
               }}
               style={{
                 height: '100%',
                 color: theme === 'dark' ? '#FFFFFF' : '#000000',
                 width: '100%',
               }}>
-              {state === null && <Picker.Item label="Select" value={null} />}
+              {selectedState === null && (
+                <Picker.Item label="Select" value={null} />
+              )}
               {Array.isArray(state) &&
                 state.map((item, index) => (
                   <Picker.Item
@@ -777,7 +789,11 @@ const GeneralSettings = () => {
             <ActivityIndicator size="small" color="#fff" />
           ) : (
             <Text
-              style={{color: 'fff', fontSize: 14, fontFamily: 'Campton Bold'}}>
+              style={{
+                color: 'fff',
+                fontSize: 14,
+                fontFamily: 'Manrope-ExtraBold',
+              }}>
               Update
             </Text>
           )}
@@ -813,18 +829,18 @@ const GeneralSettings = () => {
 const styles = StyleSheet.create({
   Header: {
     fontSize: 14,
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
     color: '#fff',
   },
   Header2: {
     fontSize: 14,
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
     color: '#fff',
     paddingVertical: 20,
   },
   Header3: {
     fontSize: 14,
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
     color: '#FF3D00',
   },
   subCountry: {width: '50%'},
@@ -832,7 +848,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 5,
     color: 'white',
-    fontFamily: 'CamptonLight',
+    fontFamily: 'Manrope-Light',
     // width: '98%',
   },
   eyeIcon: {
@@ -843,7 +859,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     width: '98%',
     color: 'white',
-    fontFamily: 'CamptonLight',
+    fontFamily: 'Manrope-Light',
     alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -854,7 +870,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     marginBottom: 5,
     paddingLeft: 8,
-    fontFamily: 'CamptonMedium',
+    fontFamily: 'Manrope-Medium',
     fontSize: 13,
   },
   nameInputContainer: {

@@ -79,7 +79,7 @@ const Earn3IG = () => {
                 <Text
                   style={{
                     color: '#FFF',
-                    fontFamily: 'CamptonLight',
+                    fontFamily: 'Manrope-Light',
                     fontSize: 10,
                   }}>
                   {currentDateTime}
@@ -87,7 +87,7 @@ const Earn3IG = () => {
                 <Text
                   style={{
                     color: '#fff',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 30,
                   }}>
                   Post an Advert on your instagram page
@@ -104,7 +104,7 @@ const Earn3IG = () => {
                     <Text
                       style={{
                         color: '#808080',
-                        fontFamily: 'CamptonMedium',
+                        fontFamily: 'Manrope-Medium',
                         fontSize: 12,
                       }}>
                       Earning:
@@ -113,7 +113,7 @@ const Earn3IG = () => {
                   <Text
                     style={{
                       color: '#fff',
-                      fontFamily: 'Campton Bold',
+                      fontFamily: 'Manrope-ExtraBold',
                       fontSize: 12,
                     }}>
                     ₦110 per Page Like and Follow
@@ -140,7 +140,7 @@ const Earn3IG = () => {
                 }}>
                 <Text
                   style={{
-                    fontFamily: 'CamptonBook',
+                    fontFamily: 'Manrope-Regular',
                     fontSize: 12,
                     color: '#006304',
                   }}>
@@ -162,7 +162,7 @@ const Earn3IG = () => {
                   alignItems: 'center',
                 }}>
                 <View style={{paddingBottom: 5}} />
-                <Text style={{fontFamily: 'Campton Bold', fontSize: 15}}>
+                <Text style={{fontFamily: 'Manrope-ExtraBold', fontSize: 15}}>
                   {`${minutes.toString().padStart(2, '0')}:${seconds
                     .toString()
                     .padStart(2, '0')}`}
@@ -184,7 +184,7 @@ const Earn3IG = () => {
                 <Text
                   style={{
                     color: '#fff',
-                    fontFamily: 'CamptonSemiBold',
+                    fontFamily: 'Manrope-Bold',
                     fontSize: 22,
                     paddingTop: 20,
                   }}>
@@ -194,7 +194,7 @@ const Earn3IG = () => {
                   <Text
                     style={{
                       color: '#fff',
-                      fontFamily: 'CamptonSemiBold',
+                      fontFamily: 'Manrope-Bold',
                       fontSize: 12,
                       paddingBottom: 10,
                       paddingTop: 60,
@@ -260,7 +260,7 @@ const Earn3IG = () => {
                   <Text
                     style={{
                       color: 'white',
-                      fontFamily: 'CamptonBook',
+                      fontFamily: 'Manrope-Regular',
                       fontSize: 13,
                     }}>
                     Hi Guys, i sell comfy sneakers, cover shoes, crocs and high
@@ -303,7 +303,7 @@ const Earn3IG = () => {
                 <Text
                   style={{
                     color: '#fff',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 24,
                     alignSelf: 'center',
                   }}>
@@ -321,7 +321,7 @@ const Earn3IG = () => {
                     {/* <Plus /> */}
                   </TouchableOpacity>
                 </View>
-                <Text style={{color: '#fff', fontFamily: 'CamptonSemiBold'}}>
+                <Text style={{color: '#fff', fontFamily: 'Manrope-Bold'}}>
                   Please enter the name on your Instagram account that performed
                   this task
                 </Text>
@@ -338,7 +338,7 @@ const Earn3IG = () => {
                     <Text
                       style={{
                         color: 'white',
-                        fontFamily: 'CamptonBook',
+                        fontFamily: 'Manrope-Regular',
                         fontSize: 13,
                       }}>
                       Blaziod
@@ -365,7 +365,7 @@ const Earn3IG = () => {
                     <Text
                       style={{
                         color: '#fff',
-                        fontFamily: 'CamptonBook',
+                        fontFamily: 'Manrope-Regular',
                         fontSize: 12,
                       }}>
                       Upload Proof
@@ -375,7 +375,7 @@ const Earn3IG = () => {
                     <Text
                       style={{
                         color: '#FFD0FE',
-                        fontFamily: 'CamptonBook',
+                        fontFamily: 'Manrope-Regular',
                         fontSize: 12,
                       }}>
                       Save
@@ -405,7 +405,7 @@ const Earn3IG = () => {
                   }>
                   <Text
                     style={{
-                      fontFamily: 'CamptonMedium',
+                      fontFamily: 'Manrope-Medium',
                       justifyContent: 'center',
                       alignItems: 'center',
                       color: '#000',
@@ -436,18 +436,18 @@ const styles = StyleSheet.create({
   },
   Box2Text: {
     color: 'red',
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     fontSize: 12,
   },
 
   Step: {
     color: '#fff',
-    fontFamily: 'CamptonSemiBold',
+    fontFamily: 'Manrope-Bold',
     fontSize: 12,
   },
   StepText: {
     color: '#fff',
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     fontSize: 12,
   },
   StepView: {

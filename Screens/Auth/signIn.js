@@ -80,7 +80,7 @@ const SignIn = () => {
               text2Style: {
                 color: 'green',
                 fontSize: 14,
-                fontFamily: 'Campton Bold',
+                fontFamily: 'Manrope-ExtraBold',
               },
             });
           } else if (response.status === 401) {
@@ -112,7 +112,7 @@ const SignIn = () => {
               text2Style: {
                 color: 'green',
                 fontSize: 14,
-                fontFamily: 'Campton Bold',
+                fontFamily: 'Manrope-ExtraBold',
               },
             });
             navigation.navigate('SignIn');
@@ -186,7 +186,7 @@ const SignIn = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
         navigation.reset({
@@ -227,7 +227,7 @@ const SignIn = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
         navigation.navigate('SignIn');
@@ -252,7 +252,7 @@ const SignIn = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
       }
@@ -278,7 +278,7 @@ const SignIn = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
     } finally {
@@ -357,10 +357,18 @@ const SignIn = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
-        navigation.navigate('Tabs', {screen: 'Home'});
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: 'Tabs',
+              params: {screen: 'Home'},
+            },
+          ],
+        });
       } else {
         const errorData = await response.json();
         console.error('Error signing in:', errorData);
@@ -383,7 +391,7 @@ const SignIn = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
       }
@@ -408,7 +416,7 @@ const SignIn = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
     } finally {
@@ -468,7 +476,7 @@ const SignIn = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
     };
@@ -534,7 +542,7 @@ const SignIn = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
       }
@@ -559,7 +567,7 @@ const SignIn = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
     } finally {
@@ -606,7 +614,7 @@ const SignIn = () => {
                 style={{
                   width: '85%',
                   color: 'white',
-                  fontFamily: 'CamptonLight',
+                  fontFamily: 'Manrope-Light',
                 }}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
@@ -633,7 +641,7 @@ const SignIn = () => {
                 style={{
                   color: '#fff',
                   fontSize: 14,
-                  fontFamily: 'Campton Bold',
+                  fontFamily: 'Manrope-ExtraBold',
                   alignSelf: 'flex-end',
                   paddingRight: 10,
                   paddingVertical: 10,
@@ -688,7 +696,7 @@ const SignIn = () => {
           style={{
             color: '#fff',
             fontSize: 14,
-            fontFamily: 'CamptonBook',
+            fontFamily: 'Manrope-Regular',
           }}>
           Don&apos;t have an account?
         </Text>
@@ -697,7 +705,7 @@ const SignIn = () => {
             style={{
               color: '#CB29BE',
               fontSize: 14,
-              fontFamily: 'Campton Bold',
+              fontFamily: 'Manrope-ExtraBold',
             }}
             onPress={() => navigation.navigate('SignUp')}>
             Sign Up
@@ -717,7 +725,7 @@ const SignIn = () => {
           style={{
             color: '#b1b1b1',
             fontSize: 14,
-            fontFamily: 'CamptonBook',
+            fontFamily: 'Manrope-Regular',
           }}>
           By signing up, you agree to our
         </Text>
@@ -726,7 +734,7 @@ const SignIn = () => {
             style={{
               color: '#fff',
               fontSize: 14,
-              fontFamily: 'Campton Bold',
+              fontFamily: 'Manrope-ExtraBold',
             }}>
             Terms and Privacy Policy
           </Text>
@@ -775,20 +783,20 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     textAlign: 'center',
     marginTop: 100,
-    fontFamily: 'CamptonSemiBold',
+    fontFamily: 'Manrope-Bold',
   },
   welcomeText2: {
     fontSize: 32,
     color: '#FFFFFF',
     textAlign: 'center',
-    fontFamily: 'CamptonSemiBold',
+    fontFamily: 'Manrope-Bold',
   },
   tagline: {
     fontSize: 16,
     color: '#B1B1B1',
     textAlign: 'center',
     marginTop: 5,
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
   },
   formContainer: {
     marginTop: 5,
@@ -804,7 +812,7 @@ const styles = StyleSheet.create({
     width: '94%',
     color: 'white',
     alignSelf: 'center',
-    fontFamily: 'CamptonLight',
+    fontFamily: 'Manrope-Light',
     borderWidth: 2,
   },
   textInput2: {
@@ -814,7 +822,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     width: '94%',
     color: 'white',
-    fontFamily: 'CamptonLight',
+    fontFamily: 'Manrope-Light',
     alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -834,7 +842,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: 'normal',
-    fontFamily: 'CamptonLight',
+    fontFamily: 'Manrope-Light',
   },
   socialLogins: {
     marginTop: 20,
@@ -845,7 +853,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: 'center',
     color: '#B1B1B1',
-    fontFamily: 'CamptonLight',
+    fontFamily: 'Manrope-Light',
   },
   buttonRow: {
     flexDirection: 'row',
@@ -872,7 +880,7 @@ const styles = StyleSheet.create({
   socialButtonText: {
     fontSize: 15,
     color: '#000',
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
   },
 });
 

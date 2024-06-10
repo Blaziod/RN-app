@@ -291,7 +291,7 @@ const Advertise1FBMenu = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
       console.log(data);
@@ -317,7 +317,7 @@ const Advertise1FBMenu = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
       if (error) {
@@ -341,7 +341,7 @@ const Advertise1FBMenu = () => {
         ]}>
         <Text
           style={[
-            {color: '#fff', fontFamily: 'CamptonBook', fontSize: 13},
+            {color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13},
             dynamicStyles.TextColor,
           ]}>
           Select Platform
@@ -365,7 +365,7 @@ const Advertise1FBMenu = () => {
         </TouchableOpacity>
         <Text
           style={[
-            {color: '#B1B1B1', fontSize: 10, fontFamily: 'CamptonBook'},
+            {color: '#B1B1B1', fontSize: 10, fontFamily: 'Manrope-Regular'},
             dynamicStyles.TextColor,
           ]}>
           Please select the social media or App Store platform where you want to
@@ -391,7 +391,7 @@ const Advertise1FBMenu = () => {
         }}>
         <Text
           style={[
-            {color: '#fff', fontFamily: 'CamptonBook', fontSize: 13},
+            {color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13},
             dynamicStyles.TextColor,
           ]}>
           Select Location
@@ -415,7 +415,7 @@ const Advertise1FBMenu = () => {
         </TouchableOpacity>
         <Text
           style={[
-            {color: '#B1B1B1', fontSize: 10, fontFamily: 'CamptonBook'},
+            {color: '#B1B1B1', fontSize: 10, fontFamily: 'Manrope-Regular'},
             dynamicStyles.TextColor,
           ]}>
           Please select the social media or App Store platform where you want to
@@ -441,7 +441,7 @@ const Advertise1FBMenu = () => {
         }}>
         <Text
           style={[
-            {color: '#fff', fontFamily: 'CamptonBook', fontSize: 13},
+            {color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13},
             dynamicStyles.TextColor,
           ]}>
           Number of Facebook Advert post you want
@@ -468,7 +468,7 @@ const Advertise1FBMenu = () => {
         </TouchableOpacity>
         <Text
           style={[
-            {color: '#B1B1B1', fontSize: 10, fontFamily: 'CamptonBook'},
+            {color: '#B1B1B1', fontSize: 10, fontFamily: 'Manrope-Regular'},
             dynamicStyles.TextColor,
           ]}>
           Enter the desired Number of Facebook Advert Post you want us to get
@@ -486,7 +486,7 @@ const Advertise1FBMenu = () => {
         </Modal>
         <Text
           style={[
-            {color: '#fff', fontFamily: 'CamptonBook', fontSize: 13},
+            {color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13},
             dynamicStyles.TextColor,
           ]}>
           Select Gender
@@ -518,7 +518,7 @@ const Advertise1FBMenu = () => {
         </Modal>
         <Text
           style={[
-            {color: '#B1B1B1', fontSize: 10, fontFamily: 'CamptonBook'},
+            {color: '#B1B1B1', fontSize: 10, fontFamily: 'Manrope-Regular'},
             dynamicStyles.TextColor,
           ]}>
           you can select the kind of gender whether male or female that you want
@@ -526,7 +526,7 @@ const Advertise1FBMenu = () => {
         </Text>
         <Text
           style={[
-            {color: '#fff', fontFamily: 'CamptonBook', fontSize: 13},
+            {color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13},
             dynamicStyles.TextColor,
           ]}>
           Select Religion
@@ -558,7 +558,7 @@ const Advertise1FBMenu = () => {
         </Modal>
         <Text
           style={[
-            {color: '#B1B1B1', fontSize: 10, fontFamily: 'CamptonBook'},
+            {color: '#B1B1B1', fontSize: 10, fontFamily: 'Manrope-Regular'},
             dynamicStyles.TextColor,
           ]}>
           You can target people of a particular religion or belief. Your advert
@@ -567,7 +567,7 @@ const Advertise1FBMenu = () => {
         </Text>
         <Text
           style={[
-            {color: '#fff', fontFamily: 'CamptonBook', fontSize: 13},
+            {color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13},
             dynamicStyles.TextColor,
           ]}>
           Enter Advert Task or Caption
@@ -596,7 +596,7 @@ const Advertise1FBMenu = () => {
         </TouchableOpacity>
         <Text
           style={[
-            {color: '#B1B1B1', fontSize: 10, fontFamily: 'CamptonBook'},
+            {color: '#B1B1B1', fontSize: 10, fontFamily: 'Manrope-Regular'},
             dynamicStyles.TextColor,
           ]}>
           Please enter the advert text or caption. The advert text or caption
@@ -608,7 +608,7 @@ const Advertise1FBMenu = () => {
           style={[
             {
               color: '#fff',
-              fontFamily: 'Campton Bold',
+              fontFamily: 'Manrope-ExtraBold',
               fontSize: 13,
               paddingTop: 10,
             },
@@ -645,7 +645,7 @@ const Advertise1FBMenu = () => {
             </Svg>
             <Text
               style={[
-                {color: '#fff', fontFamily: 'CamptonBook', fontSize: 13},
+                {color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13},
                 dynamicStyles.TextColor,
               ]}>
               Photo
@@ -679,7 +679,7 @@ const Advertise1FBMenu = () => {
             </Svg>
             <Text
               style={[
-                {color: '#fff', fontFamily: 'CamptonBook', fontSize: 13},
+                {color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13},
                 dynamicStyles.TextColor,
               ]}>
               Video
@@ -741,7 +741,7 @@ const Advertise1FBMenu = () => {
             style={[
               {
                 color: '#fff',
-                fontFamily: 'CamptonBook',
+                fontFamily: 'Manrope-Regular',
                 fontSize: 13,
               },
               dynamicStyles.TextColor,
@@ -752,7 +752,7 @@ const Advertise1FBMenu = () => {
             style={[
               {
                 color: '#fff',
-                fontFamily: 'CamptonBook',
+                fontFamily: 'Manrope-Regular',
                 fontSize: 30,
               },
               dynamicStyles.TextColor,
@@ -773,7 +773,7 @@ const Advertise1FBMenu = () => {
           onPress={() => setIsModalVisible(true)}>
           <Text
             style={{
-              fontFamily: 'CamptonBook',
+              fontFamily: 'Manrope-Regular',
               color: '#fff',
               fontSize: 13,
             }}>
@@ -856,7 +856,7 @@ const Advertise1FBMenu = () => {
                         {
                           color: '#fff',
                           fontSize: 14,
-                          fontFamily: 'Campton Bold',
+                          fontFamily: 'Manrope-ExtraBold',
                           paddingBottom: 10,
                         },
                         dynamicStyles.TextColor,
@@ -903,7 +903,7 @@ const Advertise1FBMenu = () => {
                             {
                               color: '#fff',
                               fontSize: 14,
-                              fontFamily: 'CamptonSemiBold',
+                              fontFamily: 'Manrope-Bold',
                             },
                             dynamicStyles.TextColor,
                           ]}>
@@ -913,7 +913,7 @@ const Advertise1FBMenu = () => {
                           style={{
                             color: '#909090',
                             fontSize: 12,
-                            fontFamily: 'CamptonBook',
+                            fontFamily: 'Manrope-Regular',
                           }}>
                           Get real people to post your ads on their social media
                           account.
@@ -978,7 +978,7 @@ const Advertise1FBMenu = () => {
                             {
                               color: '#fff',
                               fontSize: 14,
-                              fontFamily: 'CamptonSemiBold',
+                              fontFamily: 'Manrope-Bold',
                             },
                             dynamicStyles.TextColor,
                           ]}>
@@ -988,7 +988,7 @@ const Advertise1FBMenu = () => {
                           style={{
                             color: '#909090',
                             fontSize: 12,
-                            fontFamily: 'CamptonBook',
+                            fontFamily: 'Manrope-Regular',
                           }}>
                           Get real people to post your ads on their social media
                           account.
@@ -1051,7 +1051,7 @@ const Advertise1FBMenu = () => {
                             {
                               color: '#fff',
                               fontSize: 14,
-                              fontFamily: 'CamptonSemiBold',
+                              fontFamily: 'Manrope-Bold',
                             },
                             dynamicStyles.TextColor,
                           ]}>
@@ -1061,7 +1061,7 @@ const Advertise1FBMenu = () => {
                           style={{
                             color: '#909090',
                             fontSize: 12,
-                            fontFamily: 'CamptonBook',
+                            fontFamily: 'Manrope-Regular',
                           }}>
                           Get real people to post your ads on their social media
                           account.
@@ -1165,7 +1165,7 @@ const Advertise1FBMenu = () => {
                         {
                           color: '#fff',
                           fontSize: 14,
-                          fontFamily: 'Campton Bold',
+                          fontFamily: 'Manrope-ExtraBold',
                           paddingBottom: 10,
                           paddingTop: 20,
                         },
@@ -1203,7 +1203,7 @@ const Advertise1FBMenu = () => {
                             {
                               color: '#fff',
                               alignSelf: 'center',
-                              fontFamily: 'CamptonBook',
+                              fontFamily: 'Manrope-Regular',
                             },
                             dynamicStyles.TextColor,
                           ]}>
@@ -1214,7 +1214,7 @@ const Advertise1FBMenu = () => {
                             {
                               color: '#fff',
                               fontSize: 30,
-                              fontFamily: 'CamptonMedium',
+                              fontFamily: 'Manrope-Medium',
                             },
                             dynamicStyles.TextColor,
                           ]}>
@@ -1233,7 +1233,7 @@ const Advertise1FBMenu = () => {
                           style={[
                             {
                               fontSize: 13,
-                              fontFamily: 'CamptonBook',
+                              fontFamily: 'Manrope-Regular',
                               color: '#B1B1B1',
                             },
                             dynamicStyles.TextColor,
@@ -1245,7 +1245,7 @@ const Advertise1FBMenu = () => {
                             {
                               fontSize: 13,
                               color: '#B1B1B1',
-                              fontFamily: 'CamptonBook',
+                              fontFamily: 'Manrope-Regular',
                             },
                             dynamicStyles.TextColor,
                           ]}>
@@ -1265,7 +1265,7 @@ const Advertise1FBMenu = () => {
                           style={[
                             {
                               fontSize: 13,
-                              fontFamily: 'CamptonBook',
+                              fontFamily: 'Manrope-Regular',
                               color: '#B1B1B1',
                             },
                             dynamicStyles.TextColor,
@@ -1276,7 +1276,7 @@ const Advertise1FBMenu = () => {
                           style={[
                             {
                               fontSize: 13,
-                              fontFamily: 'CamptonBook',
+                              fontFamily: 'Manrope-Regular',
                               color: '#B1B1B1',
                             },
                             dynamicStyles.TextColor,
@@ -1309,7 +1309,7 @@ const Advertise1FBMenu = () => {
                       <Text
                         style={{
                           color: '#fff',
-                          fontFamily: 'CamptonBook',
+                          fontFamily: 'Manrope-Regular',
                           fontSize: 14,
                         }}>
                         proceed
@@ -1485,7 +1485,7 @@ const Advertise1FBMenu = () => {
                       style={{
                         color: '#fff',
                         fontSize: 14,
-                        fontFamily: 'Campton Bold',
+                        fontFamily: 'Manrope-ExtraBold',
                         paddingBottom: 10,
                         paddingTop: 20,
                       }}>
@@ -1496,7 +1496,7 @@ const Advertise1FBMenu = () => {
                         color: '#fff',
                         fontSize: 12,
                         // fontWeight: 400,
-                        fontFamily: 'CamptonBook',
+                        fontFamily: 'Manrope-Regular',
                         textAlign: 'center',
                         paddingHorizontal: 20,
                       }}>
@@ -1534,7 +1534,7 @@ const Advertise1FBMenu = () => {
                       <Text
                         style={{
                           color: '#fff',
-                          fontFamily: 'CamptonBook',
+                          fontFamily: 'Manrope-Regular',
                           fontSize: 14,
                         }}>
                         Go Home
@@ -1554,7 +1554,7 @@ const Advertise1FBMenu = () => {
 const styles = StyleSheet.create({
   text: {
     color: '#fff',
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     fontSize: 13,
   },
   nameInput: {

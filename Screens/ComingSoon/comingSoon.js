@@ -49,7 +49,7 @@ const ComingSoon = () => {
             {
               color: '#fff',
               fontSize: 50,
-              fontFamily: 'Campton Bold',
+              fontFamily: 'Manrope-ExtraBold',
               textAlign: 'center',
             },
             dynamicStyles.TextColor,

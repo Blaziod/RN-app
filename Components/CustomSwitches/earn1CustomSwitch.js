@@ -43,7 +43,7 @@ const Earn1CustomSwitch = ({
             style={{
               fontSize: 14,
               color: getSelectionMode === 1 ? '#FF6DFB' : '#B1B1B1',
-              fontFamily: 'Campton Bold',
+              fontFamily: 'Manrope-ExtraBold',
             }}>
             {option1}
           </Text>
@@ -63,7 +63,7 @@ const Earn1CustomSwitch = ({
             style={{
               fontSize: 14,
               color: getSelectionMode === 2 ? '#FF6DFB' : '#B1B1B1',
-              fontFamily: 'Campton Bold',
+              fontFamily: 'Manrope-ExtraBold',
             }}>
             <Text>{option2}</Text>
           </Text>
@@ -83,7 +83,7 @@ const Earn1CustomSwitch = ({
             style={{
               fontSize: 14,
               color: getSelectionMode === 5 ? '#FF6DFB' : '#B1B1B1',
-              fontFamily: 'Campton Bold',
+              fontFamily: 'Manrope-ExtraBold',
             }}>
             {option5}
           </Text>

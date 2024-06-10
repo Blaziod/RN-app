@@ -20,11 +20,11 @@ import Toast from 'react-native-toast-message';
 import {ApiLink} from '../../enums/apiLink';
 
 import {
-  LSAdvertiseModalPicker,
   AdvertiseModalPicker2,
   AdvertiseModalPicker3,
   AdvertiseModalPicker4,
   AdvertiseModalPicker5,
+  AdvertiseModalPicker6,
 } from '../Modals/AdvertModalPicker';
 
 const Advertise1LSMenu = () => {
@@ -189,7 +189,7 @@ const Advertise1LSMenu = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
       console.log(data);
@@ -214,7 +214,7 @@ const Advertise1LSMenu = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
       if (error) {
@@ -232,7 +232,8 @@ const Advertise1LSMenu = () => {
           flexDirection: 'column',
           gap: 10,
         }}>
-        <Text style={{color: '#fff', fontFamily: 'CamptonBook', fontSize: 13}}>
+        <Text
+          style={{color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13}}>
           Select Platform
         </Text>
         <TouchableOpacity
@@ -248,7 +249,11 @@ const Advertise1LSMenu = () => {
           <Text style={styles.text}>{choosePlatform}</Text>
         </TouchableOpacity>
         <Text
-          style={{color: '#B1B1B1', fontSize: 10, fontFamily: 'CamptonBook'}}>
+          style={{
+            color: '#B1B1B1',
+            fontSize: 10,
+            fontFamily: 'Manrope-Regular',
+          }}>
           Please select the social media or App Store platform where you want to
           perform this action
         </Text>
@@ -257,7 +262,7 @@ const Advertise1LSMenu = () => {
           animationType="slide"
           visible={modalVisible}
           onRequestClose={() => changeModalVisibility(false)}>
-          <LSAdvertiseModalPicker
+          <AdvertiseModalPicker6
             changeModalVisibility={changeModalVisibility}
             setData={setData}
           />
@@ -270,7 +275,8 @@ const Advertise1LSMenu = () => {
           flexDirection: 'column',
           gap: 10,
         }}>
-        <Text style={{color: '#fff', fontFamily: 'CamptonBook', fontSize: 13}}>
+        <Text
+          style={{color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13}}>
           Select Location
         </Text>
         <TouchableOpacity
@@ -286,9 +292,14 @@ const Advertise1LSMenu = () => {
           <Text style={styles.text}>{chooseLocation}</Text>
         </TouchableOpacity>
         <Text
-          style={{color: '#B1B1B1', fontSize: 10, fontFamily: 'CamptonBook'}}>
-          Please select the social media or App Store platform where you want to
-          perform this action
+          style={{
+            color: '#B1B1B1',
+            fontSize: 10,
+            fontFamily: 'Manrope-Regular',
+          }}>
+          You can target a particular location where your Advert task will be
+          mostly shown. Select “All over Nigeria” if you want to target every
+          location within the country.
         </Text>
         <Modal
           transparent={true}
@@ -308,7 +319,8 @@ const Advertise1LSMenu = () => {
           flexDirection: 'column',
           gap: 10,
         }}>
-        <Text style={{color: '#fff', fontFamily: 'CamptonBook', fontSize: 13}}>
+        <Text
+          style={{color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13}}>
           Number of Likes you want
         </Text>
         <TouchableOpacity
@@ -328,7 +340,11 @@ const Advertise1LSMenu = () => {
           />
         </TouchableOpacity>
         <Text
-          style={{color: '#B1B1B1', fontSize: 10, fontFamily: 'CamptonBook'}}>
+          style={{
+            color: '#B1B1B1',
+            fontSize: 10,
+            fontFamily: 'Manrope-Regular',
+          }}>
           Enter the number of Likes you want us to get for you
         </Text>
         <Modal
@@ -341,7 +357,8 @@ const Advertise1LSMenu = () => {
             setData3={setData3}
           />
         </Modal>
-        <Text style={{color: '#fff', fontFamily: 'CamptonBook', fontSize: 13}}>
+        <Text
+          style={{color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13}}>
           Select Gender
         </Text>
         <TouchableOpacity
@@ -367,11 +384,16 @@ const Advertise1LSMenu = () => {
           />
         </Modal>
         <Text
-          style={{color: '#B1B1B1', fontSize: 10, fontFamily: 'CamptonBook'}}>
+          style={{
+            color: '#B1B1B1',
+            fontSize: 10,
+            fontFamily: 'Manrope-Regular',
+          }}>
           you can select the kind of gender whether male or female that you want
           to see your task or “All Gender” if you want to target all genders
         </Text>
-        <Text style={{color: '#fff', fontFamily: 'CamptonBook', fontSize: 13}}>
+        <Text
+          style={{color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13}}>
           Select Religion
         </Text>
         <TouchableOpacity
@@ -397,12 +419,17 @@ const Advertise1LSMenu = () => {
           />
         </Modal>
         <Text
-          style={{color: '#B1B1B1', fontSize: 10, fontFamily: 'CamptonBook'}}>
+          style={{
+            color: '#B1B1B1',
+            fontSize: 10,
+            fontFamily: 'Manrope-Regular',
+          }}>
           You can target people of a particular religion or belief. Your advert
           and task will be shown to the particular religion you select. Select
           'All Religion' if you want to target all religion
         </Text>
-        <Text style={{color: '#fff', fontFamily: 'CamptonBook', fontSize: 13}}>
+        <Text
+          style={{color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13}}>
           The Link to Your social Media Post
         </Text>
         <TouchableOpacity
@@ -421,7 +448,11 @@ const Advertise1LSMenu = () => {
           />
         </TouchableOpacity>
         <Text
-          style={{color: '#B1B1B1', fontSize: 10, fontFamily: 'CamptonBook'}}>
+          style={{
+            color: '#B1B1B1',
+            fontSize: 10,
+            fontFamily: 'Manrope-Regular',
+          }}>
           Enter the link to the post you want people to like. ensure the link
           you paste here is the link to your post not your page
         </Text>
@@ -441,7 +472,7 @@ const Advertise1LSMenu = () => {
           <Text
             style={{
               color: '#fff',
-              fontFamily: 'CamptonBook',
+              fontFamily: 'Manrope-Regular',
               fontSize: 13,
             }}>
             Total pay
@@ -449,7 +480,7 @@ const Advertise1LSMenu = () => {
           <Text
             style={{
               color: '#fff',
-              fontFamily: 'CamptonBook',
+              fontFamily: 'Manrope-Regular',
               fontSize: 30,
             }}>
             {userData1?.userdata?.wallet?.currency_symbol}{' '}
@@ -468,7 +499,7 @@ const Advertise1LSMenu = () => {
           onPress={() => setIsModalVisible(true)}>
           <Text
             style={{
-              fontFamily: 'CamptonBook',
+              fontFamily: 'Manrope-Regular',
               color: '#fff',
               fontSize: 13,
             }}>
@@ -548,7 +579,7 @@ const Advertise1LSMenu = () => {
                       style={{
                         color: '#fff',
                         fontSize: 14,
-                        fontFamily: 'Campton Bold',
+                        fontFamily: 'Manrope-ExtraBold',
                         paddingBottom: 10,
                       }}>
                       How would you like to pay?
@@ -589,7 +620,7 @@ const Advertise1LSMenu = () => {
                           style={{
                             color: '#fff',
                             fontSize: 14,
-                            fontFamily: 'CamptonSemiBold',
+                            fontFamily: 'Manrope-Bold',
                           }}>
                           100% Secure payment
                         </Text>
@@ -597,7 +628,7 @@ const Advertise1LSMenu = () => {
                           style={{
                             color: '#909090',
                             fontSize: 12,
-                            fontFamily: 'CamptonBook',
+                            fontFamily: 'Manrope-Regular',
                           }}>
                           Pay through our highly secured online payment partner
                           using your VISA/Mastercard/Verve card. Or Bank
@@ -659,7 +690,7 @@ const Advertise1LSMenu = () => {
                           style={{
                             color: '#fff',
                             fontSize: 14,
-                            fontFamily: 'CamptonSemiBold',
+                            fontFamily: 'Manrope-Bold',
                           }}>
                           Pay from your Trendit Wallet
                         </Text>
@@ -667,10 +698,10 @@ const Advertise1LSMenu = () => {
                           style={{
                             color: '#909090',
                             fontSize: 12,
-                            fontFamily: 'CamptonBook',
+                            fontFamily: 'Manrope-Regular',
                           }}>
                           Wallet Balance:
-                          {userData?.userdata?.wallet?.currency_symbol}{' '}
+                          {userData?.userdata?.wallet?.currency_symbol}
                           {userBalance?.balance}
                         </Text>
                       </View>
@@ -727,7 +758,7 @@ const Advertise1LSMenu = () => {
                           style={{
                             color: '#fff',
                             fontSize: 14,
-                            fontFamily: 'CamptonSemiBold',
+                            fontFamily: 'Manrope-Bold',
                           }}>
                           Pay with Crypto
                         </Text>
@@ -735,7 +766,7 @@ const Advertise1LSMenu = () => {
                           style={{
                             color: '#909090',
                             fontSize: 12,
-                            fontFamily: 'CamptonBook',
+                            fontFamily: 'Manrope-Regular',
                           }}>
                           Pay with BTC to our BTC address
                         </Text>
@@ -834,7 +865,7 @@ const Advertise1LSMenu = () => {
                       style={{
                         color: '#fff',
                         fontSize: 14,
-                        fontFamily: 'Campton Bold',
+                        fontFamily: 'Manrope-ExtraBold',
                         paddingBottom: 10,
                         paddingTop: 20,
                       }}>
@@ -866,7 +897,7 @@ const Advertise1LSMenu = () => {
                           style={{
                             color: '#fff',
                             alignSelf: 'center',
-                            fontFamily: 'CamptonBook',
+                            fontFamily: 'Manrope-Regular',
                           }}>
                           Total Pay
                         </Text>
@@ -874,7 +905,7 @@ const Advertise1LSMenu = () => {
                           style={{
                             color: '#fff',
                             fontSize: 30,
-                            fontFamily: 'CamptonMedium',
+                            fontFamily: 'Manrope-Medium',
                           }}>
                           {/* {userData1?.userdata?.wallet?.currency_symbol}{' '} */}
                           {isNaN(Number(chooseNumber))
@@ -890,7 +921,7 @@ const Advertise1LSMenu = () => {
                         <Text
                           style={{
                             fontSize: 13,
-                            fontFamily: 'CamptonBook',
+                            fontFamily: 'Manrope-Regular',
                             color: '#B1B1B1',
                           }}>
                           Amount due to task
@@ -899,7 +930,7 @@ const Advertise1LSMenu = () => {
                           style={{
                             fontSize: 13,
                             color: '#B1B1B1',
-                            fontFamily: 'CamptonBook',
+                            fontFamily: 'Manrope-Regular',
                           }}>
                           {/* {userData1?.userdata?.wallet?.currency_symbol}{' '} */}
                           {isNaN(Number(chooseNumber))
@@ -916,7 +947,7 @@ const Advertise1LSMenu = () => {
                         <Text
                           style={{
                             fontSize: 13,
-                            fontFamily: 'CamptonBook',
+                            fontFamily: 'Manrope-Regular',
                             color: '#B1B1B1',
                           }}>
                           Wallet balance after this payment
@@ -924,7 +955,7 @@ const Advertise1LSMenu = () => {
                         <Text
                           style={{
                             fontSize: 13,
-                            fontFamily: 'CamptonBook',
+                            fontFamily: 'Manrope-Regular',
                             color: '#B1B1B1',
                           }}>
                           {result}
@@ -955,7 +986,7 @@ const Advertise1LSMenu = () => {
                       <Text
                         style={{
                           color: '#fff',
-                          fontFamily: 'CamptonBook',
+                          fontFamily: 'Manrope-Regular',
                           fontSize: 14,
                         }}>
                         proceed
@@ -1132,7 +1163,7 @@ const Advertise1LSMenu = () => {
                       style={{
                         color: '#fff',
                         fontSize: 14,
-                        fontFamily: 'Campton Bold',
+                        fontFamily: 'Manrope-ExtraBold',
                         paddingBottom: 10,
                         paddingTop: 20,
                       }}>
@@ -1143,7 +1174,7 @@ const Advertise1LSMenu = () => {
                         color: '#fff',
                         fontSize: 12,
                         // fontWeight: 400,
-                        fontFamily: 'CamptonBook',
+                        fontFamily: 'Manrope-Regular',
                         textAlign: 'center',
                         paddingHorizontal: 20,
                       }}>
@@ -1181,7 +1212,7 @@ const Advertise1LSMenu = () => {
                       <Text
                         style={{
                           color: '#fff',
-                          fontFamily: 'CamptonBook',
+                          fontFamily: 'Manrope-Regular',
                           fontSize: 14,
                         }}>
                         Go Home
@@ -1201,7 +1232,7 @@ const Advertise1LSMenu = () => {
 const styles = StyleSheet.create({
   text: {
     color: '#fff',
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     fontSize: 13,
   },
   nameInput: {

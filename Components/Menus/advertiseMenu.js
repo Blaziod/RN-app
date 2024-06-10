@@ -58,7 +58,7 @@ const AdvertiseMenu = () => {
           <View style={styles.Check}>
             <Text
               style={[
-                {color: '#fff', fontFamily: 'CamptonMedium'},
+                {color: '#fff', fontFamily: 'Manrope-Medium'},
                 dynamicStyles.TextColor,
               ]}>
               {' '}
@@ -68,7 +68,7 @@ const AdvertiseMenu = () => {
               style={[
                 {
                   color: '#fff',
-                  fontFamily: 'CamptonBook',
+                  fontFamily: 'Manrope-Regular',
                   paddingTop: 10,
                   fontSize: 12,
                 },
@@ -101,7 +101,7 @@ const AdvertiseMenu = () => {
                 <Text
                   style={{
                     color: '#808080',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 12,
                   }}>
                   Pricing:
@@ -111,7 +111,7 @@ const AdvertiseMenu = () => {
                 style={[
                   {
                     color: '#fff',
-                    fontFamily: 'Campton Bold',
+                    fontFamily: 'Manrope-ExtraBold',
                     fontSize: 12,
                   },
                   dynamicStyles.TextColor,
@@ -133,7 +133,7 @@ const AdvertiseMenu = () => {
                 <Text
                   style={{
                     color: '#fff',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 10,
                   }}>
                   Create Advert
@@ -193,7 +193,7 @@ const AdvertiseMenu = () => {
           <View style={styles.Check}>
             <Text
               style={[
-                {color: '#fff', fontFamily: 'CamptonMedium'},
+                {color: '#fff', fontFamily: 'Manrope-Medium'},
                 dynamicStyles.TextColor,
               ]}>
               {' '}
@@ -203,7 +203,7 @@ const AdvertiseMenu = () => {
               style={[
                 {
                   color: '#fff',
-                  fontFamily: 'CamptonBook',
+                  fontFamily: 'Manrope-Regular',
                   paddingTop: 10,
                   fontSize: 12,
                 },
@@ -237,7 +237,7 @@ const AdvertiseMenu = () => {
                 <Text
                   style={{
                     color: '#808080',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 12,
                   }}>
                   Pricing:
@@ -247,7 +247,7 @@ const AdvertiseMenu = () => {
                 style={[
                   {
                     color: '#fff',
-                    fontFamily: 'Campton Bold',
+                    fontFamily: 'Manrope-ExtraBold',
                     fontSize: 12,
                   },
                   dynamicStyles.TextColor,
@@ -269,7 +269,7 @@ const AdvertiseMenu = () => {
                 <Text
                   style={{
                     color: '#fff',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 10,
                   }}>
                   Create Advert
@@ -300,7 +300,7 @@ const AdvertiseMenu = () => {
           <View style={styles.Check}>
             <Text
               style={[
-                {color: '#fff', fontFamily: 'CamptonMedium'},
+                {color: '#fff', fontFamily: 'Manrope-Medium'},
                 dynamicStyles.TextColor,
               ]}>
               {' '}
@@ -310,7 +310,7 @@ const AdvertiseMenu = () => {
               style={[
                 {
                   color: '#fff',
-                  fontFamily: 'CamptonBook',
+                  fontFamily: 'Manrope-Regular',
                   paddingTop: 10,
                   fontSize: 12,
                 },
@@ -343,7 +343,7 @@ const AdvertiseMenu = () => {
                 <Text
                   style={{
                     color: '#808080',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 12,
                   }}>
                   Pricing:
@@ -353,7 +353,7 @@ const AdvertiseMenu = () => {
                 style={[
                   {
                     color: '#fff',
-                    fontFamily: 'Campton Bold',
+                    fontFamily: 'Manrope-ExtraBold',
                     fontSize: 12,
                   },
                   dynamicStyles.TextColor,
@@ -375,7 +375,7 @@ const AdvertiseMenu = () => {
                 <Text
                   style={{
                     color: '#fff',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 10,
                   }}>
                   Create Advert
@@ -410,7 +410,7 @@ const AdvertiseMenu = () => {
           <View style={styles.Check}>
             <Text
               style={[
-                {color: '#fff', fontFamily: 'CamptonMedium'},
+                {color: '#fff', fontFamily: 'Manrope-Medium'},
                 dynamicStyles.TextColor,
               ]}>
               {' '}
@@ -420,7 +420,7 @@ const AdvertiseMenu = () => {
               style={[
                 {
                   color: '#fff',
-                  fontFamily: 'CamptonBook',
+                  fontFamily: 'Manrope-Regular',
                   paddingTop: 10,
                   fontSize: 12,
                 },
@@ -454,7 +454,7 @@ const AdvertiseMenu = () => {
                 <Text
                   style={{
                     color: '#808080',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 12,
                   }}>
                   Pricing:
@@ -464,7 +464,7 @@ const AdvertiseMenu = () => {
                 style={[
                   {
                     color: '#fff',
-                    fontFamily: 'Campton Bold',
+                    fontFamily: 'Manrope-ExtraBold',
                     fontSize: 12,
                   },
                   dynamicStyles.TextColor,
@@ -486,7 +486,7 @@ const AdvertiseMenu = () => {
                 <Text
                   style={{
                     color: '#fff',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 10,
                   }}>
                   Create Advert
@@ -544,7 +544,7 @@ const AdvertiseMenu = () => {
           <View style={styles.Check}>
             <Text
               style={[
-                {color: '#fff', fontFamily: 'CamptonMedium'},
+                {color: '#fff', fontFamily: 'Manrope-Medium'},
                 dynamicStyles.TextColor,
               ]}>
               {' '}
@@ -554,7 +554,7 @@ const AdvertiseMenu = () => {
               style={[
                 {
                   color: '#fff',
-                  fontFamily: 'CamptonBook',
+                  fontFamily: 'Manrope-Regular',
                   paddingTop: 10,
                   fontSize: 12,
                 },
@@ -588,7 +588,7 @@ const AdvertiseMenu = () => {
                 <Text
                   style={{
                     color: '#808080',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 12,
                   }}>
                   Pricing:
@@ -598,7 +598,7 @@ const AdvertiseMenu = () => {
                 style={[
                   {
                     color: '#fff',
-                    fontFamily: 'Campton Bold',
+                    fontFamily: 'Manrope-ExtraBold',
                     fontSize: 12,
                   },
                   dynamicStyles.TextColor,
@@ -620,7 +620,7 @@ const AdvertiseMenu = () => {
                 <Text
                   style={{
                     color: '#fff',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 10,
                   }}>
                   Create Advert
@@ -654,7 +654,7 @@ const AdvertiseMenu = () => {
           <View style={styles.Check}>
             <Text
               style={[
-                {color: '#fff', fontFamily: 'CamptonMedium'},
+                {color: '#fff', fontFamily: 'Manrope-Medium'},
                 dynamicStyles.TextColor,
               ]}>
               Get People to post your advert on Threads
@@ -663,7 +663,7 @@ const AdvertiseMenu = () => {
               style={[
                 {
                   color: '#fff',
-                  fontFamily: 'CamptonBook',
+                  fontFamily: 'Manrope-Regular',
                   paddingTop: 10,
                   fontSize: 12,
                 },
@@ -699,7 +699,7 @@ const AdvertiseMenu = () => {
                 <Text
                   style={{
                     color: '#808080',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 12,
                   }}>
                   Pricing:
@@ -709,7 +709,7 @@ const AdvertiseMenu = () => {
                 style={[
                   {
                     color: '#fff',
-                    fontFamily: 'Campton Bold',
+                    fontFamily: 'Manrope-ExtraBold',
                     fontSize: 12,
                   },
                   dynamicStyles.TextColor,
@@ -731,7 +731,7 @@ const AdvertiseMenu = () => {
                 <Text
                   style={{
                     color: '#fff',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 10,
                   }}>
                   Create Advert

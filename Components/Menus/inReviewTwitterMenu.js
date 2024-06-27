@@ -22,14 +22,6 @@ const InReviewTwitterMenu = () => {
   const [userAccessToken, setUserAccessToken] = useState(null);
   const [tasks, setTasks] = useState(null);
 
-  const platformPrices = {
-    facebook: 110,
-    instagram: 110,
-    tiktok: 110,
-    twitter: 110,
-    whatsapp: 60,
-  };
-
   const platformImages = {
     whatsapp: (
       <Svg
@@ -374,7 +366,7 @@ const InReviewTwitterMenu = () => {
                   paddingTop: 10,
                   fontFamily: 'Manrope-Medium',
                 }}>
-                {task.task.caption}
+                {task.task.caption || task.task.text || task.task.account_link}
               </Text>
               <View
                 style={{
@@ -389,8 +381,7 @@ const InReviewTwitterMenu = () => {
                     fontFamily: 'Manrope-ExtraBold',
                     fontSize: 12,
                   }}>
-                  ₦{tasks && tasks.platform && platformPrices[tasks.platform]}{' '}
-                  per task
+                  ₦{task.reward_money} per task
                 </Text>
               </View>
             </TouchableOpacity>

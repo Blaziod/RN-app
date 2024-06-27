@@ -457,7 +457,7 @@ const Earn1X = ({navigation}) => {
                   </Text>
                   <View style={{paddingVertical: 20}}>
                     <TextInput
-                      placeholder="Facebook profile  link"
+                      placeholder="X profile  link"
                       style={{
                         backgroundColor: 'rgba(255, 255, 255, 0.08)',
                         color: '#fff',
@@ -576,7 +576,7 @@ const Earn1X = ({navigation}) => {
                     padding: 4,
                   }}>
                   <Text style={{color: '#1877f2'}}>
-                    {availableTasks?.total} Tasks Available
+                    {availableTasks?.total || 0} Tasks Available
                   </Text>
                 </TouchableOpacity>
               </View>

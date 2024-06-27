@@ -16,6 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 import {useTheme} from '../../Components/Contexts/colorTheme';
 import {ApiLink} from '../../enums/apiLink';
+import Headers from '../../Components/Headers/Headers';
 
 const More = () => {
   // const height = Dimensions.get('screen').height;
@@ -149,17 +150,15 @@ const More = () => {
         dynamicStyles.AppContainer,
       ]}>
       <StatusBar />
-      <View style={{paddingTop: '100%'}} />
-      <View
-        style={{
-          alignItems: 'flex-end',
-        }}>
+      <Headers />
+      <View style={{}}>
         <View
           style={[
             {
               backgroundColor: '#000',
               padding: 10,
-              width: '45%',
+              height: '100%',
+              paddingTop: 50,
             },
             dynamicStyles.DivContainer,
           ]}>
@@ -167,14 +166,14 @@ const More = () => {
             <TouchableOpacity
               style={{
                 flexDirection: 'row',
-                gap: 5,
-                paddingVertical: 5,
+                gap: 10,
+                paddingVertical: 10,
                 alignItems: 'center',
               }}
               onPress={() => navigation.navigate('Transact')}>
               <Svg
-                width="24"
-                height="24"
+                width="35"
+                height="35"
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg">
@@ -191,7 +190,7 @@ const More = () => {
 
               <Text
                 style={[
-                  {color: '#B1B1B1', fontSize: 14, fontFamily: 'Manrope-Bold'},
+                  {color: '#B1B1B1', fontSize: 20, fontFamily: 'Manrope-Bold'},
                   dynamicStyles.TextColor,
                 ]}>
                 Transactions
@@ -200,14 +199,14 @@ const More = () => {
             <TouchableOpacity
               style={{
                 flexDirection: 'row',
-                gap: 5,
-                paddingVertical: 5,
+                gap: 10,
+                paddingVertical: 10,
                 alignItems: 'center',
               }}
               onPress={() => navigation.navigate('Refer')}>
               <Svg
-                width="24"
-                height="24"
+                width="34"
+                height="34"
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg">
@@ -224,7 +223,7 @@ const More = () => {
               </Svg>
               <Text
                 style={[
-                  {color: '#B1B1B1', fontSize: 14, fontFamily: 'Manrope-Bold'},
+                  {color: '#B1B1B1', fontSize: 20, fontFamily: 'Manrope-Bold'},
                   dynamicStyles.TextColor,
                 ]}>
                 Refer Link
@@ -233,14 +232,14 @@ const More = () => {
             <TouchableOpacity
               style={{
                 flexDirection: 'row',
-                gap: 5,
-                paddingVertical: 5,
+                gap: 10,
+                paddingVertical: 10,
                 alignItems: 'center',
               }}
               onPress={() => navigation.navigate('Settings')}>
               <Svg
-                width="24"
-                height="24"
+                width="34"
+                height="34"
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg">
@@ -257,7 +256,7 @@ const More = () => {
 
               <Text
                 style={[
-                  {color: '#B1B1B1', fontSize: 14, fontFamily: 'Manrope-Bold'},
+                  {color: '#B1B1B1', fontSize: 20, fontFamily: 'Manrope-Bold'},
                   dynamicStyles.TextColor,
                 ]}>
                 Settings
@@ -266,13 +265,13 @@ const More = () => {
             <TouchableOpacity
               style={{
                 flexDirection: 'row',
-                gap: 5,
-                paddingVertical: 5,
+                gap: 10,
+                paddingVertical: 10,
                 alignItems: 'center',
               }}>
               <Svg
-                width="24"
-                height="24"
+                width="34"
+                height="34"
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg">
@@ -289,7 +288,7 @@ const More = () => {
 
               <Text
                 style={[
-                  {color: '#B1B1B1', fontSize: 14, fontFamily: 'Manrope-Bold'},
+                  {color: '#B1B1B1', fontSize: 20, fontFamily: 'Manrope-Bold'},
                   dynamicStyles.TextColor,
                 ]}>
                 Support
@@ -298,8 +297,8 @@ const More = () => {
             <TouchableOpacity
               style={{
                 flexDirection: 'row',
-                gap: 5,
-                paddingVertical: 5,
+                gap: 10,
+                paddingVertical: 10,
                 alignItems: 'center',
               }}
               onPress={async () => {
@@ -338,8 +337,8 @@ const More = () => {
                 }
               }}>
               <Svg
-                width="24"
-                height="24"
+                width="34"
+                height="34"
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg">
@@ -355,13 +354,13 @@ const More = () => {
               <Text
                 style={{
                   color: '#FF3D00',
-                  fontSize: 14,
+                  fontSize: 20,
                   fontFamily: 'Manrope-Bold',
                 }}>
                 Sign Out
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={{backgroundColor: '#fff', width: 100, height: 50}}
               onPress={() => {
                 AsyncStorage.removeItem('userdatafiles1');
@@ -374,7 +373,7 @@ const More = () => {
                 navigation.navigate('SignIn');
               }}>
               <Text>Clear Token</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
       </View>

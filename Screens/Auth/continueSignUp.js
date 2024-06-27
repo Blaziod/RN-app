@@ -157,7 +157,15 @@ const ContinueSignUp = () => {
               fontFamily: 'Manrope-ExtraBold',
             },
           });
-          navigation.navigate('Tabs', {screen: 'Home'});
+          navigation.reset({
+            index: 0,
+            routes: [
+              {
+                name: 'Tabs',
+                params: {screen: 'Home'},
+              },
+            ],
+          });
         })
         .catch(error => {
           console.error('Error for Catch:', error.response);
@@ -210,6 +218,69 @@ const ContinueSignUp = () => {
         const source = {uri: response.assets[0].uri}; // Adjusted for the typical response structure
         setUploadedImage(source); // Assuming setUploadedImage is a state setter function
         console.log('Image picked:', source);
+        console.log('Imaging', uploadedImage);
+
+        console.log(response);
+        const url = `${ApiLink.ENDPOINT_1}/profile/update`;
+        // Create a new FormData object
+        console.log('starting Image Upload');
+        let formData = new FormData();
+        formData.append('user_id', userData?.userdata?.id);
+        formData.append('screenshot', {
+          name: 'image.jpg', // You might need to handle the name dynamically
+          type: 'image/jpeg', // Adjust the MIME type according to your image type
+          uri: response.assets[0].uri,
+        });
+        console.log('url:', response.assets[0].uri);
+        console.log('type:', uploadedImage?.type);
+        try {
+          fetch(url, {
+            method: 'post',
+            headers: {
+              Authorization: `Bearer ${userData?.userdata?.id}`,
+            },
+            body: formData,
+          })
+            .then(response => {
+              if (response.status === 200 || response.status === 201) {
+                return response.json();
+              } else {
+                if (response.status === 401) {
+                  console.log(
+                    '401 Unauthorized: Access token is invalid or expired',
+                  );
+                  AsyncStorage.removeItem('userbalance');
+                  AsyncStorage.removeItem('userdata1');
+                  AsyncStorage.removeItem('userdata');
+                  AsyncStorage.removeItem('userdata2');
+                  AsyncStorage.removeItem('userdatas');
+                  AsyncStorage.removeItem('userdatafiles1');
+                  AsyncStorage.removeItem('accesstoken');
+                  navigation.reset({
+                    index: 0,
+                    routes: [
+                      {
+                        name: 'SignIn',
+                      },
+                    ],
+                  });
+                }
+                setIsLoading(false);
+                throw new Error(response.message);
+              }
+            })
+            .then(data => {
+              console.log(data);
+            })
+            .catch(error => {
+              console.error('Error for Catch:', error);
+            })
+            .finally(() => {
+              setIsLoading(false); // Move this inside finally block
+            });
+        } catch (error) {
+          console.error('Error Main :', error);
+        }
       }
     });
   };

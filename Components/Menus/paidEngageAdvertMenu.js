@@ -216,7 +216,7 @@ const PaidEngageAdvertMenu = () => {
                   borderTopRightRadius: 4,
                   borderTopLeftRadius: 4,
                 }}
-                onPress={() => navigation.navigate('Earn1Follow')}>
+                onPress={() => navigation.navigate('Earn1FS')}>
                 <Text
                   style={{
                     color: '#fff',
@@ -412,7 +412,7 @@ const PaidEngageAdvertMenu = () => {
                   borderTopRightRadius: 4,
                   borderTopLeftRadius: 4,
                 }}
-                onPress={() => navigation.navigate('Earn1Like')}>
+                onPress={() => navigation.navigate('Earn1LS')}>
                 <Text
                   style={{
                     color: '#fff',

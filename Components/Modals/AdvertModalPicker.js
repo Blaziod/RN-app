@@ -24,6 +24,7 @@ const OPTIONS = [
   'Follow',
   'Google Play Store',
   'Spotify',
+  'Threads',
 ];
 const OPTIONS3 = [
   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
@@ -83,6 +84,27 @@ const TKAdvertiseModalPicker = props => {
   };
 
   const item = OPTIONS[4]; // Access the second item directly
+  return (
+    <TouchableOpacity
+      onPress={() => props.changeModalVisibility(false)}
+      style={styles.ModalPicker}>
+      <View style={styles.modal}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => onPressItem(item)}>
+          <Text style={styles.text}>{item}</Text>
+        </TouchableOpacity>
+      </View>
+    </TouchableOpacity>
+  );
+};
+const TRAdvertiseModalPicker = props => {
+  const onPressItem = option => {
+    props.changeModalVisibility(false);
+    props.setData(option);
+  };
+
+  const item = OPTIONS[12]; // Access the second item directly
   return (
     <TouchableOpacity
       onPress={() => props.changeModalVisibility(false)}
@@ -525,4 +547,5 @@ export {
   FSAdvertiseModalPicker,
   GPAdvertiseModalPicker,
   SPAdvertiseModalPicker,
+  TRAdvertiseModalPicker,
 };

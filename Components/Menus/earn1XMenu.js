@@ -50,7 +50,22 @@ const Earn1XMenu = () => {
     whatsapp: 'Earn2WB',
     threads: 'Earn2TR',
   };
-
+  const EplatformNav = {
+    facebook: 'Earn2FS',
+    instagram: 'Earn2FS',
+    tiktok: 'Earn2FS',
+    twitter: 'Earn2FS',
+    whatsapp: 'Earn2FS',
+    threads: 'Earn2FS',
+  };
+  const EplatformPrices = {
+    facebook: 3.5,
+    instagram: 3.5,
+    tiktok: 3.5,
+    twitter: 5,
+    threads: 110,
+    whatsapp: 60,
+  };
   const platformImages = {
     whatsapp: (
       <Svg
@@ -512,7 +527,9 @@ const Earn1XMenu = () => {
                 }}
                 onPress={() =>
                   navigation.navigate(
-                    tasks && tasks.platform && platformNav[tasks.platform],
+                    tasks.task_type === 'engagement'
+                      ? tasks && tasks.platform && EplatformNav[tasks.platform]
+                      : tasks && tasks.platform && platformNav[tasks.platform],
                   )
                 }>
                 <View
@@ -555,15 +572,33 @@ const Earn1XMenu = () => {
                     gap: 7,
                     paddingRight: 50,
                   }}>
-                  <Text
-                    style={{
-                      color: '#fff',
-                      fontFamily: 'Manrope-ExtraBold',
-                      fontSize: 12,
-                    }}>
-                    ₦{tasks && tasks.platform && platformPrices[tasks.platform]}{' '}
-                    per task
-                  </Text>
+                  {tasks?.task_type === 'engagement' ? (
+                    <Text
+                      style={{
+                        color: '#fff',
+                        fontFamily: 'Manrope-ExtraBold',
+                        fontSize: 12,
+                      }}>
+                      ₦
+                      {tasks &&
+                        tasks.platform &&
+                        EplatformPrices[tasks.platform]}
+                      per task
+                    </Text>
+                  ) : (
+                    <Text
+                      style={{
+                        color: '#fff',
+                        fontFamily: 'Manrope-ExtraBold',
+                        fontSize: 12,
+                      }}>
+                      ₦
+                      {tasks &&
+                        tasks.platform &&
+                        platformPrices[tasks.platform]}{' '}
+                      per task
+                    </Text>
+                  )}
                 </View>
               </TouchableOpacity>
             ))

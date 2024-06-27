@@ -28,6 +28,7 @@ const SignUp = () => {
   const [signupToken, setSignupToken] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [isFocused1, setIsFocused1] = useState(false);
   const navigation = useNavigation();
   const [ggToken, setGgToken] = useState(null);
 
@@ -63,7 +64,7 @@ const SignUp = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({email}),
+        body: JSON.stringify({email: email, referrer_code: referral}),
       });
 
       if (response.ok) {
@@ -469,7 +470,7 @@ const SignUp = () => {
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
             />
-            {/* <TextInput
+            <TextInput
               style={[styles.textInput, isFocused1 && styles.focused]}
               placeholder="Referral code/Username(Optional)"
               placeholderTextColor="#888"
@@ -479,7 +480,7 @@ const SignUp = () => {
               value={referral}
               onFocus={() => setIsFocused1(true)}
               onBlur={() => setIsFocused1(false)}
-            /> */}
+            />
             <TouchableOpacity
               style={styles.continueButton}
               onPress={handleSignUp}

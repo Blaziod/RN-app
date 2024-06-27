@@ -44,6 +44,16 @@ import Earn1TK from '../Screens/Earn/earn1TK';
 import Earn2TK from '../Screens/Earn/earn2TK';
 import Earn1TR from '../Screens/Earn/earn1TR';
 import History from '../Screens/Advertise/history';
+import GeneralSettings from '../Screens/Settings/generalSettings';
+import BankSettings from '../Screens/Settings/bankDetails';
+import PreferencesSettings from '../Screens/Settings/preferences';
+import SecuritySettings from '../Screens/Settings/securitySettings';
+import NotificationSettings from '../Screens/Settings/notificationSettings';
+import Earn1FS from '../Screens/Earn/earn1FS';
+import Earn2FS from '../Screens/Earn/earn2FS';
+import Earn1LS from '../Screens/Earn/earn1LS';
+import Earn1CM from '../Screens/Earn/earn1CM';
+import Advertise1TR from '../Screens/Advertise/advertise1TR';
 
 const Tab = createBottomTabNavigator();
 const MoreStack = createStackNavigator();
@@ -58,6 +68,11 @@ function MoreStackScreen() {
       <MoreStack.Screen name="Settings" component={Settings} />
       <MoreStack.Screen name="Transact" component={Transactions} />
       <MoreStack.Screen name="ComingSoon" component={ComingSoon} />
+      <MoreStack.Screen name="Account" component={GeneralSettings} />
+      <MoreStack.Screen name="Security" component={SecuritySettings} />
+      <MoreStack.Screen name="Bank" component={BankSettings} />
+      <MoreStack.Screen name="Notification" component={NotificationSettings} />
+      <MoreStack.Screen name="Preference" component={PreferencesSettings} />
     </MoreStack.Navigator>
   );
 }
@@ -76,7 +91,11 @@ function EarnStackScreen() {
       <EarnStack.Screen name="Earn1TK" component={Earn1TK} />
       <EarnStack.Screen name="Earn1TR" component={Earn1TR} />
       <EarnStack.Screen name="Earn1WA" component={Earn1WA} />
+      <EarnStack.Screen name="Earn1FS" component={Earn1FS} />
+      <EarnStack.Screen name="Earn1LS" component={Earn1LS} />
+      <EarnStack.Screen name="Earn1CM" component={Earn1CM} />
       <EarnStack.Screen name="Earn2WB" component={Earn2WB} />
+      <EarnStack.Screen name="Earn2FS" component={Earn2FS} />
       <EarnStack.Screen name="Earn2X" component={Earn2X} />
       <EarnStack.Screen name="Earn2TK" component={Earn2TK} />
     </EarnStack.Navigator>
@@ -99,6 +118,7 @@ function AdvertiseStackScreen() {
       <AdvertiseStack.Screen name="Advertise1FS" component={Advertise1FS} />
       <AdvertiseStack.Screen name="Advertise1GP" component={Advertise1GP} />
       <AdvertiseStack.Screen name="Advertise1SP" component={Advertise1SP} />
+      <AdvertiseStack.Screen name="Advertise1TR" component={Advertise1TR} />
       <AdvertiseStack.Screen name="History" component={History} />
     </AdvertiseStack.Navigator>
   );
@@ -189,6 +209,8 @@ const TabNavigation = () => {
                 <Path
                   d="M6.98482 20.564L7.43881 19.673L6.98482 20.564ZM5.23676 18.816L6.12776 18.362L5.23676 18.816ZM20.3648 18.816L19.4738 18.362L20.3648 18.816ZM18.6167 20.564L18.1628 19.673L18.6167 20.564ZM20.5278 10.0545L20.0738 10.9455L20.5278 10.0545ZM20.7463 10.273L19.8553 10.727L20.7463 10.273ZM5.07379 10.0545L5.52778 10.9455L5.07379 10.0545ZM4.85528 10.273L5.74628 10.727L4.85528 10.273ZM4.80078 6C4.2485 6 3.80078 6.44772 3.80078 7C3.80078 7.55228 4.2485 8 4.80078 8V6ZM20.8008 8C21.3531 8 21.8008 7.55228 21.8008 7C21.8008 6.44772 21.3531 6 20.8008 6V8ZM20.8008 12C20.2485 12 19.8008 12.4477 19.8008 13C19.8008 13.5523 20.2485 14 20.8008 14V12ZM22.8008 14C23.3531 14 23.8008 13.5523 23.8008 13C23.8008 12.4477 23.3531 12 22.8008 12V14ZM2.80078 12C2.2485 12 1.80078 12.4477 1.80078 13C1.80078 13.5523 2.2485 14 2.80078 14V12ZM4.80078 14C5.35307 14 5.80078 13.5523 5.80078 13C5.80078 12.4477 5.35307 12 4.80078 12V14ZM5.60078 11H20.0008V9H5.60078V11ZM19.8008 10.8V14.6H21.8008V10.8H19.8008ZM14.4008 20H11.2008V22H14.4008V20ZM5.80078 14.6V10.8H3.80078V14.6H5.80078ZM11.2008 20C10.0642 20 9.27186 19.9992 8.65502 19.9488C8.04985 19.8994 7.70217 19.8072 7.43881 19.673L6.53083 21.455C7.12312 21.7568 7.76331 21.8826 8.49216 21.9422C9.20933 22.0008 10.0972 22 11.2008 22V20ZM3.80078 14.6C3.80078 15.7036 3.8 16.5914 3.8586 17.3086C3.91815 18.0375 4.04396 18.6777 4.34575 19.27L6.12776 18.362C5.99358 18.0986 5.9014 17.7509 5.85196 17.1458C5.80156 16.5289 5.80078 15.7366 5.80078 14.6H3.80078ZM7.43881 19.673C6.87432 19.3854 6.41538 18.9265 6.12776 18.362L4.34575 19.27C4.82512 20.2108 5.59002 20.9757 6.53083 21.455L7.43881 19.673ZM19.8008 14.6C19.8008 15.7366 19.8 16.5289 19.7496 17.1458C19.7002 17.7509 19.608 18.0986 19.4738 18.362L21.2558 19.27C21.5576 18.6777 21.6834 18.0375 21.743 17.3086C21.8016 16.5914 21.8008 15.7036 21.8008 14.6H19.8008ZM14.4008 22C15.5044 22 16.3922 22.0008 17.1094 21.9422C17.8383 21.8826 18.4784 21.7568 19.0707 21.455L18.1628 19.673C17.8994 19.8072 17.5517 19.8994 16.9465 19.9488C16.3297 19.9992 15.5374 20 14.4008 20V22ZM19.4738 18.362C19.1862 18.9265 18.7272 19.3854 18.1628 19.673L19.0707 21.455C20.0115 20.9757 20.7764 20.2108 21.2558 19.27L19.4738 18.362ZM20.0008 11C20.0731 11 20.1258 11 20.1705 11.0007C20.2152 11.0014 20.2376 11.0027 20.2477 11.0035C20.2575 11.0043 20.2413 11.0036 20.2105 10.9964C20.1764 10.9883 20.1281 10.9732 20.0738 10.9455L20.9818 9.16349C20.7638 9.05244 20.5558 9.022 20.4106 9.01013C20.2771 8.99922 20.1243 9 20.0008 9V11ZM21.8008 10.8C21.8008 10.6765 21.8016 10.5237 21.7906 10.3902C21.7788 10.245 21.7483 10.037 21.6373 9.81901L19.8553 10.727C19.8276 10.6727 19.8124 10.6243 19.8044 10.5903C19.7971 10.5595 19.7965 10.5433 19.7973 10.553C19.7981 10.5632 19.7994 10.5855 19.8001 10.6303C19.8008 10.675 19.8008 10.7277 19.8008 10.8H21.8008ZM20.0738 10.9455C19.9797 10.8976 19.9032 10.8211 19.8553 10.727L21.6373 9.81901C21.4935 9.53677 21.264 9.3073 20.9818 9.16349L20.0738 10.9455ZM5.60078 9C5.47727 9 5.32449 8.99922 5.19095 9.01013C5.04573 9.022 4.83774 9.05244 4.6198 9.16349L5.52778 10.9455C5.47345 10.9732 5.42513 10.9884 5.3911 10.9964C5.36024 11.0036 5.34404 11.0043 5.35381 11.0035C5.36398 11.0027 5.38632 11.0014 5.43106 11.0007C5.47577 11 5.52849 11 5.60078 11V9ZM5.80078 10.8C5.80078 10.7277 5.80081 10.675 5.80151 10.6303C5.80221 10.5855 5.80344 10.5632 5.80427 10.553C5.80507 10.5433 5.80441 10.5595 5.79715 10.5903C5.78913 10.6243 5.77397 10.6727 5.74628 10.727L3.96427 9.81901C3.85322 10.037 3.82278 10.245 3.81091 10.3902C3.8 10.5237 3.80078 10.6765 3.80078 10.8H5.80078ZM4.6198 9.16349C4.33755 9.3073 4.10808 9.53677 3.96427 9.81901L5.74628 10.727C5.69835 10.8211 5.62186 10.8976 5.52778 10.9455L4.6198 9.16349ZM4.80078 8H20.8008V6H4.80078V8ZM9.80078 7C9.80078 5.34315 11.1439 4 12.8008 4V2C10.0394 2 7.80078 4.23858 7.80078 7H9.80078ZM12.8008 4C14.4576 4 15.8008 5.34315 15.8008 7H17.8008C17.8008 4.23858 15.5622 2 12.8008 2V4ZM20.8008 14H22.8008V12H20.8008V14ZM2.80078 14H4.80078V12H2.80078V14Z"
                   fill={iconTintColor(focused)}
+                  stroke-width="2"
+                  stroke-linecap="round"
                 />
               </Svg>
               <Text
@@ -239,43 +261,7 @@ const TabNavigation = () => {
           ),
         }}
       />
-      <Tab.Screen
-        name="Resell"
-        component={ComingSoon}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({focused}) => (
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                top: 10,
-              }}>
-              <Svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="25"
-                height="24"
-                viewBox="0 0 25 24"
-                fill="none">
-                <Path
-                  d="M3.64347 13.0203C3.39935 12.811 3.27729 12.7064 3.23256 12.5819C3.19331 12.4727 3.19331 12.3531 3.23256 12.2439C3.27729 12.1194 3.39935 12.0147 3.64347 11.8055L12.1142 4.54486C12.5344 4.18466 12.7445 4.00457 12.9224 4.00015C13.077 3.99632 13.2247 4.06424 13.3224 4.18412C13.4348 4.32205 13.4348 4.59879 13.4348 5.15226V9.44752C15.5695 9.82098 17.5232 10.9026 18.9751 12.5268C20.558 14.2974 21.4336 16.5888 21.4348 18.9639V19.5759C20.3855 18.3118 19.0753 17.2894 17.5941 16.5788C16.2881 15.9523 14.8764 15.5812 13.4348 15.4834V19.6735C13.4348 20.227 13.4348 20.5037 13.3224 20.6417C13.2247 20.7615 13.077 20.8295 12.9224 20.8256C12.7445 20.8212 12.5344 20.6411 12.1142 20.2809L3.64347 13.0203Z"
-                  stroke={iconTintColor(focused)}
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </Svg>
-              <Text
-                style={{
-                  color: iconTintColor(focused),
-                  fontFamily: 'Manrope-Light',
-                }}>
-                Resell
-              </Text>
-            </View>
-          ),
-        }}
-      />
+
       <Tab.Screen
         name="More"
         component={MoreStackScreen}

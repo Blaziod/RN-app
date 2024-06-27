@@ -1,31 +1,27 @@
 /* eslint-disable prettier/prettier */
-import React, {useState, useRef, useEffect} from 'react';
+/* eslint-disable react-native/no-inline-styles */
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
-  TextInput,
-  TouchableOpacity,
   ActivityIndicator,
-  StyleSheet,
   SafeAreaView,
+  StatusBar,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import Clipboard from '@react-native-clipboard/clipboard';
 import Toast from 'react-native-toast-message';
 import {ApiLink} from '../../enums/apiLink';
+import {OtpInput} from 'react-native-otp-entry';
 
 const VerifyEmailScreen = () => {
-  const [otp, setOtp] = useState(new Array(6).fill(''));
   const [userEmail, setUserEmail] = useState('');
-  const [lastAttemptedOTP, setLastAttemptedOTP] = useState('');
-  const [clipboardOtp, setClipboardOtp] = useState('');
+  const [otp, setOtp] = useState('');
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
   const route = useRoute();
   const {signupToken} = route.params;
-  const inputRefs = useRef(otp.map(() => React.createRef()));
 
   useEffect(() => {
     const fetchEmail = async () => {
@@ -33,63 +29,13 @@ const VerifyEmailScreen = () => {
       setUserEmail(email);
     };
     fetchEmail();
-    const intervalId = setInterval(checkClipboardForOTP, 9000);
-    return () => clearInterval(intervalId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const checkClipboardForOTP = async () => {
-    const clipboardContent = await Clipboard.getString();
-    if (
-      clipboardContent &&
-      clipboardContent.length === 6 &&
-      /^\d+$/.test(clipboardContent) &&
-      clipboardContent !== lastAttemptedOTP &&
-      clipboardContent !== clipboardOtp
-    ) {
-      setClipboardOtp(clipboardContent);
-      const newOtp = clipboardContent.split('');
-      setOtp(newOtp);
-      applyOTPToInputs(newOtp);
-    }
-  };
-
-  const applyOTPToInputs = newOtp => {
-    newOtp.forEach((digit, index) => {
-      if (inputRefs.current[index]?.current) {
-        inputRefs.current[index].current.setNativeProps({text: digit});
-      }
-    });
-    if (newOtp.join('').length === 6) {
-      verifyEmail(newOtp.join(''));
-    }
-  };
-
-  const handleOtpChange = (value, index) => {
-    const newOtp = [...otp];
-    newOtp[index] = value;
-    setOtp(newOtp);
-
-    if (value && index < otp.length - 1) {
-      inputRefs.current[index + 1]?.current?.focus();
-    }
-    if (value === '' && index > 0) {
-      inputRefs.current[index - 1]?.current?.focus();
-    }
-
-    if (newOtp.join('').length === 6) {
-      verifyEmail(newOtp.join(''));
-    }
-  };
-
-  const verifyEmail = async otpString => {
-    setLastAttemptedOTP(otpString);
-    setClipboardOtp('');
-    setOtp(otpString.split(''));
+  const verifyEmail = async () => {
     setIsLoading(true);
     try {
       const response = await axios.post(`${ApiLink.ENDPOINT_1}/verify-email`, {
-        entered_code: otpString,
+        entered_code: otp,
         signup_token: signupToken,
       });
       console.log('Verify email response:', response.data);
@@ -99,7 +45,7 @@ const VerifyEmailScreen = () => {
         throw new Error(response.data.message);
       }
     } catch (error) {
-      console.error('Error verifying email:', error);
+      console.error('Error verifying email:', error.message);
       Toast.show({
         type: 'error',
         text1: 'Error',
@@ -127,86 +73,99 @@ const VerifyEmailScreen = () => {
     }
   };
 
+  useEffect(() => {
+    if (otp.length === 6) {
+      verifyEmail();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [otp]);
+
   return (
-    <SafeAreaView style={styles.container}>
-      <View>
-        <TouchableOpacity
-          style={styles.goBackButton}
-          onPress={() => navigation.goBack()}>
-          <Text style={styles.goBackButtonText}>Go Back</Text>
-        </TouchableOpacity>
-        <View>
-          {isLoading ? (
-            <ActivityIndicator size="large" color="#fff" />
-          ) : (
-            <View style={styles.contentContainer}>
-              <Text style={styles.headerText}>Confirm your email</Text>
-              <Text style={styles.subHeaderText}>
-                We have sent an email with a code to {userEmail}, please enter
-                it below to verify your account.
-              </Text>
-              <View style={styles.codeInputContainer}>
-                {otp.map((digit, index) => (
-                  <TextInput
-                    key={index}
-                    style={styles.codeDigit}
-                    maxLength={1}
-                    onChangeText={text => handleOtpChange(text, index)}
-                    keyboardType="numeric"
-                    ref={inputRefs.current[index]}
-                  />
-                ))}
-              </View>
-            </View>
-          )}
+    <SafeAreaView
+      style={{flex: 1, backgroundColor: '#000', position: 'relative'}}>
+      {isLoading ? (
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: '#000',
+            alignItems: 'center',
+            padding: 10,
+            justifyContent: 'center',
+            alignSelf: 'center',
+          }}>
+          <ActivityIndicator size="large" color="#fff" />
         </View>
-      </View>
+      ) : (
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: '#000',
+            alignItems: 'center',
+            padding: 10,
+            justifyContent: 'center',
+          }}>
+          <StatusBar hidden />
+          <Text
+            style={{
+              fontFamily: 'Manrope-ExtraBold',
+              color: '#fff',
+              top: 30,
+              right: 30,
+              position: 'absolute',
+            }}
+            onPress={() => {
+              navigation.goBack();
+            }}>
+            Go Back
+          </Text>
+
+          <Text
+            style={{
+              fontFamily: 'Manrope-ExtraBold',
+              fontSize: 32,
+              color: '#fff',
+            }}>
+            Confirm your email
+          </Text>
+          <Text
+            style={{
+              fontFamily: 'Manrope-Regular',
+              fontSize: 15,
+              color: '#b1b1b1',
+              marginTop: 10,
+              textAlign: 'center',
+            }}>
+            We have sent an email with a code to {userEmail}, please enter it
+            below to create your Trendit3 account.
+          </Text>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginVertical: 22,
+              width: '90%',
+            }}>
+            <OtpInput
+              numberOfDigits={6}
+              onTextChange={text => {
+                setOtp(text);
+              }}
+              focusColor="#CB29BE"
+              focusStickBlinkingDuration={400}
+              theme={{
+                pinCodeContainerStyle: {
+                  backgroundColor: '#000',
+                  width: 50,
+                  height: 50,
+                  borderRadius: 10,
+                },
+              }}
+            />
+          </View>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-    backgroundColor: '#000',
-  },
-  goBackButton: {
-    marginTop: 20,
-    marginBottom: 20,
-  },
-  goBackButtonText: {
-    color: '#FFFFFF',
-  },
-  contentContainer: {
-    alignItems: 'center',
-  },
-  headerText: {
-    fontSize: 24,
-    color: '#FFFFFF',
-    marginBottom: 10,
-  },
-  subHeaderText: {
-    color: '#AAAAAA',
-    fontSize: 16,
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  codeInputContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  codeDigit: {
-    width: 40,
-    height: 40,
-    margin: 5,
-    borderWidth: 1,
-    borderColor: '#FFFFFF',
-    textAlign: 'center',
-    color: '#FFFFFF',
-    fontSize: 20,
-  },
-});
 
 export default VerifyEmailScreen;

@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
 
   Box2: {
     backgroundColor: '#FFE9E9',
-    height: 80,
+    height: 'auto',
     paddingHorizontal: 10,
     paddingVertical: 10,
   },

@@ -12,6 +12,8 @@ import {
   Image,
   Dimensions,
   SafeAreaView,
+  Alert,
+  Linking,
 } from 'react-native';
 // import {AdvertiseModal1} from './Modals/AdvertiseModal1';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -20,6 +22,8 @@ import {Svg, Path, G} from 'react-native-svg';
 import Toast from 'react-native-toast-message';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {ApiLink} from '../../enums/apiLink';
+import axios from 'axios';
+import queryString from 'query-string';
 
 import {
   XAdvertiseModalPicker,
@@ -54,6 +58,10 @@ const Advertise1XMenu = () => {
   const [isModal3Visible, setIsModal3Visible] = useState(false);
   const deviceHeight = Dimensions.get('window').height;
   const [userBalance, setUserBalance] = useState(null);
+  const [txRef, setTxRef] = useState(null);
+  const [transactionId, setTransactionId] = useState(null);
+  const homeScreenUrl = 'https://blaziod.github.io';
+  const [isLoading1, setIsLoading1] = useState(false);
   const result =
     userBalance?.balance -
     (isNaN(Number(chooseNumber)) ? 0 : Number(chooseNumber) * 140);
@@ -195,12 +203,7 @@ const Advertise1XMenu = () => {
       taskData.append('amount', chooseNumber * 140);
       taskData.append('target_state', 'Lagos');
       console.log('Task Data:', image?.uri);
-      // taskData.append('media', {
-      //   uri: image?.uri,
-      //   type: image?.type,
-      //   name: image?.fileName,
-      // });
-      // taskData.append('media_path', imageData);
+
       const Token = userData?.accessToken;
       console.log('Testing', Token);
 
@@ -281,6 +284,222 @@ const Advertise1XMenu = () => {
       }
     }
   };
+
+  const createTaskPaystack = async (paymentMethod = 'payment_gateway') => {
+    setTaskType('advert');
+    setAmount(chooseNumber * 140);
+    const taskData = new FormData();
+    taskData.append('platform', choosePlatform);
+    taskData.append('target_country', chooseLocation);
+    taskData.append('posts_count', chooseNumber);
+    taskData.append('task_type', 'advert');
+    taskData.append('caption', caption);
+    taskData.append('gender', gender);
+    // taskData.append('hashtags', hashtag);
+    taskData.append('amount', chooseNumber * 140);
+    taskData.append('target_state', 'Lagos');
+    console.log('Task Data:', image?.uri);
+
+    const Token = userData?.accessToken;
+    console.log('Testing', Token);
+
+    try {
+      const response = await fetch(
+        `${ApiLink.ENDPOINT_1}/tasks/new?payment_method=${paymentMethod}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${Token}`,
+            'CALLBACK-URL': homeScreenUrl,
+          },
+          body: taskData,
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error('HTTP error ' + response);
+      }
+
+      const data = await response.json();
+      const url = data.authorization_url;
+      console.log('URL:', url); // replace with the actual URL you want to redirect to
+      Linking.openURL(url);
+      console.log(data);
+    } catch (error) {
+      console.error('Error:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: error.message,
+        style: {
+          borderLeftColor: 'pink',
+          backgroundColor: 'yellow',
+          width: '80%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        text1Style: {
+          color: 'red',
+          fontSize: 14,
+        },
+        text2Style: {
+          color: 'green',
+          fontSize: 14,
+          fontFamily: 'Manrope-ExtraBold',
+        },
+      });
+      if (error) {
+        console.error('Response data:', error);
+        console.error('Response status:', error);
+      }
+    }
+  };
+  useEffect(() => {
+    const handleUrl = async event => {
+      try {
+        const url = event.url;
+        // Alert.alert('Url Caught');
+        const parsed = queryString.parseUrl(url);
+        // Alert.alert('Url parsed');
+
+        if (parsed.query.tx_ref) {
+          const {tx_ref, transaction_id, status} = parsed.query;
+          // Alert.alert('tx_ref found');
+
+          if (status === 'completed') {
+            setTxRef(tx_ref);
+            setTransactionId(transaction_id);
+            Alert.alert('Verifying your payment');
+          }
+        }
+      } catch (error) {
+        console.error(error);
+        Alert.alert('Error: handling', error.toString());
+      }
+    };
+
+    // Listen for incoming links
+    const subscription = Linking.addEventListener('url', handleUrl);
+
+    // Clean up the listener on unmount
+    return () => subscription.remove();
+  }, []);
+
+  useEffect(() => {
+    if (transactionId !== null) {
+      verifyPayment();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transactionId]);
+
+  const verifyPayment = async () => {
+    try {
+      // Alert.alert('URL: ', `${txRef}, ${transactionId}`);
+      setIsLoading1(true);
+      const Token = userData?.accessToken;
+      const response = await axios.post(
+        `${ApiLink.ENDPOINT_1}/payment/verify`,
+        {reference: txRef, transaction_id: transactionId},
+        {
+          headers: {
+            Authorization: `Bearer ${Token}`,
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
+      if (response.status >= 200 && response.status < 300) {
+        Alert.alert('Payment Verified');
+        setIsModal2Visible(false);
+        setIsModal3Visible(true);
+        console.log(response.data);
+        Toast.show({
+          type: 'success',
+          text1: 'Success',
+          text2: response.data.message,
+          style: {
+            borderLeftColor: 'pink',
+            backgroundColor: 'yellow',
+            width: '80%',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          text1Style: {
+            color: 'red',
+            fontSize: 14,
+          },
+          text2Style: {
+            color: 'green',
+            fontSize: 14,
+            fontFamily: 'Manrope-ExtraBold',
+          },
+        });
+      } else {
+        Alert.alert('Error Else');
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: response.data.message,
+          style: {
+            borderLeftColor: 'pink',
+            backgroundColor: 'yellow',
+            width: '80%',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          text1Style: {
+            color: 'red',
+            fontSize: 14,
+          },
+          text2Style: {
+            color: 'green',
+            fontSize: 14,
+            fontFamily: 'Manrope-ExtraBold',
+          },
+        });
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: 'Home',
+            },
+          ],
+        });
+      }
+    } catch (error) {
+      Alert.alert('Error', error.toString());
+      console.error(error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: error.message,
+        style: {
+          borderLeftColor: 'pink',
+          backgroundColor: 'yellow',
+          width: '80%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        text1Style: {
+          color: 'red',
+          fontSize: 14,
+        },
+        text2Style: {
+          color: 'green',
+          fontSize: 14,
+          fontFamily: 'Manrope-ExtraBold',
+        },
+      });
+    } finally {
+      setIsLoading1(false);
+    }
+  };
+
   return (
     <View>
       <View
@@ -763,7 +982,8 @@ const Advertise1XMenu = () => {
                         width: '100%',
                         borderRadius: 8,
                         flexDirection: 'row',
-                      }}>
+                      }}
+                      onPress={() => createTaskPaystack()}>
                       <Svg
                         width="24"
                         height="24"
@@ -871,72 +1091,6 @@ const Advertise1XMenu = () => {
                           Wallet Balance:
                           {userData?.userdata?.wallet?.currency_symbol}
                           {userBalance?.balance}
-                        </Text>
-                      </View>
-                      <Svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <Path
-                          d="M5 12H18M13 6L18.2929 11.2929C18.6834 11.6834 18.6834 12.3166 18.2929 12.7071L13 18"
-                          stroke="#FF6DFB"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                        />
-                      </Svg>
-                    </TouchableOpacity>
-                  </View>
-                  <View style={{paddingHorizontal: 10, paddingBottom: 33}}>
-                    <TouchableOpacity
-                      style={{
-                        backgroundColor: '#1a1a1a',
-                        height: 100,
-                        justifyContent: 'space-evenly',
-                        alignItems: 'center',
-                        width: '100%',
-                        borderRadius: 8,
-                        flexDirection: 'row',
-                      }}>
-                      <Svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <G id="Software/bitcoin/circle">
-                          <Path
-                            id="Icon"
-                            d="M8.99984 6.99996V17M6.99984 6.99996H13.4998C14.8805 6.99996 15.9998 8.11925 15.9998 9.49996C15.9998 10.8807 14.8805 12 13.4998 12H8.99984H14.4998C15.8805 12 16.9998 13.1192 16.9998 14.5C16.9998 15.8807 15.8805 17 14.4998 17H6.99984M12 7V5M12 19V17M23 12C23 18.0751 18.0751 23 12 23C5.92487 23 1 18.0751 1 12C1 5.92487 5.92487 1 12 1C18.0751 1 23 5.92487 23 12Z"
-                            stroke="#FF6DFB"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                          />
-                        </G>
-                      </Svg>
-
-                      <View
-                        style={{
-                          flexDirection: 'column',
-                          gap: 5,
-                          width: 250,
-                        }}>
-                        <Text
-                          style={{
-                            color: '#fff',
-                            fontSize: 14,
-                            fontFamily: 'Manrope-Bold',
-                          }}>
-                          Pay with Crypto
-                        </Text>
-                        <Text
-                          style={{
-                            color: '#909090',
-                            fontSize: 12,
-                            fontFamily: 'Manrope-Regular',
-                          }}>
-                          Pay with BTC to our BTC address
                         </Text>
                       </View>
                       <Svg
@@ -1371,8 +1525,7 @@ const Advertise1XMenu = () => {
                           index: 0,
                           routes: [
                             {
-                              name: 'Tabs',
-                              params: {screen: 'Home'},
+                              name: 'History',
                             },
                           ],
                         })

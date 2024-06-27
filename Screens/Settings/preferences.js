@@ -1,9 +1,22 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect} from 'react';
-import {View, Text, TextInput, StyleSheet, Switch} from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import {useTheme} from '../../Components/Contexts/colorTheme';
+import {RadioButton} from 'react-native-paper';
+import Headers from '../../Components/Headers/Headers';
+import {Svg, Path} from 'react-native-svg';
+import {useNavigation} from '@react-navigation/native';
 
 const PreferencesSettings = () => {
+  const navigation = useNavigation();
   const {theme, setAppTheme} = useTheme();
   const [isDarkEnabled, setDarkEnabled] = useState(theme === 'dark');
   const [isLightEnabled, setLightEnabled] = useState(theme === 'light');
@@ -36,85 +49,84 @@ const PreferencesSettings = () => {
     },
   });
 
-  const handleDarkToggle = newValue => {
-    setDarkEnabled(newValue);
-    if (newValue) {
-      setLightEnabled(false);
-      setSystemEnabled(false);
-      setAppTheme('dark');
-    }
-  };
-
-  const handleLightToggle = newValue => {
-    setLightEnabled(newValue);
-    if (newValue) {
-      setDarkEnabled(false);
-      setSystemEnabled(false);
-      setAppTheme('light');
-    }
-  };
-
-  const handleSystemToggle = newValue => {
-    setSystemEnabled(newValue);
-    if (newValue) {
-      setDarkEnabled(false);
-      setLightEnabled(false);
-      setAppTheme('system');
-    }
-  };
-
+  const strokeColor = theme === 'dark' ? '#b1b1b1' : '#000';
   return (
-    <View style={[styles.container, dynamicStyles.AppContainer]}>
-      <Text style={[styles.Header2, dynamicStyles.TextColor]}>Appearance</Text>
+    <ScrollView style={[styles.container, dynamicStyles.AppContainer]}>
+      <Headers />
+      <View style={{padding: 10}}>
+        <TouchableOpacity
+          style={{
+            flexDirection: 'row',
+            gap: 5,
+            alignItems: 'center',
+            paddingVertical: 10,
+            paddingBottom: 20,
+          }}
+          onPress={() => navigation.navigate('Settings')}>
+          <Svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="28"
+            height="28"
+            viewBox="0 0 28 28"
+            fill={strokeColor}>
+            <Path
+              d="M16.3332 7L10.1581 13.175C9.7025 13.6307 9.7025 14.3693 10.1581 14.825L16.3332 21"
+              stroke="white"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </Svg>
+          <Text
+            style={[
+              {
+                color: '#fff',
+                fontFamily: 'Manrope-Bold',
+                fontSize: 20,
+              },
+              dynamicStyles.TextColor,
+            ]}>
+            Notifications
+          </Text>
+        </TouchableOpacity>
+        <Text style={[styles.Header2, dynamicStyles.TextColor]}>
+          Appearance
+        </Text>
 
-      <View>
-        <View style={[styles.row2, dynamicStyles.DivContainer]}>
-          <TextInput
-            style={[styles.Input2, dynamicStyles.TextColor]}
-            placeholder="Dark Mode"
-            placeholderTextColor={theme === 'dark' ? '#FFFFFF' : '#000000'}
-            editable={isDarkEnabled}
-          />
-          <Switch
-            trackColor={{false: '#767577', true: '#81b0ff'}}
-            thumbColor={isDarkEnabled ? '#f5dd4b' : '#f4f3f4'}
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={handleDarkToggle}
-            value={isDarkEnabled}
-          />
-        </View>
-        <View style={[styles.row2, dynamicStyles.DivContainer]}>
-          <TextInput
-            style={[styles.Input2, dynamicStyles.TextColor]}
-            placeholder="Light Mode"
-            placeholderTextColor={theme === 'dark' ? '#FFFFFF' : '#000000'}
-            editable={isLightEnabled}
-          />
-          <Switch
-            trackColor={{false: '#767577', true: '#81b0ff'}}
-            thumbColor={isLightEnabled ? '#f5dd4b' : '#f4f3f4'}
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={handleLightToggle}
-            value={isLightEnabled}
-          />
-        </View>
-        <View style={[styles.row2, dynamicStyles.DivContainer]}>
-          <TextInput
-            style={[styles.Input2, dynamicStyles.TextColor]}
-            placeholder="System Settings"
-            placeholderTextColor={theme === 'dark' ? '#FFFFFF' : '#000000'}
-            editable={isSystemEnabled}
-          />
-          <Switch
-            trackColor={{false: '#767577', true: '#81b0ff'}}
-            thumbColor={isSystemEnabled ? '#f5dd4b' : '#f4f3f4'}
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={handleSystemToggle}
-            value={isSystemEnabled}
-          />
+        <View>
+          <RadioButton.Group
+            onValueChange={newValue => setAppTheme(newValue)}
+            value={theme}>
+            <View style={[styles.row2, dynamicStyles.DivContainer]}>
+              <TextInput
+                style={[styles.Input2, dynamicStyles.TextColor]}
+                placeholder="Dark Mode"
+                placeholderTextColor={theme === 'dark' ? '#FFFFFF' : '#000000'}
+                editable={theme === 'dark'}
+              />
+              <RadioButton value="dark" />
+            </View>
+            <View style={[styles.row2, dynamicStyles.DivContainer]}>
+              <TextInput
+                style={[styles.Input2, dynamicStyles.TextColor]}
+                placeholder="Light Mode"
+                placeholderTextColor={theme === 'dark' ? '#FFFFFF' : '#000000'}
+                editable={theme === 'light'}
+              />
+              <RadioButton value="light" />
+            </View>
+            <View style={[styles.row2, dynamicStyles.DivContainer]}>
+              <TextInput
+                style={[styles.Input2, dynamicStyles.TextColor]}
+                placeholder="System Settings"
+                placeholderTextColor={theme === 'dark' ? '#FFFFFF' : '#000000'}
+                editable={theme === 'system'}
+              />
+              <RadioButton value="system" />
+            </View>
+          </RadioButton.Group>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

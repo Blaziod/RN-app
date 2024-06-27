@@ -18,6 +18,7 @@ import ContinueSignUp from './Screens/Auth/continueSignUp';
 import ResetPassword from './Screens/Auth/resetPassword';
 import ResetOtp from './Screens/Auth/reset-otp';
 import SplashScreen from './Screens/Splash/splashScreen';
+import TwoFA from './Screens/Auth/2FA';
 
 const Stack = createNativeStackNavigator();
 function StackNavigator() {
@@ -37,6 +38,7 @@ function StackNavigator() {
       <Stack.Screen name="Onboard2" component={ContinueSignUp} />
       <Stack.Screen name="Reset" component={ResetPassword} />
       <Stack.Screen name="ResetOtp" component={ResetOtp} />
+      <Stack.Screen name="2FA" component={TwoFA} />
     </Stack.Navigator>
   );
 }

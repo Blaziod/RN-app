@@ -459,7 +459,7 @@ const Earn2FB = () => {
             <View
               style={{
                 backgroundColor: '#E5F0FF',
-                height: 80,
+                height: 'auto',
                 paddingHorizontal: 20,
                 paddingVertical: 10,
                 alignItems: 'center',
@@ -789,7 +789,7 @@ const styles = StyleSheet.create({
 
   Box2: {
     backgroundColor: '#FFE9E9',
-    height: 80,
+    height: 'auto',
     paddingHorizontal: 10,
     paddingVertical: 10,
   },

@@ -13,6 +13,8 @@ import {
   Dimensions,
   SafeAreaView,
   Alert,
+  ScrollView,
+  Linking,
 } from 'react-native';
 // import {AdvertiseModal1} from './Modals/AdvertiseModal1';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -20,6 +22,10 @@ import {useNavigation} from '@react-navigation/native';
 import {Svg, Path, G} from 'react-native-svg';
 import Toast from 'react-native-toast-message';
 import {launchImageLibrary} from 'react-native-image-picker';
+import {useTheme} from '../../Components/Contexts/colorTheme';
+import {ApiLink} from '../../enums/apiLink';
+import axios from 'axios';
+import queryString from 'query-string';
 
 import {
   FBAdvertiseModalPicker,
@@ -30,12 +36,13 @@ import {
 } from '../Modals/AdvertModalPicker';
 
 const Advertise1FBMenu = () => {
-  const [base64Image, setBase64Image] = useState();
-  const [religion, setReligion] = useState('Select');
-  const [gender, setGender] = useState('Select');
-  const [choosePlatform, setChoosePlatform] = useState('Select');
-  const [chooseLocation, setChooseLocation] = useState('Select');
-  const [chooseNumber, setChooseNumber] = useState('Select');
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [base64Images, setBase64Images] = useState([]);
+  const [religion, setReligion] = useState('Select Religion');
+  const [gender, setGender] = useState('Select Gender');
+  const [choosePlatform, setChoosePlatform] = useState('Select Platform');
+  const [chooseLocation, setChooseLocation] = useState('Select Location');
+  const [chooseNumber, setChooseNumber] = useState('Enter The Number');
   const [modalVisible, setModalVisible] = useState(false);
   const [modal2Visible, setModal2Visible] = useState(false);
   const [modal3Visible, setModal3Visible] = useState(false);
@@ -48,6 +55,10 @@ const Advertise1FBMenu = () => {
   const [targetState, setTargetState] = useState('');
   const [userData, setUserData] = useState(null);
   const [userData1, setUserData1] = useState(null);
+  const [txRef, setTxRef] = useState(null);
+  const [transactionId, setTransactionId] = useState(null);
+  const homeScreenUrl = 'https://blaziod.github.io';
+  const [isLoading1, setIsLoading1] = useState(false);
   const [image, setImage] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModal2Visible, setIsModal2Visible] = useState(false);
@@ -57,6 +68,36 @@ const Advertise1FBMenu = () => {
   const result =
     userBalance?.balance -
     (isNaN(Number(chooseNumber)) ? 0 : Number(chooseNumber) * 140);
+
+  const {theme} = useTheme();
+
+  const dynamicStyles = StyleSheet.create({
+    AppContainer: {
+      flex: 1,
+      backgroundColor: theme === 'dark' ? '#121212' : '#FFFFFF', // Dynamic background color
+      width: '100%',
+    },
+    DivContainer: {
+      backgroundColor:
+        theme === 'dark' ? '#2f2f2f6b' : 'rgba(177, 177, 177, 0.20)', // Dynamic background color
+    },
+    TextColor: {
+      color: theme === 'dark' ? '#FFFFFF' : '#000000', // Dynamic text color
+    },
+    Button: {
+      backgroundColor: theme === 'dark' ? '#FFF' : '#CB29BE', // Dynamic background color
+    },
+    Btext: {
+      color: theme === 'dark' ? '#FF6DFB' : '#FFF', // Dynamic text color
+    },
+    ModalContainer: {
+      backgroundColor: theme === 'dark' ? '#000' : '#FFF', // Dynamic background color
+    },
+    ModalDivContainer: {
+      backgroundColor:
+        theme === 'dark' ? '#1a1a1a' : 'rgba(177, 177, 177, 0.20)', // Dynamic background color
+    },
+  });
 
   useEffect(() => {
     AsyncStorage.getItem('userbalance')
@@ -144,34 +185,46 @@ const Advertise1FBMenu = () => {
   const setData5 = option5 => {
     setReligion(option5);
   };
+
   const chooseImage = () => {
-    // requestMediaLibraryPermission();
     let options = {
       mediaType: 'photo',
-      includeBase64: true, // Change this to true
+      includeBase64: true,
+      selectionLimit: 4, // Allow up to 4 images to be selected
     };
     console.log('chooseImage called');
     launchImageLibrary(options, async response => {
-      console.log('Response:', response);
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else {
-        let selectedImage = response.assets[0];
-        setImage(selectedImage); // Store the selected image in the state variable
-        console.log('Image selected:', selectedImage);
+        console.log(response, 'Response');
+        const images = response.assets.map(asset => ({
+          uri: asset.uri,
+          type: asset.type,
+          name: asset.fileName,
+        }));
+        const base64Strs = response.assets.map(
+          asset => `data:${asset.type};base64,${asset.base64}`,
+        );
 
-        // Convert the image to a base64 string
-        let base64Str = `data:${selectedImage.type};base64,${selectedImage.base64}`;
-        setBase64Image(base64Str); // Store the base64 string in a separate state variable
+        // Update state with the selected images and their base64 strings
+        setSelectedImages(images);
+        setImage(images);
+        setBase64Images(base64Strs);
 
-        // Store the base64 string in AsyncStorage
+        console.log('Images selected:', images);
+
+        // Store the base64 strings in AsyncStorage
         try {
-          await AsyncStorage.setItem('profile_picture', base64Str);
-          console.log('Image stored successfully');
+          await AsyncStorage.setItem(
+            'profile_pictures',
+            JSON.stringify(base64Strs),
+          );
+          console.log('Images stored successfully');
         } catch (error) {
-          console.error('Error storing image:', error);
+          console.error('Error storing images:', error);
         }
       }
     });
@@ -185,65 +238,267 @@ const Advertise1FBMenu = () => {
       );
       return;
     }
-    console.log('Image at start of createTask:', image);
-    if (chooseImage) {
-      setTaskType('advert');
-      setAmount(chooseNumber * 140);
-      const taskData = new FormData();
-      taskData.append('platform', choosePlatform);
-      taskData.append('target_country', chooseLocation);
-      taskData.append('posts_count', chooseNumber);
-      taskData.append('task_type', 'advert');
-      taskData.append('caption', caption);
-      taskData.append('gender', gender);
-      // taskData.append('hashtags', hashtag);
-      taskData.append('amount', chooseNumber * 140);
-      taskData.append('target_state', 'Lagos');
-      console.log('Task Data:', image?.uri);
+
+    setTaskType('advert');
+    setAmount(chooseNumber * 140);
+    const taskData = new FormData();
+    taskData.append('platform', choosePlatform);
+    taskData.append('target_country', chooseLocation);
+    taskData.append('posts_count', chooseNumber);
+    taskData.append('task_type', 'advert');
+    taskData.append('caption', caption);
+    taskData.append('gender', gender);
+    // taskData.append('hashtags', hashtag);
+    taskData.append('amount', chooseNumber * 140);
+    taskData.append('target_state', 'Lagos');
+    console.log('Task Data:', image?.uri);
+    if (Array.isArray(image)) {
+      // If it's an array, append each image as part of the form data
+      image.forEach((img, index) => {
+        taskData.append(`media[${index}]`, {
+          uri: img.uri,
+          type: img.type,
+          name: img.fileName,
+        });
+      });
+    } else {
+      // If it's a single image, append it directly
       taskData.append('media', {
         uri: image?.uri,
         type: image?.type,
         name: image?.fileName,
       });
-      // taskData.append('media_path', imageData);
-      const Token = userData?.accessToken;
-      console.log('Testing', Token);
+    }
 
-      try {
-        const response = await fetch(
-          `https://api.trendit3.com/api/tasks/new?payment_method=${paymentMethod}`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              Authorization: `Bearer ${Token}`,
-            },
-            body: taskData,
+    // taskData.append('media_path', imageData);
+    const Token = userData?.accessToken;
+    console.log('Testing', Token);
+
+    try {
+      const response = await fetch(
+        `${ApiLink.ENDPOINT_1}/tasks/new?payment_method=${paymentMethod}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${Token}`,
           },
-        );
+          body: taskData,
+        },
+      );
 
-        if (!response.ok) {
-          if (response.status === 401) {
-            Toast.show({
-              type: 'error',
-              text1: 'Error',
-              text2: 'AccessToken expired',
-              // Styling omitted for brevity
-            });
-          } else {
-            throw new Error('HTTP error ' + response.status);
+      if (!response.ok) {
+        if (response.status === 401) {
+          Toast.show({
+            type: 'error',
+            text1: 'Error',
+            text2: 'AccessToken expired',
+            // Styling omitted for brevity
+          });
+        } else {
+          throw new Error('HTTP error ' + response.status);
+        }
+      }
+
+      const data = await response.json();
+      //   Alert.alert('Success', data.message);
+      setIsModal2Visible(false);
+      setIsModal3Visible(true);
+      AsyncStorage.removeItem('profile_picture');
+      Toast.show({
+        type: 'success',
+        text1: 'Success',
+        text2: data.message,
+        style: {
+          borderLeftColor: 'pink',
+          backgroundColor: 'yellow',
+          width: '80%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        text1Style: {
+          color: 'red',
+          fontSize: 14,
+        },
+        text2Style: {
+          color: 'green',
+          fontSize: 14,
+          fontFamily: 'Manrope-ExtraBold',
+        },
+      });
+      console.log(data);
+    } catch (error) {
+      console.error('Error:', error);
+      console.error('Error message:', error.message);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: error.message,
+        style: {
+          borderLeftColor: 'pink',
+          backgroundColor: 'yellow',
+          width: '80%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        text1Style: {
+          color: 'red',
+          fontSize: 14,
+        },
+        text2Style: {
+          color: 'green',
+          fontSize: 14,
+          fontFamily: 'Manrope-ExtraBold',
+        },
+      });
+      if (error) {
+        console.error('Response data:', error);
+        console.error('Response status:', error);
+      }
+    }
+  };
+
+  const createTaskPaystack = async (paymentMethod = 'payment_gateway') => {
+    setTaskType('advert');
+    setAmount(chooseNumber * 140);
+    const taskData = new FormData();
+    taskData.append('platform', choosePlatform);
+    taskData.append('target_country', chooseLocation);
+    taskData.append('posts_count', chooseNumber);
+    taskData.append('task_type', 'advert');
+    taskData.append('caption', caption);
+    taskData.append('gender', gender);
+    // taskData.append('hashtags', hashtag);
+    taskData.append('amount', chooseNumber * 140);
+    taskData.append('target_state', 'Lagos');
+    console.log('Task Data:', image?.uri);
+    taskData.append('media', {
+      uri: image?.uri,
+      type: image?.type,
+      name: image?.fileName,
+    });
+    // taskData.append('media_path', imageData);
+    const Token = userData?.accessToken;
+    console.log('Testing', Token);
+
+    try {
+      const response = await fetch(
+        `${ApiLink.ENDPOINT_1}/tasks/new?payment_method=${paymentMethod}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${Token}`,
+            'CALLBACK-URL': homeScreenUrl,
+          },
+          body: taskData,
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error('HTTP error ' + response);
+      }
+
+      const data = await response.json();
+      const url = data.authorization_url;
+      console.log('URL:', url); // replace with the actual URL you want to redirect to
+      Linking.openURL(url);
+      console.log(data);
+    } catch (error) {
+      console.error('Error:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: error.message,
+        style: {
+          borderLeftColor: 'pink',
+          backgroundColor: 'yellow',
+          width: '80%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        text1Style: {
+          color: 'red',
+          fontSize: 14,
+        },
+        text2Style: {
+          color: 'green',
+          fontSize: 14,
+          fontFamily: 'Manrope-ExtraBold',
+        },
+      });
+      if (error) {
+        console.error('Response data:', error);
+        console.error('Response status:', error);
+      }
+    }
+  };
+  useEffect(() => {
+    const handleUrl = async event => {
+      try {
+        const url = event.url;
+        // Alert.alert('Url Caught');
+        const parsed = queryString.parseUrl(url);
+        // Alert.alert('Url parsed');
+
+        if (parsed.query.tx_ref) {
+          const {tx_ref, transaction_id, status} = parsed.query;
+          // Alert.alert('tx_ref found');
+
+          if (status === 'completed') {
+            setTxRef(tx_ref);
+            setTransactionId(transaction_id);
+            Alert.alert('Verifying your payment');
           }
         }
+      } catch (error) {
+        console.error(error);
+        Alert.alert('Error: handling', error.toString());
+      }
+    };
 
-        const data = await response.json();
-        //   Alert.alert('Success', data.message);
+    // Listen for incoming links
+    const subscription = Linking.addEventListener('url', handleUrl);
+
+    // Clean up the listener on unmount
+    return () => subscription.remove();
+  }, []);
+
+  useEffect(() => {
+    if (transactionId !== null) {
+      verifyPayment();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transactionId]);
+
+  const verifyPayment = async () => {
+    try {
+      // Alert.alert('URL: ', `${txRef}, ${transactionId}`);
+      setIsLoading1(true);
+      const Token = userData?.accessToken;
+      const response = await axios.post(
+        `${ApiLink.ENDPOINT_1}/payment/verify`,
+        {reference: txRef, transaction_id: transactionId},
+        {
+          headers: {
+            Authorization: `Bearer ${Token}`,
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
+      if (response.status >= 200 && response.status < 300) {
+        Alert.alert('Payment Verified');
         setIsModal2Visible(false);
         setIsModal3Visible(true);
-        AsyncStorage.removeItem('profile_picture');
+        console.log(response.data);
         Toast.show({
           type: 'success',
           text1: 'Success',
-          text2: data.message,
+          text2: response.data.message,
           style: {
             borderLeftColor: 'pink',
             backgroundColor: 'yellow',
@@ -259,17 +514,15 @@ const Advertise1FBMenu = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
-        console.log(data);
-      } catch (error) {
-        console.error('Error:', error);
-        console.error('Error message:', error.message);
+      } else {
+        Alert.alert('Error Else');
         Toast.show({
           type: 'error',
           text1: 'Error',
-          text2: error.message,
+          text2: response.data.message,
           style: {
             borderLeftColor: 'pink',
             backgroundColor: 'yellow',
@@ -285,43 +538,89 @@ const Advertise1FBMenu = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
-        if (error) {
-          console.error('Response data:', error);
-          console.error('Response status:', error);
-        }
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: 'Home',
+            },
+          ],
+        });
       }
+    } catch (error) {
+      Alert.alert('Error', error.toString());
+      console.error(error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: error.message,
+        style: {
+          borderLeftColor: 'pink',
+          backgroundColor: 'yellow',
+          width: '80%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        text1Style: {
+          color: 'red',
+          fontSize: 14,
+        },
+        text2Style: {
+          color: 'green',
+          fontSize: 14,
+          fontFamily: 'Manrope-ExtraBold',
+        },
+      });
+    } finally {
+      setIsLoading1(false);
     }
   };
 
   return (
     <View>
       <View
-        style={{
-          //   paddingVertical: 10,
-          paddingHorizontal: 30,
-          flexDirection: 'column',
-          gap: 10,
-        }}>
-        <Text style={{color: '#fff', fontFamily: 'CamptonBook', fontSize: 13}}>
+        style={[
+          {
+            //   paddingVertical: 10,
+            paddingHorizontal: 30,
+            flexDirection: 'column',
+            gap: 10,
+          },
+          dynamicStyles.AppContainer,
+        ]}>
+        <Text
+          style={[
+            {color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13},
+            dynamicStyles.TextColor,
+          ]}>
           Select Platform
         </Text>
         <TouchableOpacity
-          style={{
-            backgroundColor: '#2f2f2f6b',
-            height: 50,
-            width: '100%',
-            borderRadius: 4,
-            justifyContent: 'center',
-            paddingHorizontal: 15,
-          }}
+          style={[
+            {
+              backgroundColor: '#2f2f2f6b',
+              height: 50,
+              width: '100%',
+              borderRadius: 4,
+              justifyContent: 'center',
+              paddingHorizontal: 15,
+            },
+            dynamicStyles.DivContainer,
+          ]}
           onPress={() => changeModalVisibility(true)}>
-          <Text style={styles.text}>{choosePlatform}</Text>
+          <Text style={[styles.text, dynamicStyles.TextColor]}>
+            {choosePlatform}
+          </Text>
         </TouchableOpacity>
         <Text
-          style={{color: '#B1B1B1', fontSize: 10, fontFamily: 'CamptonBook'}}>
+          style={[
+            {color: '#B1B1B1', fontSize: 10, fontFamily: 'Manrope-Regular'},
+            dynamicStyles.TextColor,
+          ]}>
           Please select the social media or App Store platform where you want to
           perform this action
         </Text>
@@ -343,23 +642,35 @@ const Advertise1FBMenu = () => {
           flexDirection: 'column',
           gap: 10,
         }}>
-        <Text style={{color: '#fff', fontFamily: 'CamptonBook', fontSize: 13}}>
+        <Text
+          style={[
+            {color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13},
+            dynamicStyles.TextColor,
+          ]}>
           Select Location
         </Text>
         <TouchableOpacity
-          style={{
-            backgroundColor: '#2f2f2f6b',
-            height: 50,
-            width: '100%',
-            borderRadius: 4,
-            justifyContent: 'center',
-            paddingHorizontal: 15,
-          }}
+          style={[
+            {
+              backgroundColor: '#2f2f2f6b',
+              height: 50,
+              width: '100%',
+              borderRadius: 4,
+              justifyContent: 'center',
+              paddingHorizontal: 15,
+            },
+            dynamicStyles.DivContainer,
+          ]}
           onPress={() => changeModal2Visibility(true)}>
-          <Text style={styles.text}>{chooseLocation}</Text>
+          <Text style={[styles.text, dynamicStyles.TextColor]}>
+            {chooseLocation}
+          </Text>
         </TouchableOpacity>
         <Text
-          style={{color: '#B1B1B1', fontSize: 10, fontFamily: 'CamptonBook'}}>
+          style={[
+            {color: '#B1B1B1', fontSize: 10, fontFamily: 'Manrope-Regular'},
+            dynamicStyles.TextColor,
+          ]}>
           Please select the social media or App Store platform where you want to
           perform this action
         </Text>
@@ -381,27 +692,38 @@ const Advertise1FBMenu = () => {
           flexDirection: 'column',
           gap: 10,
         }}>
-        <Text style={{color: '#fff', fontFamily: 'CamptonBook', fontSize: 13}}>
+        <Text
+          style={[
+            {color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13},
+            dynamicStyles.TextColor,
+          ]}>
           Number of Facebook Advert post you want
         </Text>
         <TouchableOpacity
-          style={{
-            backgroundColor: '#2f2f2f6b',
-            height: 50,
-            width: '100%',
-            borderRadius: 4,
-            justifyContent: 'center',
-            paddingHorizontal: 15,
-          }}>
+          style={[
+            {
+              backgroundColor: '#2f2f2f6b',
+              height: 50,
+              width: '100%',
+              borderRadius: 4,
+              justifyContent: 'center',
+              paddingHorizontal: 15,
+            },
+            dynamicStyles.DivContainer,
+          ]}>
           <TextInput
             onChangeText={setChooseNumber}
-            placeholder="Select"
-            placeholderTextColor="#fff"
+            placeholder="Enter Your Desired Number"
+            style={{color: theme === 'dark' ? '#FFFFFF' : '#000000'}}
+            placeholderTextColor={theme === 'dark' ? '#FFFFFF' : '#000000'}
             keyboardType="numeric"
           />
         </TouchableOpacity>
         <Text
-          style={{color: '#B1B1B1', fontSize: 10, fontFamily: 'CamptonBook'}}>
+          style={[
+            {color: '#B1B1B1', fontSize: 10, fontFamily: 'Manrope-Regular'},
+            dynamicStyles.TextColor,
+          ]}>
           Enter the desired Number of Facebook Advert Post you want us to get
           for you
         </Text>
@@ -415,20 +737,27 @@ const Advertise1FBMenu = () => {
             setData3={setData3}
           />
         </Modal>
-        <Text style={{color: '#fff', fontFamily: 'CamptonBook', fontSize: 13}}>
+        <Text
+          style={[
+            {color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13},
+            dynamicStyles.TextColor,
+          ]}>
           Select Gender
         </Text>
         <TouchableOpacity
-          style={{
-            backgroundColor: '#2f2f2f6b',
-            height: 50,
-            width: '100%',
-            borderRadius: 4,
-            justifyContent: 'center',
-            paddingHorizontal: 15,
-          }}
+          style={[
+            {
+              backgroundColor: '#2f2f2f6b',
+              height: 50,
+              width: '100%',
+              borderRadius: 4,
+              justifyContent: 'center',
+              paddingHorizontal: 15,
+            },
+            dynamicStyles.DivContainer,
+          ]}
           onPress={() => changeModal4Visibility(true)}>
-          <Text style={styles.text}>{gender}</Text>
+          <Text style={[styles.text, dynamicStyles.TextColor]}>{gender}</Text>
         </TouchableOpacity>
         <Modal
           transparent={true}
@@ -441,24 +770,34 @@ const Advertise1FBMenu = () => {
           />
         </Modal>
         <Text
-          style={{color: '#B1B1B1', fontSize: 10, fontFamily: 'CamptonBook'}}>
+          style={[
+            {color: '#B1B1B1', fontSize: 10, fontFamily: 'Manrope-Regular'},
+            dynamicStyles.TextColor,
+          ]}>
           you can select the kind of gender whether male or female that you want
           to see your task or “All Gender” if you want to target all genders
         </Text>
-        <Text style={{color: '#fff', fontFamily: 'CamptonBook', fontSize: 13}}>
+        <Text
+          style={[
+            {color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13},
+            dynamicStyles.TextColor,
+          ]}>
           Select Religion
         </Text>
         <TouchableOpacity
-          style={{
-            backgroundColor: '#2f2f2f6b',
-            height: 50,
-            width: '100%',
-            borderRadius: 4,
-            justifyContent: 'center',
-            paddingHorizontal: 15,
-          }}
+          style={[
+            {
+              backgroundColor: '#2f2f2f6b',
+              height: 50,
+              width: '100%',
+              borderRadius: 4,
+              justifyContent: 'center',
+              paddingHorizontal: 15,
+            },
+            dynamicStyles.DivContainer,
+          ]}
           onPress={() => changeModal5Visibility(true)}>
-          <Text style={styles.text}>{religion}</Text>
+          <Text style={[styles.text, dynamicStyles.TextColor]}>{religion}</Text>
         </TouchableOpacity>
         <Modal
           transparent={true}
@@ -471,57 +810,79 @@ const Advertise1FBMenu = () => {
           />
         </Modal>
         <Text
-          style={{color: '#B1B1B1', fontSize: 10, fontFamily: 'CamptonBook'}}>
+          style={[
+            {color: '#B1B1B1', fontSize: 10, fontFamily: 'Manrope-Regular'},
+            dynamicStyles.TextColor,
+          ]}>
           You can target people of a particular religion or belief. Your advert
           and task will be shown to the particular religion you select. Select
           'All Religion' if you want to target all religion
         </Text>
-        <Text style={{color: '#fff', fontFamily: 'CamptonBook', fontSize: 13}}>
+        <Text
+          style={[
+            {color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13},
+            dynamicStyles.TextColor,
+          ]}>
           Enter Advert Task or Caption
         </Text>
         <TouchableOpacity
-          style={{
-            backgroundColor: '#2f2f2f6b',
-            height: 120,
-            width: '100%',
-            borderRadius: 4,
-            justifyContent: 'center',
-            paddingHorizontal: 15,
-          }}>
+          style={[
+            {
+              backgroundColor: '#2f2f2f6b',
+              height: 100,
+              width: '100%',
+              borderRadius: 4,
+              justifyContent: 'center',
+              paddingHorizontal: 15,
+            },
+            dynamicStyles.DivContainer,
+          ]}>
           <TextInput
             onChangeText={setCaption}
             placeholder="Select"
-            placeholderTextColor="#fff"
+            style={{
+              color: theme === 'dark' ? '#FFFFFF' : '#000000',
+              height: 100,
+            }}
+            placeholderTextColor={theme === 'dark' ? '#FFFFFF' : '#000000'}
           />
         </TouchableOpacity>
         <Text
-          style={{color: '#B1B1B1', fontSize: 10, fontFamily: 'CamptonBook'}}>
+          style={[
+            {color: '#B1B1B1', fontSize: 10, fontFamily: 'Manrope-Regular'},
+            dynamicStyles.TextColor,
+          ]}>
           Please enter the advert text or caption. The advert text or caption
           should be well detailed. You can also include a link to your site, a
           phone number for people to contact you or any information you want
           people to see on your advert
         </Text>
-
         <Text
-          style={{
-            color: '#fff',
-            fontFamily: 'Campton Bold',
-            fontSize: 13,
-            paddingTop: 10,
-          }}>
+          style={[
+            {
+              color: '#fff',
+              fontFamily: 'Manrope-ExtraBold',
+              fontSize: 13,
+              paddingTop: 10,
+            },
+            dynamicStyles.TextColor,
+          ]}>
           Choose one of the Advert Media Upload Below:
         </Text>
         <View style={{flexDirection: 'row', gap: 5}}>
           <TouchableOpacity
-            style={{
-              flexDirection: 'row',
-              gap: 5,
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: '#2f2f2f6b',
-              padding: 7,
-              borderRadius: 4,
-            }}>
+            style={[
+              {
+                flexDirection: 'row',
+                gap: 5,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: '#2f2f2f6b',
+                padding: 7,
+                borderRadius: 4,
+              },
+              dynamicStyles.DivContainer,
+            ]}>
             <Svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
@@ -536,20 +897,26 @@ const Advertise1FBMenu = () => {
               />
             </Svg>
             <Text
-              style={{color: '#fff', fontFamily: 'CamptonBook', fontSize: 13}}>
+              style={[
+                {color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13},
+                dynamicStyles.TextColor,
+              ]}>
               Photo
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={{
-              flexDirection: 'row',
-              gap: 5,
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: '#2f2f2f6b',
-              padding: 7,
-              borderRadius: 4,
-            }}>
+            style={[
+              {
+                flexDirection: 'row',
+                gap: 5,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: '#2f2f2f6b',
+                padding: 7,
+                borderRadius: 4,
+              },
+              dynamicStyles.DivContainer,
+            ]}>
             <Svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
@@ -564,7 +931,10 @@ const Advertise1FBMenu = () => {
               />
             </Svg>
             <Text
-              style={{color: '#fff', fontFamily: 'CamptonBook', fontSize: 13}}>
+              style={[
+                {color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13},
+                dynamicStyles.TextColor,
+              ]}>
               Video
             </Text>
           </TouchableOpacity>
@@ -580,11 +950,25 @@ const Advertise1FBMenu = () => {
             width: '50%',
           }}
           onPress={() => chooseImage()}>
-          {image ? (
-            <Image
-              source={{uri: image.uri}}
-              style={{width: 100, height: 100}}
-            />
+          {Array.isArray(image) && image.length > 0 ? (
+            image.length === 1 ? (
+              <Image
+                source={{uri: image[0].uri}}
+                style={{width: 100, height: 100}}
+              />
+            ) : (
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}>
+                {image.map((img, index) => (
+                  <Image
+                    key={index}
+                    source={{uri: img.uri}}
+                    style={{width: 100, height: 100, marginRight: 5}}
+                  />
+                ))}
+              </ScrollView>
+            )
           ) : (
             <Svg
               xmlns="http://www.w3.org/2000/svg"
@@ -603,32 +987,41 @@ const Advertise1FBMenu = () => {
         </TouchableOpacity>
       </View>
       <View
-        style={{
-          alignSelf: 'baseline',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          backgroundColor: '#2F2F2F6B',
-          height: 80,
-          width: '100%',
-          paddingHorizontal: 15,
-          flexDirection: 'row',
-        }}>
+        style={[
+          {
+            alignSelf: 'baseline',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            backgroundColor: '#2F2F2F6B',
+            height: 80,
+            width: '100%',
+            paddingHorizontal: 15,
+            flexDirection: 'row',
+          },
+          dynamicStyles.DivContainer,
+        ]}>
         <View style={{flexDirection: 'column'}}>
           <Text
-            style={{
-              color: '#fff',
-              fontFamily: 'CamptonBook',
-              fontSize: 13,
-            }}>
+            style={[
+              {
+                color: '#fff',
+                fontFamily: 'Manrope-Regular',
+                fontSize: 13,
+              },
+              dynamicStyles.TextColor,
+            ]}>
             Total pay
           </Text>
           <Text
-            style={{
-              color: '#fff',
-              fontFamily: 'CamptonBook',
-              fontSize: 30,
-            }}>
-            {userData1?.userdata?.wallet?.currency_code}:{' '}
+            style={[
+              {
+                color: '#fff',
+                fontFamily: 'Manrope-Regular',
+                fontSize: 30,
+              },
+              dynamicStyles.TextColor,
+            ]}>
+            {userData1?.userdata?.wallet?.currency_symbol}
             {isNaN(Number(chooseNumber)) ? 0 : Number(chooseNumber) * 140}
           </Text>
         </View>
@@ -644,7 +1037,7 @@ const Advertise1FBMenu = () => {
           onPress={() => setIsModalVisible(true)}>
           <Text
             style={{
-              fontFamily: 'CamptonBook',
+              fontFamily: 'Manrope-Regular',
               color: '#fff',
               fontSize: 13,
             }}>
@@ -660,20 +1053,22 @@ const Advertise1FBMenu = () => {
             style={{
               flex: 1,
               backgroundColor: '#121212aa',
-              //   padding: 20,
               justifyContent: 'flex-end',
             }}>
             <>
               <SafeAreaView>
                 <View
-                  style={{
-                    backgroundColor: '#000',
-                    width: '100%',
-                    paddingHorizontal: 10,
-                    paddingVertical: 20,
-                    maxHeight: deviceHeight * 0.7,
-                    position: 'relative',
-                  }}>
+                  style={[
+                    {
+                      backgroundColor: '#000',
+                      width: '100%',
+                      paddingHorizontal: 10,
+                      paddingVertical: 20,
+                      maxHeight: deviceHeight * 0.7,
+                      position: 'relative',
+                    },
+                    dynamicStyles.ModalContainer,
+                  ]}>
                   <View
                     style={{
                       justifyContent: 'center',
@@ -721,39 +1116,33 @@ const Advertise1FBMenu = () => {
                       </View>
                     </TouchableOpacity>
                     <Text
-                      style={{
-                        color: '#fff',
-                        fontSize: 14,
-                        fontFamily: 'Campton Bold',
-                        paddingBottom: 10,
-                      }}>
+                      style={[
+                        {
+                          color: '#fff',
+                          fontSize: 14,
+                          fontFamily: 'Manrope-ExtraBold',
+                          paddingBottom: 10,
+                        },
+                        dynamicStyles.TextColor,
+                      ]}>
                       How would you like to pay?
-                    </Text>
-                    <Text
-                      style={{
-                        color: '#fff',
-                        fontSize: 12,
-                        // fontWeight: 400,
-                        fontFamily: 'CamptonBook',
-                        textAlign: 'center',
-                        paddingHorizontal: 20,
-                      }}>
-                      Are you sure you want to generate your next Twitter task
-                      now. You have 1 hour to perform this task. Please confirm
-                      only if you are ready to perform the task.
                     </Text>
                   </View>
                   <View style={{paddingHorizontal: 10}}>
                     <TouchableOpacity
-                      style={{
-                        backgroundColor: '#1a1a1a',
-                        height: 100,
-                        justifyContent: 'space-evenly',
-                        alignItems: 'center',
-                        width: '100%',
-                        borderRadius: 8,
-                        flexDirection: 'row',
-                      }}>
+                      style={[
+                        {
+                          backgroundColor: '#1a1a1a',
+                          height: 100,
+                          justifyContent: 'space-evenly',
+                          alignItems: 'center',
+                          width: '100%',
+                          borderRadius: 8,
+                          flexDirection: 'row',
+                        },
+                        dynamicStyles.ModalDivContainer,
+                      ]}
+                      onPress={() => createTaskPaystack()}>
                       <Svg
                         width="24"
                         height="24"
@@ -775,18 +1164,21 @@ const Advertise1FBMenu = () => {
                           width: 250,
                         }}>
                         <Text
-                          style={{
-                            color: '#fff',
-                            fontSize: 14,
-                            fontFamily: 'CamptonSemiBold',
-                          }}>
+                          style={[
+                            {
+                              color: '#fff',
+                              fontSize: 14,
+                              fontFamily: 'Manrope-Bold',
+                            },
+                            dynamicStyles.TextColor,
+                          ]}>
                           100% Secure payment
                         </Text>
                         <Text
                           style={{
                             color: '#909090',
                             fontSize: 12,
-                            fontFamily: 'CamptonBook',
+                            fontFamily: 'Manrope-Regular',
                           }}>
                           Get real people to post your ads on their social media
                           account.
@@ -809,15 +1201,18 @@ const Advertise1FBMenu = () => {
                   </View>
                   <View style={{paddingHorizontal: 10, paddingVertical: 12}}>
                     <TouchableOpacity
-                      style={{
-                        backgroundColor: '#1a1a1a',
-                        height: 100,
-                        justifyContent: 'space-evenly',
-                        alignItems: 'center',
-                        width: '100%',
-                        borderRadius: 8,
-                        flexDirection: 'row',
-                      }}
+                      style={[
+                        {
+                          backgroundColor: '#1a1a1a',
+                          height: 100,
+                          justifyContent: 'space-evenly',
+                          alignItems: 'center',
+                          width: '100%',
+                          borderRadius: 8,
+                          flexDirection: 'row',
+                        },
+                        dynamicStyles.ModalDivContainer,
+                      ]}
                       onPress={() => {
                         setIsModal2Visible(true);
                         setIsModalVisible(false);
@@ -844,85 +1239,21 @@ const Advertise1FBMenu = () => {
                           width: 250,
                         }}>
                         <Text
-                          style={{
-                            color: '#fff',
-                            fontSize: 14,
-                            fontFamily: 'CamptonSemiBold',
-                          }}>
+                          style={[
+                            {
+                              color: '#fff',
+                              fontSize: 14,
+                              fontFamily: 'Manrope-Bold',
+                            },
+                            dynamicStyles.TextColor,
+                          ]}>
                           Pay from your Trendit Wallet
                         </Text>
                         <Text
                           style={{
                             color: '#909090',
                             fontSize: 12,
-                            fontFamily: 'CamptonBook',
-                          }}>
-                          Get real people to post your ads on their social media
-                          account.
-                        </Text>
-                      </View>
-                      <Svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <Path
-                          d="M5 12H18M13 6L18.2929 11.2929C18.6834 11.6834 18.6834 12.3166 18.2929 12.7071L13 18"
-                          stroke="#FF6DFB"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                        />
-                      </Svg>
-                    </TouchableOpacity>
-                  </View>
-                  <View style={{paddingHorizontal: 10, paddingBottom: 33}}>
-                    <TouchableOpacity
-                      style={{
-                        backgroundColor: '#1a1a1a',
-                        height: 100,
-                        justifyContent: 'space-evenly',
-                        alignItems: 'center',
-                        width: '100%',
-                        borderRadius: 8,
-                        flexDirection: 'row',
-                      }}>
-                      <Svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <G id="Software/bitcoin/circle">
-                          <Path
-                            id="Icon"
-                            d="M8.99984 6.99996V17M6.99984 6.99996H13.4998C14.8805 6.99996 15.9998 8.11925 15.9998 9.49996C15.9998 10.8807 14.8805 12 13.4998 12H8.99984H14.4998C15.8805 12 16.9998 13.1192 16.9998 14.5C16.9998 15.8807 15.8805 17 14.4998 17H6.99984M12 7V5M12 19V17M23 12C23 18.0751 18.0751 23 12 23C5.92487 23 1 18.0751 1 12C1 5.92487 5.92487 1 12 1C18.0751 1 23 5.92487 23 12Z"
-                            stroke="#FF6DFB"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                          />
-                        </G>
-                      </Svg>
-
-                      <View
-                        style={{
-                          flexDirection: 'column',
-                          gap: 5,
-                          width: 250,
-                        }}>
-                        <Text
-                          style={{
-                            color: '#fff',
-                            fontSize: 14,
-                            fontFamily: 'CamptonSemiBold',
-                          }}>
-                          Pay with Crypto
-                        </Text>
-                        <Text
-                          style={{
-                            color: '#909090',
-                            fontSize: 12,
-                            fontFamily: 'CamptonBook',
+                            fontFamily: 'Manrope-Regular',
                           }}>
                           Get real people to post your ads on their social media
                           account.
@@ -957,20 +1288,22 @@ const Advertise1FBMenu = () => {
             style={{
               flex: 1,
               backgroundColor: '#121212aa',
-              //   padding: 20,
               justifyContent: 'flex-end',
             }}>
             <>
               <SafeAreaView>
                 <View
-                  style={{
-                    backgroundColor: '#000',
-                    width: '100%',
-                    paddingHorizontal: 10,
-                    paddingVertical: 20,
-                    maxHeight: deviceHeight * 0.7,
-                    position: 'relative',
-                  }}>
+                  style={[
+                    {
+                      backgroundColor: '#000',
+                      width: '100%',
+                      paddingHorizontal: 10,
+                      paddingVertical: 20,
+                      maxHeight: deviceHeight * 0.7,
+                      position: 'relative',
+                    },
+                    dynamicStyles.ModalContainer,
+                  ]}>
                   <TouchableOpacity
                     style={{
                       justifyContent: 'center',
@@ -1019,13 +1352,16 @@ const Advertise1FBMenu = () => {
                       paddingVertical: 30,
                     }}>
                     <Text
-                      style={{
-                        color: '#fff',
-                        fontSize: 14,
-                        fontFamily: 'Campton Bold',
-                        paddingBottom: 10,
-                        paddingTop: 20,
-                      }}>
+                      style={[
+                        {
+                          color: '#fff',
+                          fontSize: 14,
+                          fontFamily: 'Manrope-ExtraBold',
+                          paddingBottom: 10,
+                          paddingTop: 20,
+                        },
+                        dynamicStyles.TextColor,
+                      ]}>
                       How would you like to pay?
                     </Text>
                   </View>
@@ -1036,13 +1372,16 @@ const Advertise1FBMenu = () => {
                       paddingHorizontal: 7,
                     }}>
                     <View
-                      style={{
-                        backgroundColor: 'rgba(177, 177, 177, 0.1)',
-                        height: 200,
-                        width: '100%',
-                        borderRadius: 6,
-                        paddingHorizontal: 10,
-                      }}>
+                      style={[
+                        {
+                          backgroundColor: 'rgba(177, 177, 177, 0.1)',
+                          height: 200,
+                          width: '100%',
+                          borderRadius: 6,
+                          paddingHorizontal: 10,
+                        },
+                        dynamicStyles.DivContainer,
+                      ]}>
                       <View
                         style={{
                           paddingBottom: 39,
@@ -1051,20 +1390,26 @@ const Advertise1FBMenu = () => {
                           justifyContent: 'center',
                         }}>
                         <Text
-                          style={{
-                            color: '#fff',
-                            alignSelf: 'center',
-                            fontFamily: 'CamptonBook',
-                          }}>
+                          style={[
+                            {
+                              color: '#fff',
+                              alignSelf: 'center',
+                              fontFamily: 'Manrope-Regular',
+                            },
+                            dynamicStyles.TextColor,
+                          ]}>
                           Total Pay
                         </Text>
                         <Text
-                          style={{
-                            color: '#fff',
-                            fontSize: 30,
-                            fontFamily: 'CamptonMedium',
-                          }}>
-                          {/* {userData1?.userdata?.wallet?.currency_code}:{' '} */}
+                          style={[
+                            {
+                              color: '#fff',
+                              fontSize: 30,
+                              fontFamily: 'Manrope-Medium',
+                            },
+                            dynamicStyles.TextColor,
+                          ]}>
+                          {/* {userData1?.userdata?.wallet?.currency_symbol}{' '} */}
                           {isNaN(Number(chooseNumber))
                             ? 0
                             : Number(chooseNumber) * 140}
@@ -1076,20 +1421,26 @@ const Advertise1FBMenu = () => {
                           justifyContent: 'space-between',
                         }}>
                         <Text
-                          style={{
-                            fontSize: 13,
-                            fontFamily: 'CamptonBook',
-                            color: '#B1B1B1',
-                          }}>
+                          style={[
+                            {
+                              fontSize: 13,
+                              fontFamily: 'Manrope-Regular',
+                              color: '#B1B1B1',
+                            },
+                            dynamicStyles.TextColor,
+                          ]}>
                           Amount due to task
                         </Text>
                         <Text
-                          style={{
-                            fontSize: 13,
-                            color: '#B1B1B1',
-                            fontFamily: 'CamptonBook',
-                          }}>
-                          {/* {userData1?.userdata?.wallet?.currency_code}:{' '} */}
+                          style={[
+                            {
+                              fontSize: 13,
+                              color: '#B1B1B1',
+                              fontFamily: 'Manrope-Regular',
+                            },
+                            dynamicStyles.TextColor,
+                          ]}>
+                          {/* {userData1?.userdata?.wallet?.currency_symbol}{' '} */}
                           {isNaN(Number(chooseNumber))
                             ? 0
                             : Number(chooseNumber) * 140}
@@ -1102,19 +1453,25 @@ const Advertise1FBMenu = () => {
                           paddingVertical: 10,
                         }}>
                         <Text
-                          style={{
-                            fontSize: 13,
-                            fontFamily: 'CamptonBook',
-                            color: '#B1B1B1',
-                          }}>
+                          style={[
+                            {
+                              fontSize: 13,
+                              fontFamily: 'Manrope-Regular',
+                              color: '#B1B1B1',
+                            },
+                            dynamicStyles.TextColor,
+                          ]}>
                           Wallet balance after this payment
                         </Text>
                         <Text
-                          style={{
-                            fontSize: 13,
-                            fontFamily: 'CamptonBook',
-                            color: '#B1B1B1',
-                          }}>
+                          style={[
+                            {
+                              fontSize: 13,
+                              fontFamily: 'Manrope-Regular',
+                              color: '#B1B1B1',
+                            },
+                            dynamicStyles.TextColor,
+                          ]}>
                           {result}
                         </Text>
                       </View>
@@ -1143,7 +1500,7 @@ const Advertise1FBMenu = () => {
                       <Text
                         style={{
                           color: '#fff',
-                          fontFamily: 'CamptonBook',
+                          fontFamily: 'Manrope-Regular',
                           fontSize: 14,
                         }}>
                         proceed
@@ -1164,7 +1521,6 @@ const Advertise1FBMenu = () => {
             style={{
               flex: 1,
               backgroundColor: '#121212aa',
-              //   padding: 20,
               justifyContent: 'flex-end',
             }}>
             <>
@@ -1320,7 +1676,7 @@ const Advertise1FBMenu = () => {
                       style={{
                         color: '#fff',
                         fontSize: 14,
-                        fontFamily: 'Campton Bold',
+                        fontFamily: 'Manrope-ExtraBold',
                         paddingBottom: 10,
                         paddingTop: 20,
                       }}>
@@ -1331,7 +1687,7 @@ const Advertise1FBMenu = () => {
                         color: '#fff',
                         fontSize: 12,
                         // fontWeight: 400,
-                        fontFamily: 'CamptonBook',
+                        fontFamily: 'Manrope-Regular',
                         textAlign: 'center',
                         paddingHorizontal: 20,
                       }}>
@@ -1360,8 +1716,7 @@ const Advertise1FBMenu = () => {
                           index: 0,
                           routes: [
                             {
-                              name: 'Tabs',
-                              params: {screen: 'Home'},
+                              name: 'History',
                             },
                           ],
                         })
@@ -1369,7 +1724,7 @@ const Advertise1FBMenu = () => {
                       <Text
                         style={{
                           color: '#fff',
-                          fontFamily: 'CamptonBook',
+                          fontFamily: 'Manrope-Regular',
                           fontSize: 14,
                         }}>
                         Go Home
@@ -1389,7 +1744,7 @@ const Advertise1FBMenu = () => {
 const styles = StyleSheet.create({
   text: {
     color: '#fff',
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     fontSize: 13,
   },
   nameInput: {

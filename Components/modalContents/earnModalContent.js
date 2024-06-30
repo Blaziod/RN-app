@@ -20,7 +20,7 @@ const EarnModalContent = () => {
               style={{
                 color: '#fff',
                 fontSize: 14,
-                fontFamily: 'CamptonBold',
+                fontFamily: 'Manrope-ExtraBold',
                 paddingBottom: 10,
                 paddingTop: 20,
               }}>
@@ -52,7 +52,7 @@ const EarnModalContent = () => {
                   style={{
                     color: '#fff',
                     alignSelf: 'center',
-                    fontFamily: 'CamptonBook',
+                    fontFamily: 'Manrope-Regular',
                   }}>
                   Total Pay
                 </Text>
@@ -60,7 +60,7 @@ const EarnModalContent = () => {
                   style={{
                     color: '#fff',
                     fontSize: 30,
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                   }}>
                   ₦589 .90
                 </Text>
@@ -73,7 +73,7 @@ const EarnModalContent = () => {
                 <Text
                   style={{
                     fontSize: 13,
-                    fontFamily: 'CamptonBook',
+                    fontFamily: 'Manrope-Regular',
                     color: '#B1B1B1',
                   }}>
                   Amount due to task
@@ -82,7 +82,7 @@ const EarnModalContent = () => {
                   style={{
                     fontSize: 13,
                     color: '#B1B1B1',
-                    fontFamily: 'CamptonBook',
+                    fontFamily: 'Manrope-Regular',
                   }}>
                   $500
                 </Text>
@@ -96,7 +96,7 @@ const EarnModalContent = () => {
                 <Text
                   style={{
                     fontSize: 13,
-                    fontFamily: 'CamptonBook',
+                    fontFamily: 'Manrope-Regular',
                     color: '#B1B1B1',
                   }}>
                   Wallet balance after this payment
@@ -104,7 +104,7 @@ const EarnModalContent = () => {
                 <Text
                   style={{
                     fontSize: 13,
-                    fontFamily: 'CamptonBook',
+                    fontFamily: 'Manrope-Regular',
                     color: '#B1B1B1',
                   }}>
                   $500
@@ -136,7 +136,7 @@ const EarnModalContent = () => {
                 <View>
                   <Text
                     style={{
-                      fontFamily: 'CamptonBook',
+                      fontFamily: 'Manrope-Regular',
                       fontSize: 12,
                       color: 'blue',
                     }}>
@@ -185,7 +185,7 @@ const EarnModalContent = () => {
               <Text
                 style={{
                   color: '#fff',
-                  fontFamily: 'CamptonBook',
+                  fontFamily: 'Manrope-Regular',
                   fontSize: 14,
                 }}>
                 proceed

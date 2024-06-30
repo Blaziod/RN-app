@@ -9,6 +9,9 @@ import {
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
+  Modal,
+  Alert,
+  Linking,
 } from 'react-native';
 import EarnCustomSwitch from '../../Components/CustomSwitches/earnCustomSwitch';
 import {useState, useEffect} from 'react';
@@ -21,12 +24,257 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import PaidPostAdvertMenu from '../../Components/Menus/paidPostAdvertMenu';
 import PaidEngageAdvertMenu from '../../Components/Menus/paidEngageAdvertMenu';
 import {useTheme} from '../../Components/Contexts/colorTheme';
+import axios from 'axios';
+import Toast from 'react-native-toast-message';
+import queryString from 'query-string';
+import {ApiLink} from '../../enums/apiLink';
 
 const Earn = () => {
   const [earnMenu, setEarnMenu] = useState(1);
   const [userData, setUserData] = useState(null);
   const navigation = useNavigation();
+  const [userAccessToken, setUserAccessToken] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [membership, setMembership] = useState(false);
   const {theme} = useTheme();
+  const [modal1Visible, setModal1Visible] = useState(false);
+  const [modal2Visible, setModal2Visible] = useState(false);
+  const [isLoading1, setIsLoading1] = useState(false);
+  const [txRef, setTxRef] = useState(null);
+  const [transactionId, setTransactionId] = useState(null);
+  const homeScreenUrl = 'https://blaziod.github.io';
+
+  useEffect(() => {
+    const handleUrl = async event => {
+      try {
+        const url = event.url;
+        // Alert.alert('Url Caught');
+        const parsed = queryString.parseUrl(url);
+        // Alert.alert('Url parsed');
+
+        if (parsed.query.tx_ref) {
+          const {tx_ref, transaction_id, status} = parsed.query;
+          // Alert.alert('tx_ref found');
+
+          if (status === 'completed') {
+            setTxRef(tx_ref);
+            setTransactionId(transaction_id);
+            Alert.alert('Verifying your payment');
+          }
+        }
+      } catch (error) {
+        console.error(error);
+        Alert.alert('Error: handling', error.toString());
+      }
+    };
+
+    // Listen for incoming links
+    const subscription = Linking.addEventListener('url', handleUrl);
+
+    // Clean up the listener on unmount
+    return () => subscription.remove();
+  }, []);
+
+  useEffect(() => {
+    if (transactionId !== null) {
+      verifyPayment();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transactionId]);
+
+  const verifyPayment = async () => {
+    try {
+      // Alert.alert('URL: ', `${txRef}, ${transactionId}`);
+      setIsLoading1(true);
+      const response = await axios.post(
+        `${ApiLink.ENDPOINT_1}/payment/verify`,
+        {reference: txRef, transaction_id: transactionId},
+        {
+          headers: {
+            Authorization: `Bearer ${userAccessToken.accessToken}`,
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
+      if (response.status >= 200 && response.status < 300) {
+        fetchMembershipStatus();
+        // eslint-disable-next-line no-lone-blocks
+        {
+          membership
+            ? navigation.reset({
+                index: 0,
+                routes: [{name: 'Earn'}],
+              })
+            : console.log('Payment Not Verified');
+        }
+        console.log(response.data);
+        Toast.show({
+          type: 'success',
+          text1: 'Success',
+          text2: response.data.message,
+          style: {
+            borderLeftColor: 'pink',
+            backgroundColor: 'yellow',
+            width: '80%',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          text1Style: {
+            color: 'red',
+            fontSize: 14,
+          },
+          text2Style: {
+            color: 'green',
+            fontSize: 14,
+            fontFamily: 'Manrope-ExtraBold',
+          },
+        });
+      } else {
+        Alert.alert('Error Else');
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: response.data.message,
+          style: {
+            borderLeftColor: 'pink',
+            backgroundColor: 'yellow',
+            width: '80%',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          text1Style: {
+            color: 'red',
+            fontSize: 14,
+          },
+          text2Style: {
+            color: 'green',
+            fontSize: 14,
+            fontFamily: 'Manrope-ExtraBold',
+          },
+        });
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: 'Home',
+            },
+          ],
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: error.message,
+        style: {
+          borderLeftColor: 'pink',
+          backgroundColor: 'yellow',
+          width: '80%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        text1Style: {
+          color: 'red',
+          fontSize: 14,
+        },
+        text2Style: {
+          color: 'green',
+          fontSize: 14,
+          fontFamily: 'Manrope-ExtraBold',
+        },
+      });
+    } finally {
+      setIsLoading1(false);
+    }
+  };
+
+  const handleMembershipPayment = async () => {
+    const userToken = userAccessToken?.accessToken;
+    console.log('Testing', userToken);
+    setIsLoading1(true);
+    try {
+      if (!homeScreenUrl) {
+        Alert.alert('Error', 'Callback URL is not defined.');
+        return;
+      }
+      const response = await axios.post(
+        `${ApiLink.ENDPOINT_1}/payment/membership-fee`,
+
+        {amount: Number(1000)},
+        {
+          headers: {
+            Authorization: `Bearer ${userAccessToken.accessToken}`, // replace userToken with your actual token
+            'Content-Type': 'application/json',
+            'CALLBACK-URL': homeScreenUrl,
+          },
+        },
+      );
+
+      if (response.data.status === 'success') {
+        // Alert.alert('Payment initialized', 'Redirecting to payment page...');
+        Toast.show({
+          type: 'success',
+          text1: 'Success',
+          text2: response.data.message,
+          style: {
+            borderLeftColor: 'pink',
+            backgroundColor: 'yellow',
+            width: '80%',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          text1Style: {
+            color: 'red',
+            fontSize: 14,
+          },
+          text2Style: {
+            color: 'green',
+            fontSize: 14,
+            fontFamily: 'Manrope-ExtraBold',
+          },
+        });
+        console.log(response.data);
+        const url = response.data.authorization_url;
+        console.log('URL:', url); // replace with the actual URL you want to redirect to
+
+        Linking.openURL(url);
+      } else {
+      }
+    } catch (error) {
+      Alert.alert('Error', 'An error occurred while processing the request.');
+      console.error(error.response.data); // log the server's response
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: error.message,
+        style: {
+          borderLeftColor: 'pink',
+          backgroundColor: 'yellow',
+          width: '80%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        text1Style: {
+          color: 'red',
+          fontSize: 14,
+        },
+        text2Style: {
+          color: 'green',
+          fontSize: 14,
+          fontFamily: 'Manrope-ExtraBold',
+        },
+      });
+    } finally {
+      setIsLoading1(false);
+    }
+  };
 
   const dynamicStyles = StyleSheet.create({
     AppContainer: {
@@ -56,6 +304,7 @@ const Earn = () => {
   const fetchUserData = () => {
     AsyncStorage.getItem('userdatafiles1')
       .then(data => {
+        // eslint-disable-next-line no-shadow
         const userData = JSON.parse(data);
         setUserData(userData);
         console.log('Here I am', userData);
@@ -71,16 +320,123 @@ const Earn = () => {
   useEffect(() => {
     fetchUserData();
   }, []);
+
+  const fetchUserAccessToken = () => {
+    // Your code to run on screen focus
+    AsyncStorage.getItem('accesstoken')
+      .then(data => {
+        // eslint-disable-next-line no-shadow
+        const userAccessToken = JSON.parse(data);
+        setUserAccessToken(userAccessToken);
+
+        if (!userAccessToken) {
+          navigation.navigate('SignIn');
+        }
+      })
+      .catch(error => {
+        console.error('Error retrieving user token:', error);
+      });
+  };
+  useEffect(() => {
+    fetchUserAccessToken();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const fetchMembershipStatus = async () => {
+    setIsLoading(true);
+    if (userAccessToken) {
+      try {
+        const response = await fetch(
+          `${ApiLink.ENDPOINT_1}/profile/membership-status`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${userAccessToken.accessToken}`, // Add the access token to the headers
+            },
+          },
+        );
+
+        const data = await response.json();
+
+        if (response.ok) {
+          console.log('Membership Status:', data);
+          AsyncStorage.setItem(
+            'membershipstatus',
+            JSON.stringify({
+              status: data,
+            }),
+          )
+            .then(() => {
+              setMembership(data.membership_status);
+              console.log('here', membership);
+              console.log('Status Stored', data);
+            })
+            .catch(error => {
+              console.error('Error storing user Status:', error);
+            });
+          setIsLoading(false);
+        } else {
+          if (response.status === 401) {
+            console.log('401 Unauthorized: Access token is invalid or expired');
+            await AsyncStorage.removeItem('userbalance');
+            await AsyncStorage.removeItem('userdata1');
+            await AsyncStorage.removeItem('userdata');
+            await AsyncStorage.removeItem('userdata2');
+            await AsyncStorage.removeItem('userdatas');
+            await AsyncStorage.removeItem('userdatafiles1');
+            await AsyncStorage.removeItem('accesstoken');
+            navigation.reset({
+              index: 0,
+              routes: [
+                {
+                  name: 'SignIn',
+                },
+              ],
+            });
+          }
+          setIsLoading(false);
+          throw new Error(data.message);
+        }
+      } catch (error) {
+        console.error('Error during membership fetch:', error);
+      }
+    } else {
+      console.log('No access token found');
+    }
+  };
+
+  useEffect(() => {
+    if (userAccessToken) {
+      fetchMembershipStatus();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userAccessToken, userData]);
+
   return (
-    <SafeAreaView>
-      <ScrollView
-        scrollEnabled={true}
-        contentInsetAdjustmentBehavior="automatic">
-        <View style={[styles.AppContainer, dynamicStyles.AppContainer]}>
-          <Headers />
-          <View style={styles.AppContainer1}>
-            <View style={styles.earnImage1}>
-              {earnMenu === 1 && (
+    <SafeAreaView style={[styles.AppContainer, dynamicStyles.AppContainer]}>
+      {isLoading ? (
+        <>
+          <Text
+            style={{
+              fontFamily: 'Manrope-Regular',
+              fontSize: 15,
+              color: '#FF6DFB',
+              alignSelf: 'center',
+              paddingBottom: 12,
+            }}>
+            Please wait while it loads ....
+          </Text>
+          <ActivityIndicator size={60} color="#FF6DFB" />
+        </>
+      ) : (
+        <ScrollView
+          scrollEnabled={true}
+          contentInsetAdjustmentBehavior="automatic">
+          <View>
+            <Headers />
+            <View style={styles.AppContainer1}>
+              <View style={styles.earnImage1}>
                 <View style={{paddingVertical: 15, paddingHorizontal: 10}}>
                   <Svg
                     width="244"
@@ -126,98 +482,869 @@ const Earn = () => {
                     </Defs>
                   </Svg>
                 </View>
-              )}
-              {earnMenu === 2 && (
-                <View style={{paddingVertical: 15, paddingHorizontal: 10}}>
-                  {/* <EngagementImage /> */}
-                </View>
-              )}
-              {earnMenu === 3 && (
-                <Text style={{color: '#fff'}}>wowww ndaboski</Text>
-              )}
-            </View>
-            <View style={styles.EarnonTContainer}>
-              <View style={styles.EarnOnT}>
-                <Text style={[styles.EarnOnTText, dynamicStyles.TextColor]}>
-                  Earn on Trendit³ just got easier
-                </Text>
-                <Text style={[styles.EarnOnTText1, dynamicStyles.TextColor]}>
-                  Earn steady income by posting advertisements for individuals,
-                  businesses, and top brands on your social media pages. To post
-                  ads on WhatsApp, Facebook, Instagram, Twitter, or TikTok, you
-                  MUST have at least 500 followers on your social media account.
-                </Text>
-                <View style={{paddingVertical: 5}} />
-                <TouchableOpacity
-                  style={[styles.PayButton, dynamicStyles.Button]}
-                  onPress={() => navigation.navigate('Membership')}>
-                  <Svg
-                    width="17"
-                    height="17"
-                    viewBox="0 0 17 17"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <Path
-                      d="M11.1666 6.58984V5.25651C11.1666 3.78375 9.97274 2.58984 8.49998 2.58984C7.82368 2.58984 7.20618 2.8416 6.73609 3.25651M5.96668 14.5898H11.0333C11.7801 14.5898 12.1534 14.5898 12.4387 14.4445C12.6895 14.3167 12.8935 14.1127 13.0214 13.8618C13.1667 13.5766 13.1667 13.2032 13.1667 12.4565V8.72318C13.1667 7.97644 13.1667 7.60307 13.0214 7.31786C12.8935 7.06697 12.6895 6.863 12.4387 6.73517C12.1534 6.58984 11.7801 6.58984 11.0333 6.58984H5.96668C5.21994 6.58984 4.84657 6.58984 4.56136 6.73517C4.31047 6.863 4.1065 7.06697 3.97867 7.31786C3.83334 7.60307 3.83334 7.97644 3.83334 8.72318V12.4565C3.83334 13.2032 3.83334 13.5766 3.97867 13.8618C4.1065 14.1127 4.31047 14.3167 4.56136 14.4445C4.84657 14.5898 5.21994 14.5898 5.96668 14.5898Z"
-                      stroke="#1877F2"
-                      stroke-linecap="round"
-                    />
-                  </Svg>
-
-                  <Text style={[styles.PayButtonLabel, dynamicStyles.Btext]}>
-                    Become A Member
+              </View>
+              <View style={styles.EarnonTContainer}>
+                <View style={styles.EarnOnT}>
+                  <Text style={[styles.EarnOnTText, dynamicStyles.TextColor]}>
+                    Earn on Trendit³ just got easier
                   </Text>
-                </TouchableOpacity>
-                <Text
-                  style={{
-                    color: '#1877F2',
-                    fontSize: 12,
-                    fontFamily: 'CamptonBook',
-                    paddingVertical: 10,
-                  }}>
-                  Membership fee: ₦1000 for Activation
-                </Text>
-              </View>
-              <Text style={[styles.EarnText, dynamicStyles.TextColor]}>
-                Earn
-              </Text>
-              <View>
-                <EarnCustomSwitch
-                  selectionMode={1}
-                  option1="Post Advert"
-                  option2="Engagement Task"
-                  option3="History"
-                  onSelectSwitch={onSelectSwitch}
-                />
-              </View>
+                  <Text style={[styles.EarnOnTText1, dynamicStyles.TextColor]}>
+                    Earn steady income by posting advertisements for
+                    individuals, businesses, and top brands on your social media
+                    pages. To post ads on WhatsApp, Facebook, Instagram,
+                    Twitter, or TikTok, you MUST have at least 500 followers on
+                    your social media account.
+                  </Text>
+                  <View style={{paddingVertical: 5}} />
 
-              {earnMenu === 1 && (
-                <View style={{paddingVertical: 15, paddingHorizontal: 10}}>
-                  {userData?.userdata?.membership_fee ? (
-                    <PaidPostAdvertMenu />
-                  ) : (
-                    <PostAdvertMenu />
-                  )}
+                  <View>
+                    {membership ? (
+                      <View>
+                        <TouchableOpacity
+                          style={[styles.PayButton, dynamicStyles.Button]}
+                          onPress={() => setModal2Visible(true)}>
+                          <Text
+                            style={[
+                              styles.PayButtonLabel,
+                              dynamicStyles.Btext,
+                            ]}>
+                            Learn More
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    ) : (
+                      <View>
+                        <TouchableOpacity
+                          style={[styles.PayButton, dynamicStyles.Button]}
+                          onPress={() => setModal1Visible(true)}>
+                          <Svg
+                            width="17"
+                            height="17"
+                            viewBox="0 0 17 17"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <Path
+                              d="M11.1666 6.58984V5.25651C11.1666 3.78375 9.97274 2.58984 8.49998 2.58984C7.82368 2.58984 7.20618 2.8416 6.73609 3.25651M5.96668 14.5898H11.0333C11.7801 14.5898 12.1534 14.5898 12.4387 14.4445C12.6895 14.3167 12.8935 14.1127 13.0214 13.8618C13.1667 13.5766 13.1667 13.2032 13.1667 12.4565V8.72318C13.1667 7.97644 13.1667 7.60307 13.0214 7.31786C12.8935 7.06697 12.6895 6.863 12.4387 6.73517C12.1534 6.58984 11.7801 6.58984 11.0333 6.58984H5.96668C5.21994 6.58984 4.84657 6.58984 4.56136 6.73517C4.31047 6.863 4.1065 7.06697 3.97867 7.31786C3.83334 7.60307 3.83334 7.97644 3.83334 8.72318V12.4565C3.83334 13.2032 3.83334 13.5766 3.97867 13.8618C4.1065 14.1127 4.31047 14.3167 4.56136 14.4445C4.84657 14.5898 5.21994 14.5898 5.96668 14.5898Z"
+                              stroke="#1877F2"
+                              stroke-linecap="round"
+                            />
+                          </Svg>
+
+                          <Text
+                            style={[
+                              styles.PayButtonLabel,
+                              dynamicStyles.Btext,
+                            ]}>
+                            Become A Member
+                          </Text>
+                        </TouchableOpacity>
+                        <Text
+                          style={{
+                            color: '#1877F2',
+                            fontSize: 12,
+                            fontFamily: 'Manrope-Regular',
+                            paddingVertical: 10,
+                            alignSelf: 'center',
+                          }}>
+                          Membership fee: ₦1000 for Activation
+                        </Text>
+                      </View>
+                    )}
+                  </View>
                 </View>
-              )}
-              {earnMenu === 2 && (
-                <View style={{paddingVertical: 15, paddingHorizontal: 10}}>
-                  {userData?.userdata?.membership_fee ? (
-                    <PaidEngageAdvertMenu />
-                  ) : (
-                    <Text style={{color: '#fff'}}>
-                      <EngageAdvertMenu />
+                <Text style={[styles.EarnText, dynamicStyles.TextColor]}>
+                  Earn
+                </Text>
+                <View
+                  style={{
+                    // flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    // gap: 5,
+                  }}>
+                  <EarnCustomSwitch
+                    selectionMode={1}
+                    option1="Post Advert"
+                    option2="Engagement Task"
+                    onSelectSwitch={onSelectSwitch}
+                  />
+                  {/* <TouchableOpacity
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      // gap: 5,
+                    }}>
+                    <Text style={[styles.EarnText2, dynamicStyles.TextColor]}>
+                      History
                     </Text>
-                  )}
+                    <Svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="17"
+                      viewBox="0 0 16 17"
+                      fill="none">
+                      <Path
+                        d="M6.66797 4.58984L10.1966 8.11844C10.4569 8.37879 10.4569 8.8009 10.1966 9.06125L6.66797 12.5898"
+                        stroke={strokeColor}
+                        stroke-linecap="round"
+                      />
+                    </Svg>
+                  </TouchableOpacity> */}
                 </View>
-              )}
-              {earnMenu === 3 && (
-                <Text style={{color: '#fff'}}>wowww ndaboski</Text>
-              )}
+                {isLoading ? (
+                  <ActivityIndicator size="large" color="#fff" />
+                ) : (
+                  <View>
+                    {earnMenu === 1 && (
+                      <View
+                        style={{paddingVertical: 15, paddingHorizontal: 10}}>
+                        {membership ? (
+                          <PaidPostAdvertMenu />
+                        ) : (
+                          <PostAdvertMenu />
+                        )}
+                      </View>
+                    )}
+                    {earnMenu === 2 && (
+                      <View
+                        style={{paddingVertical: 15, paddingHorizontal: 10}}>
+                        {membership ? (
+                          <PaidEngageAdvertMenu />
+                        ) : (
+                          <EngageAdvertMenu />
+                        )}
+                      </View>
+                    )}
+                  </View>
+                )}
+              </View>
+              <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modal1Visible}
+                onRequestClose={() => {
+                  setModal1Visible(!modal1Visible);
+                }}>
+                <ScrollView>
+                  <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                      <TouchableOpacity
+                        style={{
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          width: 50,
+                          height: 50,
+                          borderRadius: 50,
+                          position: 'absolute',
+                          top: 0,
+                          alignSelf: 'flex-end',
+                        }}
+                        onPress={() => setModal1Visible(false)}>
+                        <View
+                          style={{
+                            backgroundColor: '#FF6DFB',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            width: 50,
+                            height: 50,
+                            borderRadius: 50,
+                            position: 'absolute',
+                            top: -20,
+                            alignSelf: 'flex-end',
+                          }}>
+                          <Svg
+                            width="30"
+                            height="30"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <Path
+                              d="M18 6L6 18M18 18L6 6.00001"
+                              stroke="white"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                            />
+                          </Svg>
+                        </View>
+                      </TouchableOpacity>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          gap: 5,
+                          alignContent: 'center',
+                          alignSelf: 'center',
+                        }}>
+                        <Svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none">
+                          <G clip-path="url(#clip0_4535_37461)">
+                            <Path
+                              d="M7.9987 9.66659C10.2999 9.66659 12.1654 7.80111 12.1654 5.49992C12.1654 3.19873 10.2999 1.33325 7.9987 1.33325C5.69751 1.33325 3.83203 3.19873 3.83203 5.49992C3.83203 7.80111 5.69751 9.66659 7.9987 9.66659ZM7.9987 9.66659C4.3168 9.66659 1.33203 11.9052 1.33203 14.6666M7.9987 9.66659C11.6806 9.66659 14.6654 11.9052 14.6654 14.6666"
+                              stroke="white"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                            />
+                          </G>
+                          <Defs>
+                            <ClipPath id="clip0_4535_37461">
+                              <Rect width="16" height="16" fill="white" />
+                            </ClipPath>
+                          </Defs>
+                        </Svg>
+                        <Text style={{textAlign: 'center', color: '#fff'}}>
+                          Become a Member Today!
+                        </Text>
+                      </View>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          textAlign: 'center',
+                          paddingBottom: 20,
+                          paddingTop: 10,
+                          color: '#fff',
+                        }}>
+                        Turn your social media accounts into a daily surce of
+                        income
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          paddingTop: 10,
+                          color: '#fff',
+                        }}>
+                        Do you know you can earn daily income by performing
+                        social media task such as likes, follows, comments,
+                        subscribe, share, retweet and others. that is one of the
+                        so many benefit of becoming a member of Trendit³
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          paddingTop: 10,
+                          color: '#fff',
+                        }}>
+                        When you activate your account with a one-time
+                        membership fee of ₦1000, you get an access to enjoy the
+                        benefits listed below:
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          paddingTop: 10,
+                          color: '#fff',
+                          fontFamily: 'Manrope-ExtraBold',
+                        }}>
+                        Earn on Your Terms:{' '}
+                      </Text>
+                      <View style={{flexDirection: 'row', gap: 7}}>
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          –
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 12,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          Short & Simple Tasks: Unlike time-consuming gigs, our
+                          tasks are quick and easy to complete – perfect for
+                          fitting into your busy schedule. Like posts, follow
+                          accounts, share content – it's that simple
+                        </Text>
+                      </View>
+                      <View style={{flexDirection: 'row', gap: 7}}>
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          –
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 12,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          Real Money Rewards: Earn real money for your completed
+                          tasks. Redeem your earnings through convenient payment
+                          methods.
+                        </Text>
+                      </View>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          paddingTop: 10,
+                          color: '#fff',
+                          fontFamily: 'Manrope-ExtraBold',
+                        }}>
+                        Boost Your Social Media Presence:
+                      </Text>
+                      <View style={{flexDirection: 'row', gap: 7}}>
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          –
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 12,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          Expand your social circle and explore engaging content
+                          by following recommended accounts.
+                        </Text>
+                      </View>
+                      <View style={{flexDirection: 'row', gap: 7}}>
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          –
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 12,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          Increase Brand Awareness: By completing tasks like
+                          liking posts, you can subtly promote your own social
+                          media profiles or favorite brands.
+                        </Text>
+                      </View>
+                      <View style={{flexDirection: 'row', gap: 7}}>
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          –
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 12,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          Stay Current with Trends: Engaging with the latest
+                          viral content keeps you in the loop and helps you
+                          build a more relevant online presence.
+                        </Text>
+                      </View>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          paddingTop: 10,
+                          color: '#fff',
+                          fontFamily: 'Manrope-ExtraBold',
+                        }}>
+                        More than Just Earnings:
+                      </Text>
+                      <View style={{flexDirection: 'row', gap: 7}}>
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          –
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 12,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          Interactive Community: Connect with other app users,
+                          share experiences, and learn from each other.
+                        </Text>
+                      </View>
+                      <View style={{flexDirection: 'row', gap: 7}}>
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          –
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 12,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          Safe & Secure Environment: We prioritize user safety
+                          and security. All tasks comply with social media
+                          platform guidelines.
+                        </Text>
+                      </View>
+                      <View style={{flexDirection: 'row', gap: 7}}>
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          –
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 12,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          Fun & Rewarding: Make money while enjoying the social
+                          media experience – it's a win-win!
+                        </Text>
+                      </View>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          paddingTop: 15,
+                          color: '#fff',
+                          fontFamily: 'Manrope-ExtraBold',
+                        }}>
+                        Referral Bonuses:
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          paddingTop: 2,
+                          color: '#fff',
+                        }}>
+                        Earn an Instant Referral Commission of ₦500 when you
+                        refer someone to become a Member on Trendit³. The more
+                        you refer, the more you earn.
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 13,
+                          paddingTop: 15,
+                          paddingBottom: 15,
+                          color: '#fff',
+                        }}>
+                        Ready to start earning and take control of your social
+                        media experience? Join Trendit³ today!
+                      </Text>
+                      <View style={{paddingTop: 20}} />
+
+                      <View
+                        style={[
+                          {
+                            alignSelf: 'center',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            backgroundColor: 'rgba(177, 177, 177, 0.30)',
+                            height: 80,
+                            width: '100%',
+                            paddingHorizontal: 15,
+                            flexDirection: 'row',
+                          },
+                        ]}>
+                        <View style={{flexDirection: 'column'}}>
+                          <Text
+                            style={[
+                              {
+                                color: '#fff',
+                                fontFamily: 'Manrope-Regular',
+                                fontSize: 13,
+                              },
+                            ]}>
+                            Membership Fee
+                          </Text>
+                          <Text
+                            style={[
+                              {
+                                color: '#fff',
+                                fontFamily: 'Manrope-Regular',
+                                fontSize: 30,
+                              },
+                            ]}>
+                            ₦1,000
+                          </Text>
+                        </View>
+                        <TouchableOpacity
+                          style={{
+                            backgroundColor: '#CB29BE',
+                            height: 50,
+                            width: 140,
+                            borderRadius: 100,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}
+                          onPress={() => handleMembershipPayment()}>
+                          {isLoading1 ? (
+                            <ActivityIndicator size="small" color="#FFFFFF" />
+                          ) : (
+                            <Text
+                              style={{
+                                fontFamily: 'Manrope-Regular',
+                                color: '#fff',
+                                fontSize: 13,
+                              }}>
+                              Submit and Pay
+                            </Text>
+                          )}
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  </View>
+                </ScrollView>
+              </Modal>
+              <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modal2Visible}
+                onRequestClose={() => {
+                  setModal2Visible(!modal2Visible);
+                }}>
+                <ScrollView>
+                  <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                      <TouchableOpacity
+                        style={{
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          width: 50,
+                          height: 50,
+                          borderRadius: 50,
+                          position: 'absolute',
+                          top: 0,
+                          alignSelf: 'flex-end',
+                        }}
+                        onPress={() => setModal2Visible(false)}>
+                        <View
+                          style={{
+                            backgroundColor: '#FF6DFB',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            width: 50,
+                            height: 50,
+                            borderRadius: 50,
+                            position: 'absolute',
+                            top: -20,
+                            alignSelf: 'flex-end',
+                          }}>
+                          <Svg
+                            width="30"
+                            height="30"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <Path
+                              d="M18 6L6 18M18 18L6 6.00001"
+                              stroke="white"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                            />
+                          </Svg>
+                        </View>
+                      </TouchableOpacity>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          gap: 5,
+                          alignContent: 'center',
+                          alignSelf: 'center',
+                        }}>
+                        <Svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none">
+                          <G clip-path="url(#clip0_4535_37461)">
+                            <Path
+                              d="M7.9987 9.66659C10.2999 9.66659 12.1654 7.80111 12.1654 5.49992C12.1654 3.19873 10.2999 1.33325 7.9987 1.33325C5.69751 1.33325 3.83203 3.19873 3.83203 5.49992C3.83203 7.80111 5.69751 9.66659 7.9987 9.66659ZM7.9987 9.66659C4.3168 9.66659 1.33203 11.9052 1.33203 14.6666M7.9987 9.66659C11.6806 9.66659 14.6654 11.9052 14.6654 14.6666"
+                              stroke="white"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                            />
+                          </G>
+                          <Defs>
+                            <ClipPath id="clip0_4535_37461">
+                              <Rect width="16" height="16" fill="white" />
+                            </ClipPath>
+                          </Defs>
+                        </Svg>
+                        <Text style={{textAlign: 'center', color: '#fff'}}>
+                          Become a Member Today!
+                        </Text>
+                      </View>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          textAlign: 'center',
+                          paddingBottom: 20,
+                          paddingTop: 10,
+                          color: '#fff',
+                        }}>
+                        Turn your social media accounts into a daily surce of
+                        income
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          paddingTop: 10,
+                          color: '#fff',
+                        }}>
+                        Do you know you can earn daily income by performing
+                        social media task such as likes, follows, comments,
+                        subscribe, share, retweet and others. that is one of the
+                        so many benefit of becoming a member of Trendit³
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          paddingTop: 10,
+                          color: '#fff',
+                        }}>
+                        When you activate your account with a one-time
+                        membership fee of ₦1000, you get an access to enjoy the
+                        benefits listed below:
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          paddingTop: 10,
+                          color: '#fff',
+                          fontFamily: 'Manrope-ExtraBold',
+                        }}>
+                        Earn on Your Terms:{' '}
+                      </Text>
+                      <View style={{flexDirection: 'row', gap: 7}}>
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          –
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 12,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          Short & Simple Tasks: Unlike time-consuming gigs, our
+                          tasks are quick and easy to complete – perfect for
+                          fitting into your busy schedule. Like posts, follow
+                          accounts, share content – it's that simple
+                        </Text>
+                      </View>
+                      <View style={{flexDirection: 'row', gap: 7}}>
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          –
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 12,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          Real Money Rewards: Earn real money for your completed
+                          tasks. Redeem your earnings through convenient payment
+                          methods.
+                        </Text>
+                      </View>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          paddingTop: 10,
+                          color: '#fff',
+                          fontFamily: 'Manrope-ExtraBold',
+                        }}>
+                        Boost Your Social Media Presence:
+                      </Text>
+                      <View style={{flexDirection: 'row', gap: 7}}>
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          –
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 12,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          Expand your social circle and explore engaging content
+                          by following recommended accounts.
+                        </Text>
+                      </View>
+                      <View style={{flexDirection: 'row', gap: 7}}>
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          –
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 12,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          Increase Brand Awareness: By completing tasks like
+                          liking posts, you can subtly promote your own social
+                          media profiles or favorite brands.
+                        </Text>
+                      </View>
+                      <View style={{flexDirection: 'row', gap: 7}}>
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          –
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 12,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          Stay Current with Trends: Engaging with the latest
+                          viral content keeps you in the loop and helps you
+                          build a more relevant online presence.
+                        </Text>
+                      </View>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          paddingTop: 10,
+                          color: '#fff',
+                          fontFamily: 'Manrope-ExtraBold',
+                        }}>
+                        More than Just Earnings:
+                      </Text>
+                      <View style={{flexDirection: 'row', gap: 7}}>
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          –
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 12,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          Interactive Community: Connect with other app users,
+                          share experiences, and learn from each other.
+                        </Text>
+                      </View>
+                      <View style={{flexDirection: 'row', gap: 7}}>
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          –
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 12,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          Safe & Secure Environment: We prioritize user safety
+                          and security. All tasks comply with social media
+                          platform guidelines.
+                        </Text>
+                      </View>
+                      <View style={{flexDirection: 'row', gap: 7}}>
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          –
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 12,
+                            paddingTop: 10,
+                            color: '#fff',
+                          }}>
+                          Fun & Rewarding: Make money while enjoying the social
+                          media experience – it's a win-win!
+                        </Text>
+                      </View>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          paddingTop: 15,
+                          color: '#fff',
+                          fontFamily: 'Manrope-ExtraBold',
+                        }}>
+                        Referral Bonuses:
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          paddingTop: 2,
+                          color: '#fff',
+                        }}>
+                        Earn an Instant Referral Commission of ₦500 when you
+                        refer someone to become a Member on Trendit³. The more
+                        you refer, the more you earn.
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 13,
+                          paddingTop: 15,
+                          paddingBottom: 15,
+                          color: '#fff',
+                        }}>
+                        Ready to start earning and take control of your social
+                        media experience? Join Trendit³ today!
+                      </Text>
+                      <View style={{paddingTop: 20}} />
+                    </View>
+                  </View>
+                </ScrollView>
+              </Modal>
             </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };
@@ -239,7 +1366,7 @@ const styles = StyleSheet.create({
   },
   Box1Text: {
     color: 'red',
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     fontSize: 13,
   },
   earnImage1: {
@@ -255,12 +1382,12 @@ const styles = StyleSheet.create({
   },
   EarnOnTText: {
     color: '#fff',
-    fontFamily: 'CamptonSemiBold',
+    fontFamily: 'Manrope-Bold',
     paddingBottom: 7,
   },
   EarnOnTText1: {
     color: '#fff',
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     textAlign: 'center',
     fontSize: 12,
   },
@@ -279,14 +1406,19 @@ const styles = StyleSheet.create({
   PayButtonLabel: {
     color: '#FF6DFB',
     fontSize: 13,
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
   },
   EarnText: {
     color: '#fff',
     fontSize: 24,
-    fontFamily: 'CamptonMedium',
+    fontFamily: 'Manrope-Medium',
     paddingHorizontal: 10,
     paddingVertical: 30,
+  },
+  EarnText2: {
+    color: '#B1B1B1',
+    fontSize: 13,
+    fontFamily: 'Manrope-ExtraBold',
   },
   EarnMenu: {
     flexDirection: 'row',
@@ -294,7 +1426,7 @@ const styles = StyleSheet.create({
   },
   PostText: {
     color: '#fff',
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
     fontSize: 14,
   },
   EngText: {
@@ -305,6 +1437,34 @@ const styles = StyleSheet.create({
   },
   PostTextCont: {
     focused: '#FF6DFB',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'black',
+    borderRadius: 20,
+    padding: 35,
+    // alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    width: '90%',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+    color: '#fff',
+    paddingTop: 30,
   },
 });
 

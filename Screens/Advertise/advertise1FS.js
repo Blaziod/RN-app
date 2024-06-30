@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   ScrollView,
@@ -18,6 +18,17 @@ import Headers from '../../Components/Headers/Headers';
 import Advertise1FSMenu from '../../Components/Menus/advertise1FSMenu';
 
 const Advertise1FS = ({navigation}) => {
+  const [currentDateTime, setCurrentDateTime] = useState(
+    new Date().toLocaleString(),
+  );
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentDateTime(new Date().toLocaleString()); // Updates the time every second
+    }, 1000);
+
+    return () => clearInterval(timer); // Clear the interval on component unmount
+  }, []);
   return (
     <SafeAreaView>
       <ScrollView
@@ -49,16 +60,16 @@ const Advertise1FS = ({navigation}) => {
                 }}>
                 <Text
                   style={{
-                    color: '#B1B1B1',
-                    fontFamily: 'CamptonLight',
+                    color: '#FFF',
+                    fontFamily: 'Manrope-Light',
                     fontSize: 10,
                   }}>
-                  Jan 12th 9:27
+                  {currentDateTime}
                 </Text>
                 <Text
                   style={{
                     color: '#fff',
-                    fontFamily: 'CamptonMedium',
+                    fontFamily: 'Manrope-Medium',
                     fontSize: 30,
                   }}>
                   Get People to Follow Your Social Media Accounts.
@@ -75,7 +86,7 @@ const Advertise1FS = ({navigation}) => {
                     <Text
                       style={{
                         color: '#808080',
-                        fontFamily: 'CamptonMedium',
+                        fontFamily: 'Manrope-Medium',
                         fontSize: 12,
                       }}>
                       Pricing:
@@ -84,46 +95,17 @@ const Advertise1FS = ({navigation}) => {
                   <Text
                     style={{
                       color: '#fff',
-                      fontFamily: 'Campton Bold',
+                      fontFamily: 'Manrope-ExtraBold',
                       fontSize: 12,
                     }}>
                     ₦5 per Follow
                   </Text>
                 </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    gap: 10,
-                  }}>
-                  <Text
-                    style={{
-                      color: '#fff',
-                      fontFamily: 'CamptonBook',
-                      fontSize: 10,
-                    }}>
-                    20+ PEOPLE
-                  </Text>
-                  <Text
-                    style={{
-                      color: '#fff',
-                      fontFamily: 'CamptonBook',
-                      fontSize: 10,
-                    }}>
-                    134 LIKES
-                  </Text>
-                  <Text
-                    style={{
-                      color: '#fff',
-                      fontFamily: 'CamptonBook',
-                      fontSize: 10,
-                    }}>
-                    453 COMMENTS
-                  </Text>
-                </View>
+
                 <Text
                   style={{
                     color: '#909090',
-                    fontFamily: 'CamptonBook',
+                    fontFamily: 'Manrope-Regular',
                     fontSize: 12,
                     paddingTop: 10,
                   }}>
@@ -144,7 +126,7 @@ const Advertise1FS = ({navigation}) => {
               <Text
                 style={{
                   color: '#fff',
-                  fontFamily: 'CamptonMedium',
+                  fontFamily: 'Manrope-Medium',
                   fontSize: 25,
                   //   paddingTop: 10,
                 }}>
@@ -173,24 +155,24 @@ const styles = StyleSheet.create({
 
   Box2: {
     backgroundColor: '#FFE9E9',
-    height: 80,
+    height: 'auto',
     paddingHorizontal: 10,
     paddingVertical: 10,
   },
   Box2Text: {
     color: 'red',
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     fontSize: 12,
   },
 
   Step: {
     color: '#fff',
-    fontFamily: 'CamptonSemiBold',
+    fontFamily: 'Manrope-Bold',
     fontSize: 12,
   },
   StepText: {
     color: '#fff',
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     fontSize: 12,
   },
   StepView: {

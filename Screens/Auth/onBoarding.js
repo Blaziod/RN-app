@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
-import React, {useState} from 'react';
+/* eslint-disable react-native/no-inline-styles */
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
   Text,
@@ -11,10 +12,12 @@ import {
 } from 'react-native';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import {Svg, Path} from 'react-native-svg';
+import {ApiLink} from '../../enums/apiLink';
+import {debounce} from 'lodash';
 
 const OnboardingSignUp = ({navigation, route}) => {
+  // const debouncedCheckUsername = debounce(checkUsernameAvailability, 300);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
@@ -23,14 +26,78 @@ const OnboardingSignUp = ({navigation, route}) => {
   const {userId} = route.params;
   const userIdNumber = Number(userId);
   const [isLoading, setIsLoading] = useState(false);
-  // const WIDTH = Dimensions.get('window').width;
+  const [isCheckingUsername, setIsCheckingUsername] = useState(false);
+  const [usernameValid, setUsernameValid] = useState(null);
+
   // eslint-disable-next-line no-shadow
   const validatePassword = password => {
     const re = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
     return re.test(password);
   };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedCheckUsername = useCallback(
+    // eslint-disable-next-line no-shadow
+    debounce(async username => {
+      if (username.length < 3) {
+        setIsCheckingUsername(false);
+        setUsernameValid(null);
+        return;
+      }
 
-  const handleContinue = () => {
+      setIsCheckingUsername(true);
+      try {
+        const response = await fetch(`${ApiLink.ENDPOINT_1}/check-username`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({username: username}),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json(); // Convert the response body to JSON
+        console.log(data, 'username');
+        setIsCheckingUsername(false);
+
+        if (data.status === 'success' && data.message.includes('available')) {
+          console.log('Username is available.');
+          setUsernameValid(true);
+          Toast.show({
+            type: 'success',
+            text1: 'Username available',
+            text2: data.message,
+          });
+        } else if (data.status_code === 409) {
+          console.log('Username is taken.');
+          setUsernameValid(false);
+          Toast.show({
+            type: 'error',
+            text1: 'Username taken',
+            text2: 'Please choose another username.',
+          });
+        }
+      } catch (error) {
+        setIsCheckingUsername(false);
+        setUsernameValid(false);
+        console.error('Error checking username:', error);
+        Toast.show({
+          type: 'error',
+          text1: 'Username taken',
+          text2: 'Please choose another username.',
+        });
+      }
+    }, 5000),
+    [],
+  );
+
+  useEffect(() => {
+    debouncedCheckUsername(username);
+  }, [username, debouncedCheckUsername]);
+
+  const handleContinue = async () => {
     setIsLoading(true);
     if (!validatePassword(password)) {
       // eslint-disable-next-line no-alert
@@ -41,111 +108,68 @@ const OnboardingSignUp = ({navigation, route}) => {
       return;
     }
 
-    fetch('https://api.trendit3.com/api/complete-registration', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        firstname: firstName,
-        lastname: lastName,
-        username: username,
-        password: password,
-        user_id: userIdNumber,
-      }),
-    })
-      .then(response => response.json())
-      .then(data => {
-        setIsLoading(false);
-        setFirstName('');
-        setLastName('');
-        setUsername('');
-        AsyncStorage.setItem(
-          'userdatafiles1',
-          JSON.stringify({
-            // accessToken: data.access_token,
-            userdata: data.user_data,
+    try {
+      const response = await fetch(
+        `${ApiLink.ENDPOINT_1}/complete-registration`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            firstname: firstName,
+            lastname: lastName,
+            username: username,
+            password: password,
+            user_id: userIdNumber,
           }),
-        )
-          .then(() => {
-            console.log(data.user_data);
-            console.log(data.access_token);
-            console.log('User data stored successfully');
-          })
-          .catch(error => {
-            console.error('Error storing user data:', error);
-          });
-        AsyncStorage.setItem(
-          'accesstoken',
-          JSON.stringify({
-            accessToken: data.access_token,
-          }),
-        )
-          .then(() => {
-            console.log(data.user_data);
-            console.log(data.access_token);
-            console.log('Access Token stored successfully');
-          })
-          .catch(error => {
-            console.error('Error storing Access Token:', error);
-          });
+        },
+      );
 
-        console.log('Successful', data);
-        Toast.show({
-          type: 'success',
-          text1: 'Success',
-          text2: data.message,
-          style: {
-            borderLeftColor: 'pink',
-            backgroundColor: 'yellow',
-            width: '80%',
-            alignSelf: 'center',
-            justifyContent: 'center',
-            alignItems: 'center',
-          },
-          text1Style: {
-            color: 'red',
-            fontSize: 14,
-          },
-          text2Style: {
-            color: 'green',
-            fontSize: 14,
-            fontFamily: 'Campton Bold',
-          },
-        });
+      const data = await response.json();
+      if (response.ok && data.status === 'success') {
+        await AsyncStorage.setItem(
+          'userdatafiles1',
+          JSON.stringify({userdata: data.user_data}),
+        );
+        await AsyncStorage.setItem(
+          'accesstoken',
+          JSON.stringify({accessToken: data.access_token}),
+        );
         navigation.navigate('Onboard2');
-      })
-      .catch(error => {
-        setIsLoading(false);
-        console.error('Error:', error);
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: error.message,
-          style: {
-            borderLeftColor: 'pink',
-            backgroundColor: 'yellow',
-            width: '80%',
-            alignSelf: 'center',
-            justifyContent: 'center',
-            alignItems: 'center',
-          },
-          text1Style: {
-            color: 'red',
-            fontSize: 14,
-          },
-          text2Style: {
-            color: 'green',
-            fontSize: 14,
-            fontFamily: 'Campton Bold',
-          },
-        });
+      } else {
+        throw new Error(data.message || 'Failed to complete registration');
+      }
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Registration Error',
+        text2: error.message,
+        style: {
+          borderLeftColor: 'pink',
+          backgroundColor: 'yellow',
+          width: '80%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        text1Style: {
+          color: 'red',
+          fontSize: 14,
+        },
+        text2Style: {
+          color: 'green',
+          fontSize: 14,
+          fontFamily: 'Manrope-ExtraBold',
+        },
       });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <View style={styles.container}>
-      {/* <View style={{width: WIDTH - 25, justifyContent: 'center'}}> */}
       <ScrollView>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Text style={styles.goBackText}>Go back</Text>
@@ -173,15 +197,62 @@ const OnboardingSignUp = ({navigation, route}) => {
             />
           </TouchableOpacity>
         </View>
+
         <Text style={styles.label}>Username</Text>
-        <TouchableOpacity style={styles.input}>
+        <View style={styles.uinput}>
           <TextInput
             placeholder="Username"
-            onChangeText={setUsername}
+            onChangeText={text => {
+              setUsername(text);
+            }}
+            value={username}
             style={styles.textInput}
             placeholderTextColor="#888"
           />
-        </TouchableOpacity>
+          <View style={{width: '10%', justifyContent: 'center'}}>
+            {isCheckingUsername ? (
+              <ActivityIndicator size="small" color="#fff" />
+            ) : (
+              usernameValid !== null &&
+              (usernameValid ? (
+                <Svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  shape-rendering="geometricPrecision"
+                  text-rendering="geometricPrecision"
+                  image-rendering="optimizeQuality"
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  width="30px"
+                  height="30px"
+                  viewBox="0 0 512 512">
+                  <Path
+                    fill="#3AAF3C"
+                    d="M256 0c141.39 0 256 114.61 256 256S397.39 512 256 512 0 397.39 0 256 114.61 0 256 0z"
+                  />
+                  <Path
+                    fill="#0DA10D"
+                    fill-rule="nonzero"
+                    d="M391.27 143.23h19.23c-81.87 90.92-145.34 165.89-202.18 275.52-29.59-63.26-55.96-106.93-114.96-147.42l22.03-4.98c44.09 36.07 67.31 76.16 92.93 130.95 52.31-100.9 110.24-172.44 182.95-254.07z"
+                  />
+                  <Path
+                    fill="#fff"
+                    fill-rule="nonzero"
+                    d="M158.04 235.26c19.67 11.33 32.46 20.75 47.71 37.55 39.53-63.63 82.44-98.89 138.24-148.93l5.45-2.11h61.06c-81.87 90.93-145.34 165.9-202.18 275.53-29.59-63.26-55.96-106.93-114.96-147.43l64.68-14.61z"
+                  />
+                </Svg>
+              ) : (
+                <Svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="red"
+                  width="30px"
+                  height="30px"
+                  viewBox="0 0 24 24">
+                  <Path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z" />
+                </Svg>
+              ))
+            )}
+          </View>
+        </View>
         <Text style={styles.label}>Create a password</Text>
         <View style={styles.textInput2}>
           <TextInput
@@ -192,6 +263,7 @@ const OnboardingSignUp = ({navigation, route}) => {
             secureTextEntry={!isPasswordVisible}
             onChangeText={setPassword}
             value={password}
+            style={{width: '85%'}}
           />
           <Svg
             xmlns="http://www.w3.org/2000/svg"
@@ -210,9 +282,6 @@ const OnboardingSignUp = ({navigation, route}) => {
             />
           </Svg>
         </View>
-        <Text style={styles.passwordHint}>
-          (minimum 8 characters, with a letter and a number)
-        </Text>
         <TouchableOpacity style={styles.button} onPress={handleContinue}>
           {isLoading ? (
             <ActivityIndicator size="small" color="#fff" />
@@ -221,7 +290,6 @@ const OnboardingSignUp = ({navigation, route}) => {
           )}
         </TouchableOpacity>
       </ScrollView>
-      {/* </View> */}
     </View>
   );
 };
@@ -235,14 +303,14 @@ const styles = StyleSheet.create({
   },
   goBackText: {
     color: '#fff',
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
     position: 'absolute',
     top: 50,
     right: 10,
   },
   heading: {
     fontSize: 32,
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
     marginBottom: 10,
     color: '#fff',
     alignSelf: 'center',
@@ -254,7 +322,7 @@ const styles = StyleSheet.create({
     color: '#B1B1B1',
     alignSelf: 'center',
     textAlign: 'center',
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
   },
   button: {
     backgroundColor: '#CB29BE',
@@ -269,14 +337,14 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 12,
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
   },
   textInput: {
     padding: 12,
     borderRadius: 5,
     color: 'white',
-    fontFamily: 'CamptonLight',
-    // width: '98%',
+    fontFamily: 'Manrope-Light',
+    width: '80%',
   },
   eyeIcon: {
     marginRight: 10,
@@ -286,7 +354,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     width: '98%',
     color: 'white',
-    fontFamily: 'CamptonLight',
+    fontFamily: 'Manrope-Light',
     alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -297,7 +365,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     marginBottom: 5,
     paddingLeft: 8,
-    fontFamily: 'CamptonMedium',
+    fontFamily: 'Manrope-Medium',
     fontSize: 13,
   },
   nameInputContainer: {
@@ -329,12 +397,21 @@ const styles = StyleSheet.create({
     width: '98%',
     alignSelf: 'center',
   },
+  uinput: {
+    height: 50,
+    marginBottom: 20,
+    backgroundColor: 'rgba(177, 177, 177, 0.2)',
+    borderRadius: 5,
+    width: '98%',
+    alignSelf: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   passwordHint: {
     color: '#fff',
     paddingLeft: 8,
-    fontFamily: 'CamptonMedium',
+    fontFamily: 'Manrope-Medium',
     fontSize: 10,
   },
 });
-
 export default OnboardingSignUp;

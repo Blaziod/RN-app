@@ -1,118 +1,86 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
-import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {useState} from 'react';
+import {useTheme} from '../../Components/Contexts/colorTheme';
 
-const TransactionsTopCustomSwitch = ({
+const TransactionTopCustomSwitch = ({
   selectionMode,
   option1,
   option2,
   option3,
-  option4,
   onSelectSwitch,
 }) => {
   const [getSelectionMode, setSelectionMode] = useState(selectionMode);
+  const {theme} = useTheme();
 
   const updateSwitchData = value => {
     setSelectionMode(value);
     onSelectSwitch(value);
   };
+
+  // Dynamic styles moved inside the component for context-sensitive theme updates
+  const styles = getStyles(theme, getSelectionMode);
+
   return (
-    <ScrollView scrollEnabled={true} contentContainerStyle={{width: '100%'}}>
-      <View
-        style={{
-          height: 44,
-          backgroundColor: '#121212',
-          flexDirection: 'row',
-          justifyContent: 'center',
-          //   alignContent: 'stretch',
-          width: '100%',
-          padding: '2%',
-        }}>
+    <View style={styles.container}>
+      {[option1, option2, option3].map((option, index) => (
         <TouchableOpacity
+          key={index}
           activeOpacity={1}
-          onPress={() => updateSwitchData(1)}
-          style={{
-            paddingLeft: 5,
-            paddingRight: '3%',
-            borderBottomWidth: 0.5,
-            borderBottomColor: getSelectionMode === 1 ? '#FF6DFB' : '#fff',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+          onPress={() => updateSwitchData(index + 1)}
+          style={[
+            styles.button,
+            {
+              borderBottomColor:
+                getSelectionMode === index + 1
+                  ? '#FF6DFB'
+                  : theme === 'dark'
+                  ? '#fff'
+                  : index + 20
+                  ? '#000'
+                  : '#fff',
+            },
+          ]}>
           <Text
-            style={{
-              fontSize: 14,
-              color: getSelectionMode === 1 ? '#FF6DFB' : '#B1B1B1',
-              fontFamily: 'Campton Bold',
-            }}>
-            {option1}
+            style={[
+              styles.text,
+              {
+                color:
+                  getSelectionMode === index + 1
+                    ? '#FF6DFB'
+                    : theme === 'dark'
+                    ? '#B1B1B1'
+                    : '#000',
+              },
+            ]}>
+            {option}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={() => updateSwitchData(2)}
-          style={{
-            // paddingLeft: 20,
-            paddingRight: '3%',
-            borderBottomWidth: 0.5,
-            borderBottomColor: getSelectionMode === 2 ? '#FF6DFB' : '#fff',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Text
-            style={{
-              fontSize: 14,
-              color: getSelectionMode === 2 ? '#FF6DFB' : '#B1B1B1',
-              fontFamily: 'Campton Bold',
-            }}>
-            <Text>{option2}</Text>
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={() => updateSwitchData(3)}
-          style={{
-            // paddingLeft: 20,
-            paddingRight: '30%',
-            borderBottomWidth: 0.5,
-            borderBottomColor: getSelectionMode === 3 ? '#FF6DFB' : '#fff',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Text
-            style={{
-              fontSize: 14,
-              color: getSelectionMode === 3 ? '#FF6DFB' : '#B1B1B1',
-              fontFamily: 'Campton Bold',
-            }}>
-            <Text>{option3}</Text>
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={() => updateSwitchData(4)}
-          style={{
-            paddingLeft: 10,
-            // paddingRight: '3%',
-            borderBottomWidth: 0.5,
-            borderBottomColor: getSelectionMode === 4 ? '#FF6DFB' : '#fff',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Text
-            style={{
-              fontSize: 14,
-              color: getSelectionMode === 4 ? '#FF6DFB' : '#B1B1B1',
-              fontFamily: 'Campton Bold',
-            }}>
-            <Text>{option4}</Text>
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+      ))}
+    </View>
   );
 };
 
-export default TransactionsTopCustomSwitch;
+const getStyles = (theme, selectionMode) =>
+  StyleSheet.create({
+    container: {
+      height: 44,
+      backgroundColor: theme === 'dark' ? '#121212' : '#FFFFFF',
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+    },
+    button: {
+      paddingRight: 30,
+      borderBottomWidth: 0.5,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    text: {
+      fontSize: 13,
+      fontFamily: 'Manrope-ExtraBold',
+    },
+  });
+
+export default TransactionTopCustomSwitch;

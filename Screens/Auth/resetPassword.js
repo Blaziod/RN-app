@@ -16,6 +16,7 @@ import {
 import Toast from 'react-native-toast-message';
 import {Path, Svg} from 'react-native-svg';
 import {useNavigation} from '@react-navigation/native';
+import {ApiLink} from '../../enums/apiLink';
 
 const ResetPassword = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -29,16 +30,13 @@ const ResetPassword = () => {
   const handleResetPassword = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(
-        'https://api.trendit3.com/api/forgot-password',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({email_username: email}),
+      const response = await fetch(`${ApiLink.ENDPOINT_1}/forgot-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
+        body: JSON.stringify({email_username: email}),
+      });
 
       if (response.ok) {
         const data = await response.json();
@@ -78,7 +76,7 @@ const ResetPassword = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
       }
@@ -103,7 +101,7 @@ const ResetPassword = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
     } finally {
@@ -124,7 +122,7 @@ const ResetPassword = () => {
         <Text
           style={{
             color: '#fff',
-            fontFamily: 'CamptonSemiBold',
+            fontFamily: 'Manrope-Bold',
             fontSize: 60,
             textAlign: 'center',
           }}>
@@ -133,7 +131,7 @@ const ResetPassword = () => {
         <Text
           style={{
             color: '#b1b1b1',
-            fontFamily: 'CamptonLight',
+            fontFamily: 'Manrope-Light',
             fontSize: 15,
             textAlign: 'center',
           }}>
@@ -142,7 +140,7 @@ const ResetPassword = () => {
         <Text
           style={{
             color: '#b1b1b1',
-            fontFamily: 'CamptonLight',
+            fontFamily: 'Manrope-Light',
             fontSize: 15,
             textAlign: 'center',
           }}>
@@ -151,7 +149,7 @@ const ResetPassword = () => {
         <Text
           style={{
             color: '#b1b1b1',
-            fontFamily: 'CamptonLight',
+            fontFamily: 'Manrope-Light',
             fontSize: 15,
             textAlign: 'center',
           }}>
@@ -184,7 +182,11 @@ const ResetPassword = () => {
           style={{alignSelf: 'center', paddingTop: 20}}
           onPress={() => navigation.navigate('SignIn')}>
           <Text
-            style={{fontFamily: 'CamptonBook', color: '#FF6DFB', fontSize: 16}}>
+            style={{
+              fontFamily: 'Manrope-Regular',
+              color: '#FF6DFB',
+              fontSize: 16,
+            }}>
             Back to Home
           </Text>
         </TouchableOpacity>
@@ -203,7 +205,7 @@ const ResetPassword = () => {
           style={{
             color: '#b1b1b1',
             fontSize: 12,
-            fontFamily: 'CamptonBook',
+            fontFamily: 'Manrope-Regular',
           }}>
           By signing up, you agree to our
         </Text>
@@ -212,7 +214,7 @@ const ResetPassword = () => {
             style={{
               color: '#fff',
               fontSize: 12,
-              fontFamily: 'Campton Bold',
+              fontFamily: 'Manrope-ExtraBold',
             }}>
             Terms and Privacy Policy
           </Text>
@@ -303,7 +305,7 @@ const ResetPassword = () => {
                     style={{
                       color: '#fff',
                       fontSize: 24,
-                      fontFamily: 'Campton Bold',
+                      fontFamily: 'Manrope-ExtraBold',
                       paddingBottom: 10,
                       paddingTop: 20,
                     }}>
@@ -314,7 +316,7 @@ const ResetPassword = () => {
                       color: '#b1b1b1',
                       fontSize: 12,
                       fontWeight: 400,
-                      fontFamily: 'CamptonBook',
+                      fontFamily: 'Manrope-Regular',
                       textAlign: 'center',
                       paddingHorizontal: 20,
                     }}>
@@ -341,7 +343,7 @@ const ResetPassword = () => {
                     <Text
                       style={{
                         color: '#fff',
-                        fontFamily: 'CamptonBook',
+                        fontFamily: 'Manrope-Regular',
                         fontSize: 14,
                       }}>
                       Open Email App
@@ -367,7 +369,7 @@ const styles = StyleSheet.create({
     width: '95%',
     color: 'white',
     alignSelf: 'center',
-    fontFamily: 'CamptonLight',
+    fontFamily: 'Manrope-Light',
     borderWidth: 2,
   },
   continueButton: {

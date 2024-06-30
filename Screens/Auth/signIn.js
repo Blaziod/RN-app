@@ -11,11 +11,16 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Image,
+  Linking,
+  Alert,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 import {Svg, Path} from 'react-native-svg';
+import queryString from 'query-string';
+import axios from 'axios';
+import {ApiLink} from '../../enums/apiLink';
 
 const SignIn = () => {
   const [email_username, setEmail] = useState('');
@@ -25,12 +30,97 @@ const SignIn = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [isFocused2, setIsFocused2] = useState(false);
+  const [ggToken, setGgToken] = useState(null);
 
   useEffect(() => {
     const checkToken = async () => {
       const token = await AsyncStorage.getItem('accesstoken');
       if (token) {
-        console.log('Token found:', token);
+        try {
+          const response = await axios.get(`${ApiLink.ENDPOINT_1}/profile`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          });
+
+          if (response.status >= 200 && response.status < 300) {
+            Alert.alert('Login Successful');
+            console.log(response.data);
+            AsyncStorage.setItem(
+              'userdatafiles1',
+              JSON.stringify({
+                userdata: response.data.user_profile,
+              }),
+            )
+              .then(() => {
+                console.log(response.data.user_profile);
+                console.log('User data stored successfully');
+              })
+              .catch(error => {
+                console.error('Error storing user data:', error);
+              });
+
+            Toast.show({
+              type: 'success',
+              text1: 'Success',
+              text2: response.data.message,
+              style: {
+                borderLeftColor: 'pink',
+                backgroundColor: 'yellow',
+                width: '80%',
+                alignSelf: 'center',
+                justifyContent: 'center',
+                alignItems: 'center',
+              },
+              text1Style: {
+                color: 'red',
+                fontSize: 14,
+              },
+              text2Style: {
+                color: 'green',
+                fontSize: 14,
+                fontFamily: 'Manrope-ExtraBold',
+              },
+            });
+          } else if (response.status === 401) {
+            console.error('Unauthorized: Access token is invalid or expired.');
+            await AsyncStorage.removeItem('userbalance');
+            await AsyncStorage.removeItem('userdata1');
+            await AsyncStorage.removeItem('userdata');
+            await AsyncStorage.removeItem('userdata2');
+            await AsyncStorage.removeItem('userdatas');
+            await AsyncStorage.removeItem('userdatafiles1');
+            await AsyncStorage.removeItem('accesstoken');
+
+            Toast.show({
+              type: 'error',
+              text1: 'Error',
+              text2: response.data.message,
+              style: {
+                borderLeftColor: 'pink',
+                backgroundColor: 'yellow',
+                width: '80%',
+                alignSelf: 'center',
+                justifyContent: 'center',
+                alignItems: 'center',
+              },
+              text1Style: {
+                color: 'red',
+                fontSize: 14,
+              },
+              text2Style: {
+                color: 'green',
+                fontSize: 14,
+                fontFamily: 'Manrope-ExtraBold',
+              },
+            });
+            navigation.navigate('SignIn');
+          } else {
+          }
+        } catch (error) {
+        } finally {
+        }
         navigation.reset({
           index: 0,
           routes: [
@@ -49,55 +139,38 @@ const SignIn = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleSignUp = async () => {
-    setIsLoading(true);
+  const fetchUserProfile = async () => {
     try {
-      const response = await fetch('https://api.trendit3.com/api/login', {
-        method: 'POST',
+      setIsLoading(true);
+
+      const response = await axios.get(`${ApiLink.ENDPOINT_1}/profile`, {
         headers: {
+          Authorization: `Bearer ${ggToken}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({email_username, password}),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        setEmail('');
-        setPassword('');
+      if (response.status >= 200 && response.status < 300) {
+        Alert.alert('Login Successful');
+        console.log(response.data);
         AsyncStorage.setItem(
           'userdatafiles1',
           JSON.stringify({
-            // accessToken: data.access_token,
-            userdata: data.user_data,
+            userdata: response.data.user_profile,
           }),
         )
           .then(() => {
-            console.log(data.user_data);
-            // console.log(data.access_token);
+            console.log(response.data.user_profile);
             console.log('User data stored successfully');
           })
           .catch(error => {
             console.error('Error storing user data:', error);
           });
-        AsyncStorage.setItem(
-          'accesstoken',
-          JSON.stringify({
-            accessToken: data.access_token,
-          }),
-        )
-          .then(() => {
-            // console.log(data.user_data);
-            console.log('access token here', data.access_token);
-            console.log('Access Token stored successfully');
-          })
-          .catch(error => {
-            console.error('Error storing Access Token:', error);
-          });
-        console.log('Success signing in:', data);
+
         Toast.show({
           type: 'success',
           text1: 'Success',
-          text2: data.message,
+          text2: response.data.message,
           style: {
             borderLeftColor: 'pink',
             backgroundColor: 'yellow',
@@ -113,10 +186,194 @@ const SignIn = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
-        navigation.navigate('Tabs', {screen: 'Home'});
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: 'Tabs',
+              params: {screen: 'Home', signInToken: ggToken},
+            },
+          ],
+        });
+      } else if (response.status === 401) {
+        console.error('Unauthorized: Access token is invalid or expired.');
+        await AsyncStorage.removeItem('userbalance');
+        await AsyncStorage.removeItem('userdata1');
+        await AsyncStorage.removeItem('userdata');
+        await AsyncStorage.removeItem('userdata2');
+        await AsyncStorage.removeItem('userdatas');
+        await AsyncStorage.removeItem('userdatafiles1');
+        await AsyncStorage.removeItem('accesstoken');
+
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: response.data.message,
+          style: {
+            borderLeftColor: 'pink',
+            backgroundColor: 'yellow',
+            width: '80%',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          text1Style: {
+            color: 'red',
+            fontSize: 14,
+          },
+          text2Style: {
+            color: 'green',
+            fontSize: 14,
+            fontFamily: 'Manrope-ExtraBold',
+          },
+        });
+        navigation.navigate('SignIn');
+      } else {
+        Alert.alert('Error Else');
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: response.data.message,
+          style: {
+            borderLeftColor: 'pink',
+            backgroundColor: 'yellow',
+            width: '80%',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          text1Style: {
+            color: 'red',
+            fontSize: 14,
+          },
+          text2Style: {
+            color: 'green',
+            fontSize: 14,
+            fontFamily: 'Manrope-ExtraBold',
+          },
+        });
+      }
+    } catch (error) {
+      Alert.alert('Error', error.toString());
+      console.error(error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: error.message,
+        style: {
+          borderLeftColor: 'pink',
+          backgroundColor: 'yellow',
+          width: '80%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        text1Style: {
+          color: 'red',
+          fontSize: 14,
+        },
+        text2Style: {
+          color: 'green',
+          fontSize: 14,
+          fontFamily: 'Manrope-ExtraBold',
+        },
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (ggToken !== null) {
+      fetchUserProfile();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleSignUp = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${ApiLink.ENDPOINT_1}/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({email_username, password}),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data, 'Login');
+        if (!data.two_fa_token) {
+          setEmail('');
+          setPassword('');
+          AsyncStorage.setItem(
+            'userdatafiles1',
+            JSON.stringify({
+              // accessToken: data.access_token,
+              userdata: data.user_data,
+            }),
+          )
+            .then(() => {
+              console.log(data.user_data);
+              // console.log(data.access_token);
+              console.log('User data stored successfully');
+            })
+            .catch(error => {
+              console.error('Error storing user data:', error);
+            });
+          AsyncStorage.setItem(
+            'accesstoken',
+            JSON.stringify({
+              accessToken: data.access_token,
+            }),
+          )
+            .then(() => {
+              // console.log(data.user_data);
+              console.log('access token here', data.access_token);
+              console.log('Access Token stored successfully');
+            })
+            .catch(error => {
+              console.error('Error storing Access Token:', error);
+            });
+          console.log('Success signing in:', data);
+          Toast.show({
+            type: 'success',
+            text1: 'Success',
+            text2: data.message,
+            style: {
+              borderLeftColor: 'pink',
+              backgroundColor: 'yellow',
+              width: '80%',
+              alignSelf: 'center',
+              justifyContent: 'center',
+              alignItems: 'center',
+            },
+            text1Style: {
+              color: 'red',
+              fontSize: 14,
+            },
+            text2Style: {
+              color: 'green',
+              fontSize: 14,
+              fontFamily: 'Manrope-ExtraBold',
+            },
+          });
+          navigation.reset({
+            index: 0,
+            routes: [
+              {
+                name: 'Tabs',
+                params: {screen: 'Home'},
+              },
+            ],
+          });
+        } else {
+          navigation.navigate('2FA', {Token: data.two_fa_token});
+        }
       } else {
         const errorData = await response.json();
         console.error('Error signing in:', errorData);
@@ -139,7 +396,7 @@ const SignIn = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
       }
@@ -164,7 +421,158 @@ const SignIn = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
+        },
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const handleUrl = async event => {
+      try {
+        const parsed = queryString.parseUrl(event.url);
+
+        if (parsed.query) {
+          if (parsed.query.access_token) {
+            const {access_token} = parsed.query;
+            await AsyncStorage.setItem(
+              'accesstoken',
+              JSON.stringify({accessToken: access_token}),
+            );
+            console.log('Token stored successfully:', access_token);
+            setGgToken(access_token); // Update state to trigger the user profile fetch
+          } else if (parsed.query.error) {
+            console.error(
+              'Error received from authorization:',
+              parsed.query.error,
+            );
+            handleAuthorizationError(parsed.query.error);
+          } else {
+            console.error('No access token or error information received.');
+            handleAuthorizationError('No access token received');
+          }
+        }
+      } catch (error) {
+        console.error('Error handling the URL:', error);
+        handleAuthorizationError('Failed to process the authorization data');
+      }
+    };
+
+    // Helper function to handle errors and show user feedback
+    const handleAuthorizationError = errorMessage => {
+      Toast.show({
+        type: 'error',
+        text1: 'Authorization Error',
+        text2: errorMessage,
+        style: {
+          borderLeftColor: 'pink',
+          backgroundColor: 'yellow',
+          width: '80%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        text1Style: {
+          color: 'red',
+          fontSize: 14,
+        },
+        text2Style: {
+          color: 'green',
+          fontSize: 14,
+          fontFamily: 'Manrope-ExtraBold',
+        },
+      });
+    };
+
+    // Listen for incoming links
+    Linking.getInitialURL().then(url => {
+      if (url) {
+        handleUrl({url});
+      }
+    });
+
+    const subscription = Linking.addEventListener('url', handleUrl);
+
+    // Clean up the listener on unmount
+    return () => subscription.remove();
+  }, []);
+
+  useEffect(() => {
+    // Fetch user profile when the token is set
+    if (ggToken) {
+      fetchUserProfile();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ggToken]);
+
+  const handleGoogleSignIn = async () => {
+    console.log('Signing in with Google');
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${ApiLink.ENDPOINT_1}/app/gg_login`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Success signing in:', data);
+        // Open the authorization URL
+        if (data.authorization_url) {
+          Linking.openURL(data.authorization_url);
+        }
+      } else {
+        const errorData = await response.json();
+        console.error('Error signing in:', errorData);
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: errorData.message,
+          style: {
+            borderLeftColor: 'pink',
+            backgroundColor: 'yellow',
+            width: '80%',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          text1Style: {
+            color: 'red',
+            fontSize: 14,
+          },
+          text2Style: {
+            color: 'green',
+            fontSize: 14,
+            fontFamily: 'Manrope-ExtraBold',
+          },
+        });
+      }
+    } catch (error) {
+      console.error('Error signing in:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: error.message,
+        style: {
+          borderLeftColor: 'pink',
+          backgroundColor: 'yellow',
+          width: '80%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        text1Style: {
+          color: 'red',
+          fontSize: 14,
+        },
+        text2Style: {
+          color: 'green',
+          fontSize: 14,
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
     } finally {
@@ -208,7 +616,11 @@ const SignIn = () => {
                 secureTextEntry={!isPasswordVisible}
                 onChangeText={setPassword}
                 value={password}
-                style={{width: '85%'}}
+                style={{
+                  width: '85%',
+                  color: 'white',
+                  fontFamily: 'Manrope-Light',
+                }}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
               />
@@ -234,7 +646,7 @@ const SignIn = () => {
                 style={{
                   color: '#fff',
                   fontSize: 14,
-                  fontFamily: 'Campton Bold',
+                  fontFamily: 'Manrope-ExtraBold',
                   alignSelf: 'flex-end',
                   paddingRight: 10,
                   paddingVertical: 10,
@@ -255,30 +667,25 @@ const SignIn = () => {
           </View>
 
           <View style={styles.socialLogins}>
-            <Text style={styles.orText}>OR SIGN UP WITH</Text>
-            <View style={styles.buttonRow}>
-              <TouchableOpacity style={styles.socialButton}>
-                <Image
-                  source={require('../../assets/google-icon.png')}
-                  style={styles.socialIcon}
-                />
-                <Text style={styles.socialButtonText}>Google</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.socialButton}>
-                <Image
-                  source={require('../../assets/facebook-icon.png')}
-                  style={styles.socialIcon}
-                />
-                <Text style={styles.socialButtonText}>Facebook</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.socialButton}>
-                <Image
-                  source={require('../../assets/tiktok-icon.png')}
-                  style={styles.socialIcon}
-                />
-                <Text style={styles.socialButtonText}>TikTok</Text>
-              </TouchableOpacity>
-            </View>
+            <Text style={styles.orText}>OR SIGN IN WITH</Text>
+
+            <TouchableOpacity
+              style={styles.socialButton}
+              onPress={() => handleGoogleSignIn()}>
+              {isLoading ? (
+                <ActivityIndicator size="small" color="#000" />
+              ) : (
+                <>
+                  <Image
+                    source={require('../../assets/google-icon.png')}
+                    style={styles.socialIcon}
+                  />
+                  <Text style={styles.socialButtonText}>
+                    Sign In with Google
+                  </Text>
+                </>
+              )}
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
@@ -294,7 +701,7 @@ const SignIn = () => {
           style={{
             color: '#fff',
             fontSize: 14,
-            fontFamily: 'CamptonBook',
+            fontFamily: 'Manrope-Regular',
           }}>
           Don&apos;t have an account?
         </Text>
@@ -303,7 +710,7 @@ const SignIn = () => {
             style={{
               color: '#CB29BE',
               fontSize: 14,
-              fontFamily: 'Campton Bold',
+              fontFamily: 'Manrope-ExtraBold',
             }}
             onPress={() => navigation.navigate('SignUp')}>
             Sign Up
@@ -323,7 +730,7 @@ const SignIn = () => {
           style={{
             color: '#b1b1b1',
             fontSize: 14,
-            fontFamily: 'CamptonBook',
+            fontFamily: 'Manrope-Regular',
           }}>
           By signing up, you agree to our
         </Text>
@@ -332,7 +739,7 @@ const SignIn = () => {
             style={{
               color: '#fff',
               fontSize: 14,
-              fontFamily: 'Campton Bold',
+              fontFamily: 'Manrope-ExtraBold',
             }}>
             Terms and Privacy Policy
           </Text>
@@ -381,20 +788,20 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     textAlign: 'center',
     marginTop: 100,
-    fontFamily: 'CamptonSemiBold',
+    fontFamily: 'Manrope-Bold',
   },
   welcomeText2: {
     fontSize: 32,
     color: '#FFFFFF',
     textAlign: 'center',
-    fontFamily: 'CamptonSemiBold',
+    fontFamily: 'Manrope-Bold',
   },
   tagline: {
     fontSize: 16,
     color: '#B1B1B1',
     textAlign: 'center',
     marginTop: 5,
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
   },
   formContainer: {
     marginTop: 5,
@@ -410,7 +817,7 @@ const styles = StyleSheet.create({
     width: '94%',
     color: 'white',
     alignSelf: 'center',
-    fontFamily: 'CamptonLight',
+    fontFamily: 'Manrope-Light',
     borderWidth: 2,
   },
   textInput2: {
@@ -420,7 +827,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     width: '94%',
     color: 'white',
-    fontFamily: 'CamptonLight',
+    fontFamily: 'Manrope-Light',
     alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -440,7 +847,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: 'normal',
-    fontFamily: 'CamptonLight',
+    fontFamily: 'Manrope-Light',
   },
   socialLogins: {
     marginTop: 20,
@@ -451,7 +858,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: 'center',
     color: '#B1B1B1',
-    fontFamily: 'CamptonLight',
+    fontFamily: 'Manrope-Light',
   },
   buttonRow: {
     flexDirection: 'row',
@@ -461,10 +868,14 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#8E60CF3B',
+    backgroundColor: '#FFF',
     padding: 8,
     marginRight: 10,
-    width: '100%',
+    width: 'auto',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    height: 40,
+    borderRadius: 10,
   },
   socialIcon: {
     width: 20,
@@ -473,8 +884,8 @@ const styles = StyleSheet.create({
   },
   socialButtonText: {
     fontSize: 15,
-    color: '#fff',
-    fontFamily: 'Campton Bold',
+    color: '#000',
+    fontFamily: 'Manrope-ExtraBold',
   },
 });
 

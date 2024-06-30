@@ -2,76 +2,32 @@
   "migIndex": 1,
   "data": [
     {
-      "path": "assets/fonts/Campton Bold.otf",
-      "sha1": "94e7134e3961c81b4ef5cbb9af5e17533c421df4"
+      "path": "assets/font/Manrope-Bold.ttf",
+      "sha1": "a6b63c832d12337efb3123f47863f54472c81bf5"
     },
     {
-      "path": "assets/fonts/CamptonBlack.otf",
-      "sha1": "440c8e6db7e02c76333e160339334993ac79f31b"
+      "path": "assets/font/Manrope-ExtraBold.ttf",
+      "sha1": "01e9f1ed4df60771240fd42f5ac9dcaf398f110b"
     },
     {
-      "path": "assets/fonts/CamptonBlackItalic.otf",
-      "sha1": "09c8b8c639cff0b53279a6b6af52571d0023262b"
+      "path": "assets/font/Manrope-ExtraLight.ttf",
+      "sha1": "03f11f0309f7f955fe90e3fdf22fee5e60bada4e"
     },
     {
-      "path": "assets/fonts/CamptonBoldItalic.otf",
-      "sha1": "c504033ee176933e5f9f9e9b78c4962782aaf342"
+      "path": "assets/font/Manrope-Light.ttf",
+      "sha1": "67a7446c44660168ed179812753b03390858aa92"
     },
     {
-      "path": "assets/fonts/CamptonBook.otf",
-      "sha1": "274895af56e584715a7e62f42c11a9a403a4c256"
+      "path": "assets/font/Manrope-Medium.ttf",
+      "sha1": "d62e1b2498f65ea5bc20fc5e365d19239527b419"
     },
     {
-      "path": "assets/fonts/CamptonBookItalic.otf",
-      "sha1": "982ce7b436f54bf661fe62afd4d679383b8c6de5"
+      "path": "assets/font/Manrope-Regular.ttf",
+      "sha1": "036b14064c7b90b4b200f2730981effea5e58b15"
     },
     {
-      "path": "assets/fonts/CamptonExtraBold.otf",
-      "sha1": "9d3a46d1167264564e79115de6dd2a429b50f10f"
-    },
-    {
-      "path": "assets/fonts/CamptonExtraBoldItalic.otf",
-      "sha1": "5c4a4e1b25cd8dc9dbae66bd293448182eb157b2"
-    },
-    {
-      "path": "assets/fonts/CamptonExtraLight.otf",
-      "sha1": "ddfb7b2db4d0f69c7c0f1e16f4331ee4c405964d"
-    },
-    {
-      "path": "assets/fonts/CamptonExtraLightItalic.otf",
-      "sha1": "3b11cc2509734f3a6cc47caac4ee965b30d9841a"
-    },
-    {
-      "path": "assets/fonts/CamptonLight.otf",
-      "sha1": "88458d59d31dc6b57758bd0abc11215ab53b83ee"
-    },
-    {
-      "path": "assets/fonts/CamptonLightItalic.otf",
-      "sha1": "2b16c717932364932ea3c67c1db2313c38a5f383"
-    },
-    {
-      "path": "assets/fonts/CamptonMedium.otf",
-      "sha1": "c741938fbec00a0a6a644dd1627d4b0f44330d83"
-    },
-    {
-      "path": "assets/fonts/CamptonMediumItalic.otf",
-      "sha1": "b947d66e816a2e11855d8520fb6027fde7cee999"
-    },
-    {
-      "path": "assets/fonts/CamptonSemiBold.otf",
-      "sha1": "c31fe82ab5487900b6bb2db33bc5db0be5a9b79f"
-    },
-    {
-      "path": "assets/fonts/CamptonSemiBoldItalic.otf",
-      "sha1": "469dc329c24d323a28fff31fb641ae70be940f91"
-    },
-    {
-      "path": "assets/fonts/CamptonThin.otf",
-      "sha1": "2769c2d5fc6621fbd79a57ef04b260298827dbce"
-    },
-    {
-      "path": "assets/fonts/CamptonThinItalic.otf",
-      "sha1": "e180f982b5e5e6690b6d5edab060aa802cec98a2"
+      "path": "assets/font/Manrope-SemiBold.ttf",
+      "sha1": "e423e112f4832916b05308934c10aa84fd14c607"
     }
   ]
 }

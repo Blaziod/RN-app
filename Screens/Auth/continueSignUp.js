@@ -10,6 +10,7 @@ import {
   ScrollView,
   ActivityIndicator,
   SafeAreaView,
+  Image,
 } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import axios from 'axios';
@@ -17,6 +18,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { useFocusEffect } from "@react-navigation/native";
 import {useNavigation} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
+import {ApiLink} from '../../enums/apiLink';
+import {launchImageLibrary} from 'react-native-image-picker';
+import {Svg, Path} from 'react-native-svg';
 
 const ContinueSignUp = () => {
   const [userData, setUserData] = useState(null);
@@ -32,13 +36,16 @@ const ContinueSignUp = () => {
   const [selectedLga, setSelectedLga] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
+  const [uploadedImage, setUploadedImage] = useState(null);
 
   useEffect(() => {
-    fetch('https://api.trendit3.com/api/countries')
+    fetch(`${ApiLink.ENDPOINT_1}/countries`)
       .then(response => response.json())
       .then(data => {
-        setCountries(data.countries);
-        console.log(data.countries);
+        if (data.countries && data.countries.length > 0) {
+          setCountries(data.countries.slice(1)); // Skip the first element
+        }
+        console.log(data.countries.slice(1));
       })
 
       .catch(error => {
@@ -50,12 +57,13 @@ const ContinueSignUp = () => {
     if (selectedCountry !== null) {
       // setIsLoading(true);
       axios
-        .post('https://api.trendit3.com/api/states', {
+        .post(`${ApiLink.ENDPOINT_1}/states`, {
           country: selectedCountry,
         })
         .then(response => {
-          setState(response.data.states || []);
-          // setIsLoading(false);
+          if (response.data.states && response.data.states.length > 0) {
+            setState(response.data.states.slice(1));
+          }
         })
         .catch(error => {
           console.error('Error fetching states:', error);
@@ -68,7 +76,7 @@ const ContinueSignUp = () => {
     if (selectedState !== null) {
       // setIsLoading(true);
       axios
-        .post('https://api.trendit3.com/api/states/lga', {
+        .post(`${ApiLink.ENDPOINT_1}/states/lga`, {
           state: selectedState,
         })
         .then(response => {
@@ -101,13 +109,18 @@ const ContinueSignUp = () => {
 
   const handleContinue = () => {
     setIsLoading(true);
-    const url = 'https://api.trendit3.com/api/profile/update';
+    const url = `${ApiLink.ENDPOINT_1}/profile/update`;
     const formData = new FormData();
     formData.append('gender', gender);
     formData.append('country', selectedCountry);
     formData.append('state', selectedState);
     formData.append('local_government', selectedLga);
     formData.append('user_id', userData?.userdata?.id);
+    formData.append('profile_picture', {
+      name: 'image.jpg', // You might need to handle the name dynamically
+      type: 'image/jpeg', // Adjust the MIME type according to your image type
+      uri: uploadedImage.uri,
+    });
     console.log('start', userData?.userdata?.id);
 
     try {
@@ -141,10 +154,18 @@ const ContinueSignUp = () => {
             text2Style: {
               color: 'green',
               fontSize: 14,
-              fontFamily: 'Campton Bold',
+              fontFamily: 'Manrope-ExtraBold',
             },
           });
-          navigation.navigate('Tabs', {screen: 'Home'});
+          navigation.reset({
+            index: 0,
+            routes: [
+              {
+                name: 'Tabs',
+                params: {screen: 'Home'},
+              },
+            ],
+          });
         })
         .catch(error => {
           console.error('Error for Catch:', error.response);
@@ -167,7 +188,7 @@ const ContinueSignUp = () => {
             text2Style: {
               color: 'green',
               fontSize: 14,
-              fontFamily: 'Campton Bold',
+              fontFamily: 'Manrope-ExtraBold',
             },
           });
         })
@@ -177,6 +198,91 @@ const ContinueSignUp = () => {
     } catch (error) {
       console.error('Error Main :', error);
     }
+  };
+  const openImagePicker = () => {
+    const options = {
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+
+    launchImageLibrary(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else {
+        const source = {uri: response.assets[0].uri}; // Adjusted for the typical response structure
+        setUploadedImage(source); // Assuming setUploadedImage is a state setter function
+        console.log('Image picked:', source);
+        console.log('Imaging', uploadedImage);
+
+        console.log(response);
+        const url = `${ApiLink.ENDPOINT_1}/profile/update`;
+        // Create a new FormData object
+        console.log('starting Image Upload');
+        let formData = new FormData();
+        formData.append('user_id', userData?.userdata?.id);
+        formData.append('screenshot', {
+          name: 'image.jpg', // You might need to handle the name dynamically
+          type: 'image/jpeg', // Adjust the MIME type according to your image type
+          uri: response.assets[0].uri,
+        });
+        console.log('url:', response.assets[0].uri);
+        console.log('type:', uploadedImage?.type);
+        try {
+          fetch(url, {
+            method: 'post',
+            headers: {
+              Authorization: `Bearer ${userData?.userdata?.id}`,
+            },
+            body: formData,
+          })
+            .then(response => {
+              if (response.status === 200 || response.status === 201) {
+                return response.json();
+              } else {
+                if (response.status === 401) {
+                  console.log(
+                    '401 Unauthorized: Access token is invalid or expired',
+                  );
+                  AsyncStorage.removeItem('userbalance');
+                  AsyncStorage.removeItem('userdata1');
+                  AsyncStorage.removeItem('userdata');
+                  AsyncStorage.removeItem('userdata2');
+                  AsyncStorage.removeItem('userdatas');
+                  AsyncStorage.removeItem('userdatafiles1');
+                  AsyncStorage.removeItem('accesstoken');
+                  navigation.reset({
+                    index: 0,
+                    routes: [
+                      {
+                        name: 'SignIn',
+                      },
+                    ],
+                  });
+                }
+                setIsLoading(false);
+                throw new Error(response.message);
+              }
+            })
+            .then(data => {
+              console.log(data);
+            })
+            .catch(error => {
+              console.error('Error for Catch:', error);
+            })
+            .finally(() => {
+              setIsLoading(false); // Move this inside finally block
+            });
+        } catch (error) {
+          console.error('Error Main :', error);
+        }
+      }
+    });
   };
 
   return (
@@ -201,6 +307,66 @@ const ContinueSignUp = () => {
               Hi , we are excited to have you onboard! Finish up your profile
               set up.
             </Text>
+            <View style={[{paddingVertical: 20}]}>
+              <TouchableOpacity
+                style={{
+                  width: 66,
+                  height: 66,
+                  backgroundColor: 'rgba(203, 41, 190, 0.38)',
+                  borderRadius: 10,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  alignSelf: 'center',
+                }}
+                onPress={() => openImagePicker()}>
+                {uploadedImage ? (
+                  <Image
+                    source={uploadedImage}
+                    style={{width: '100%', height: '100%'}}
+                  />
+                ) : (
+                  <Svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none">
+                    <Path
+                      d="M3 21H21"
+                      stroke="white"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <Path
+                      d="M7 17V13L17 3L21 7L11 17H7Z"
+                      stroke="white"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <Path
+                      d="M14 6L18 10"
+                      stroke="white"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </Svg>
+                )}
+              </TouchableOpacity>
+              <Text
+                style={[
+                  {
+                    color: '#b1b1b1',
+                    fontSize: 11,
+                    fontFamily: 'Manrope-Regular',
+                    alignSelf: 'center',
+                  },
+                ]}>
+                Upload Photo
+              </Text>
+            </View>
             <Text style={styles.label}>Select Gender</Text>
             <TouchableOpacity
               style={{
@@ -445,7 +611,7 @@ const ContinueSignUp = () => {
               <Text
                 style={{
                   color: 'grey',
-                  fontFamily: 'CamptonBook',
+                  fontFamily: 'Manrope-Regular',
                   fontSize: 13,
                 }}
                 onPress={() => navigation.navigate('Tabs', {screen: 'Home'})}>
@@ -454,7 +620,7 @@ const ContinueSignUp = () => {
               <Text
                 style={{
                   color: '#FF6DFB',
-                  fontFamily: 'CamptonBook',
+                  fontFamily: 'Manrope-Regular',
                   fontSize: 14,
                   paddingBottom: 100,
                 }}
@@ -477,14 +643,14 @@ const styles = StyleSheet.create({
   },
   goBackText: {
     color: '#fff',
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
     position: 'absolute',
     top: 50,
     right: 10,
   },
   heading: {
     fontSize: 32,
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
     marginBottom: 10,
     color: '#fff',
     alignSelf: 'center',
@@ -497,7 +663,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     textAlign: 'center',
     paddingHorizontal: 20,
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
   },
   button: {
     backgroundColor: '#CB29BE',
@@ -512,19 +678,19 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 12,
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
   },
   textInput: {
     padding: 12,
     borderRadius: 5,
     color: 'white',
-    fontFamily: 'CamptonLight',
+    fontFamily: 'Manrope-Light',
   },
   label: {
     color: '#fff',
     marginBottom: 5,
     paddingLeft: 8,
-    fontFamily: 'CamptonMedium',
+    fontFamily: 'Manrope-Medium',
     fontSize: 13,
   },
   nameInputContainer: {
@@ -548,7 +714,7 @@ const styles = StyleSheet.create({
   passwordHint: {
     color: '#fff',
     paddingLeft: 8,
-    fontFamily: 'CamptonMedium',
+    fontFamily: 'Manrope-Medium',
     fontSize: 10,
   },
 });

@@ -26,6 +26,7 @@ import TransactionMenu from '../../Components/Menus/transactionMenu';
 import {Svg, Path} from 'react-native-svg';
 import queryString from 'query-string';
 import Toast from 'react-native-toast-message';
+import {ApiLink} from '../../enums/apiLink';
 
 const wait = timeout => {
   return new Promise(resolve => {
@@ -71,16 +72,13 @@ const FundWallet = () => {
     setIsLoading(true);
     if (userAccessToken) {
       try {
-        const response = await fetch(
-          'https://api.trendit3.com/api/show_balance',
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${userAccessToken.accessToken}`, // Add the access token to the headers
-            },
+        const response = await fetch(`${ApiLink.ENDPOINT_1}/show_balance`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userAccessToken.accessToken}`, // Add the access token to the headers
           },
-        );
+        });
 
         const data = await response.json();
 
@@ -246,7 +244,7 @@ const FundWallet = () => {
       // Alert.alert('URL: ', `${txRef}, ${transactionId}`);
       setIsLoading1(true);
       const response = await axios.post(
-        'https://api.trendit3.com/api/payment/verify',
+        `${ApiLink.ENDPOINT_1}/payment/verify`,
         {reference: txRef, transaction_id: transactionId},
         {
           headers: {
@@ -280,7 +278,7 @@ const FundWallet = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
       } else {
@@ -304,7 +302,7 @@ const FundWallet = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
       }
@@ -330,7 +328,7 @@ const FundWallet = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
     } finally {
@@ -354,7 +352,7 @@ const FundWallet = () => {
         return;
       }
       const response = await axios.post(
-        'https://api.trendit3.com/api/payment/credit-wallet',
+        `${ApiLink.ENDPOINT_1}/payment/credit-wallet`,
 
         {amount: Number(amount)},
         {
@@ -387,7 +385,7 @@ const FundWallet = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
         console.log(response.data);
@@ -420,7 +418,7 @@ const FundWallet = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
     } finally {
@@ -487,7 +485,7 @@ const FundWallet = () => {
                 style={{
                   color: '#FFD0FE',
                   fontSize: 14,
-                  fontFamily: 'CamptonBook',
+                  fontFamily: 'Manrope-Regular',
                 }}>
                 Go back
               </Text>
@@ -515,7 +513,7 @@ const FundWallet = () => {
                   style={{
                     color: '#fff',
                     fontSize: 14,
-                    fontFamily: 'CamptonBook',
+                    fontFamily: 'Manrope-Regular',
                   }}>
                   Fund wallet
                 </Text>
@@ -524,13 +522,13 @@ const FundWallet = () => {
                 style={{
                   color: '#b1b1b1',
                   fontSize: 12,
-                  fontFamily: 'CamptonBook',
+                  fontFamily: 'Manrope-Regular',
                 }}>
                 Wallet balance
               </Text>
               <View style={{justifyContent: 'center'}}>
                 <Text style={styles.WalletAmount}>
-                  {userData?.userdata?.wallet?.currency_code}{' '}
+                  {userData?.userdata?.wallet?.currency_symbol}
                   {isLoading ? (
                     <ActivityIndicator
                       size="medium"
@@ -584,7 +582,7 @@ const FundWallet = () => {
               style={{
                 color: '#b1b1b1',
                 paddingLeft: 20,
-                fontFamily: 'CamptonBook',
+                fontFamily: 'Manrope-Regular',
                 fontSize: 14,
                 paddingTop: 10,
               }}>
@@ -598,7 +596,7 @@ const FundWallet = () => {
               style={{
                 color: '#fff',
                 fontSize: 25,
-                fontFamily: 'CamptonMedium',
+                fontFamily: 'Manrope-Medium',
                 paddingVertical: 10,
                 paddingLeft: 20,
               }}>
@@ -703,15 +701,15 @@ const styles = StyleSheet.create({
   fundText: {
     fontSize: 12.8,
     color: '#000',
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
   },
   withdrawText: {
     fontSize: 13,
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     color: '#fff',
   },
   WalletAmount: {
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     fontSize: 40,
     color: '#FFD0FE',
   },

@@ -1,23 +1,71 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Modal,
+  ScrollView,
+  Alert,
+  Linking,
+  ActivityIndicator,
+} from 'react-native';
 import {
   Svg,
   Path,
   Stop,
   Defs,
-  LinearGradient,
   G,
-  ClipPath,
   Rect,
+  ClipPath,
+  RadialGradient,
 } from 'react-native-svg';
 import {useTheme} from '../../Components/Contexts/colorTheme';
+import axios from 'axios';
+import Toast from 'react-native-toast-message';
+import queryString from 'query-string';
+import {useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {ApiLink} from '../../enums/apiLink';
 
 const EngageAdvertMenu = () => {
   const navigation = useNavigation();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modal1Visible, setModal1Visible] = useState(false);
+  const [txRef, setTxRef] = useState(null);
+  const [transactionId, setTransactionId] = useState(null);
+  const homeScreenUrl = 'https://blaziod.github.io';
   const {theme} = useTheme();
+  const strokeColor = theme === 'dark' ? '#fff' : '#000'; // Choosing color based on theme
+  const [isLoading1, setIsLoading1] = useState(false);
+  const [userAccessToken, setUserAccessToken] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [membership, setMembership] = useState(false);
+
+  const fetchUserAccessToken = () => {
+    // Your code to run on screen focus
+    AsyncStorage.getItem('accesstoken')
+      .then(data => {
+        // eslint-disable-next-line no-shadow
+        const userAccessToken = JSON.parse(data);
+        setUserAccessToken(userAccessToken);
+        console.log('AccessToken Loading', userAccessToken);
+
+        if (!userAccessToken) {
+          navigation.navigate('SignIn');
+          console.log('AccessToken Not found', userAccessToken);
+        }
+      })
+      .catch(error => {
+        console.error('Error retrieving user token:', error);
+      });
+  };
+  useEffect(() => {
+    fetchUserAccessToken();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const dynamicStyles = StyleSheet.create({
     AppContainer: {
@@ -39,614 +87,1496 @@ const EngageAdvertMenu = () => {
       color: theme === 'dark' ? '#FF6DFB' : '#FFF', // Dynamic text color
     },
   });
+
+  useEffect(() => {
+    const handleUrl = async event => {
+      try {
+        const url = event.url;
+        // Alert.alert('Url Caught');
+        const parsed = queryString.parseUrl(url);
+        // Alert.alert('Url parsed');
+
+        if (parsed.query.tx_ref) {
+          const {tx_ref, transaction_id, status} = parsed.query;
+          // Alert.alert('tx_ref found');
+
+          if (status === 'completed') {
+            setTxRef(tx_ref);
+            setTransactionId(transaction_id);
+            Alert.alert('Verifying your payment');
+          }
+        }
+      } catch (error) {
+        console.error(error);
+        Alert.alert('Error: handling', error.toString());
+      }
+    };
+
+    // Listen for incoming links
+    const subscription = Linking.addEventListener('url', handleUrl);
+
+    // Clean up the listener on unmount
+    return () => subscription.remove();
+  }, []);
+
+  useEffect(() => {
+    if (transactionId !== null) {
+      verifyPayment();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transactionId]);
+
+  const verifyPayment = async () => {
+    try {
+      // Alert.alert('URL: ', `${txRef}, ${transactionId}`);
+      setIsLoading1(true);
+      const response = await axios.post(
+        `${ApiLink.ENDPOINT_1}/payment/verify`,
+        {reference: txRef, transaction_id: transactionId},
+        {
+          headers: {
+            Authorization: `Bearer ${userAccessToken.accessToken}`,
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
+      if (response.status >= 200 && response.status < 300) {
+        fetchMembershipStatus();
+        Alert.alert('Payment Verified');
+        // eslint-disable-next-line no-lone-blocks
+        {
+          membership
+            ? navigation.reset({
+                index: 0,
+                routes: [{name: 'Earn'}],
+              })
+            : Alert.alert('Payment Not Verified');
+        }
+        console.log(response.data);
+        Toast.show({
+          type: 'success',
+          text1: 'Success',
+          text2: response.data.message,
+          style: {
+            borderLeftColor: 'pink',
+            backgroundColor: 'yellow',
+            width: '80%',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          text1Style: {
+            color: 'red',
+            fontSize: 14,
+          },
+          text2Style: {
+            color: 'green',
+            fontSize: 14,
+            fontFamily: 'Manrope-ExtraBold',
+          },
+        });
+      } else {
+        Alert.alert('Error Else');
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: response.data.message,
+          style: {
+            borderLeftColor: 'pink',
+            backgroundColor: 'yellow',
+            width: '80%',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          text1Style: {
+            color: 'red',
+            fontSize: 14,
+          },
+          text2Style: {
+            color: 'green',
+            fontSize: 14,
+            fontFamily: 'Manrope-ExtraBold',
+          },
+        });
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: 'Home',
+            },
+          ],
+        });
+      }
+    } catch (error) {
+      Alert.alert('Error', error.toString());
+      console.error(error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: error.message,
+        style: {
+          borderLeftColor: 'pink',
+          backgroundColor: 'yellow',
+          width: '80%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        text1Style: {
+          color: 'red',
+          fontSize: 14,
+        },
+        text2Style: {
+          color: 'green',
+          fontSize: 14,
+          fontFamily: 'Manrope-ExtraBold',
+        },
+      });
+    } finally {
+      setIsLoading1(false);
+    }
+  };
+
+  const handleMembershipPayment = async () => {
+    const userToken = userAccessToken?.accessToken;
+    console.log('Testing', userToken);
+    setIsLoading1(true);
+    try {
+      if (!homeScreenUrl) {
+        Alert.alert('Error', 'Callback URL is not defined.');
+        return;
+      }
+      const response = await axios.post(
+        `${ApiLink.ENDPOINT_1}/payment/membership-fee`,
+
+        {amount: Number(1000)},
+        {
+          headers: {
+            Authorization: `Bearer ${userAccessToken.accessToken}`, // replace userToken with your actual token
+            'Content-Type': 'application/json',
+            'CALLBACK-URL': homeScreenUrl,
+          },
+        },
+      );
+
+      if (response.data.status === 'success') {
+        // Alert.alert('Payment initialized', 'Redirecting to payment page...');
+        Toast.show({
+          type: 'success',
+          text1: 'Success',
+          text2: response.data.message,
+          style: {
+            borderLeftColor: 'pink',
+            backgroundColor: 'yellow',
+            width: '80%',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          text1Style: {
+            color: 'red',
+            fontSize: 14,
+          },
+          text2Style: {
+            color: 'green',
+            fontSize: 14,
+            fontFamily: 'Manrope-ExtraBold',
+          },
+        });
+        console.log(response.data);
+        const url = response.data.authorization_url;
+        console.log('URL:', url); // replace with the actual URL you want to redirect to
+
+        Linking.openURL(url);
+      } else {
+        Alert.alert('Error', response.data.message);
+      }
+    } catch (error) {
+      Alert.alert('Error', 'An error occurred while processing the request.');
+      console.error(error.response.data); // log the server's response
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: error.message,
+        style: {
+          borderLeftColor: 'pink',
+          backgroundColor: 'yellow',
+          width: '80%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        text1Style: {
+          color: 'red',
+          fontSize: 14,
+        },
+        text2Style: {
+          color: 'green',
+          fontSize: 14,
+          fontFamily: 'Manrope-ExtraBold',
+        },
+      });
+    } finally {
+      setIsLoading1(false);
+    }
+  };
+
+  const fetchMembershipStatus = async () => {
+    setIsLoading(true);
+    if (userAccessToken) {
+      try {
+        const response = await fetch(
+          `${ApiLink.ENDPOINT_1}/profile/membership-status`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${userAccessToken.accessToken}`, // Add the access token to the headers
+            },
+          },
+        );
+
+        const data = await response.json();
+
+        if (response.ok) {
+          console.log('Membership Status:', data);
+          AsyncStorage.setItem(
+            'membershipstatus',
+            JSON.stringify({
+              status: data,
+            }),
+          )
+            .then(() => {
+              setMembership(data.membership_status);
+              console.log('here', membership);
+              console.log('Status Stored', data);
+            })
+            .catch(error => {
+              console.error('Error storing user Status:', error);
+            });
+          setIsLoading(false);
+        } else {
+          if (response.status === 401) {
+            console.log('401 Unauthorized: Access token is invalid or expired');
+            await AsyncStorage.removeItem('userbalance');
+            await AsyncStorage.removeItem('userdata1');
+            await AsyncStorage.removeItem('userdata');
+            await AsyncStorage.removeItem('userdata2');
+            await AsyncStorage.removeItem('userdatas');
+            await AsyncStorage.removeItem('userdatafiles1');
+            await AsyncStorage.removeItem('accesstoken');
+            navigation.reset({
+              index: 0,
+              routes: [
+                {
+                  name: 'SignIn',
+                },
+              ],
+            });
+          }
+          setIsLoading(false);
+          throw new Error(data.message);
+        }
+      } catch (error) {
+        console.error('Error during balance fetch:', error);
+      }
+    } else {
+      console.log('No access token found');
+    }
+  };
+
   return (
     <View>
-      <View style={styles.Container}>
-        <View style={styles.Advert1}>
-          <Svg
-            width="47"
-            height="48"
-            viewBox="0 0 47 48"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg">
-            <G id="logos:apple-app-store">
-              <Path
-                id="Vector"
-                d="M10.293 0.589844H36.707C42.3918 0.589844 47 5.19805 47 10.8828V37.2968C47 42.9816 42.3918 47.5898 36.707 47.5898H10.293C4.6082 47.5898 0 42.9816 0 37.2968V10.8828C0 5.19805 4.6082 0.589844 10.293 0.589844Z"
-                fill="blue"
-              />
-              <Path
-                id="Vector_2"
-                d="M15.0642 34.7034L15.0686 34.7048L13.4616 37.4881C12.875 38.5041 11.5759 38.8522 10.5599 38.2656C9.54411 37.679 9.19583 36.3799 9.78241 35.3639L10.9662 33.3136L11.0799 33.1167C11.2827 32.8252 11.7834 32.3218 12.7849 32.4165C12.7849 32.4165 15.1417 32.6723 15.3123 33.8972C15.3123 33.8972 15.3354 34.3002 15.0642 34.7034ZM37.8561 27.5946H32.8451C32.5038 27.5717 32.3549 27.4498 32.2961 27.3789L32.2925 27.3725L26.9284 18.0815L26.9214 18.0861L26.5998 17.6249C26.0725 16.8186 25.2353 18.8807 25.2353 18.8807C24.2356 21.1786 25.3772 23.7909 25.7751 24.5806L33.2257 37.4854C33.8121 38.5012 35.1112 38.8495 36.1274 38.2627C37.1432 37.6761 37.4915 36.377 36.9047 35.361L35.0418 32.1341C35.0056 32.0559 34.9428 31.8437 35.3249 31.8428H37.8561C39.0293 31.8428 39.9803 30.8918 39.9803 29.7186C39.9803 28.5454 39.0293 27.5946 37.8561 27.5946ZM28.1231 30.482C28.1231 30.482 28.3906 31.8426 27.3556 31.8426H8.83121C7.65805 31.8426 6.70703 30.8916 6.70703 29.7184C6.70703 28.5453 7.65805 27.5942 8.83121 27.5942H13.5936C14.3625 27.5498 14.5446 27.1059 14.5446 27.1059L14.5491 27.1081L20.7655 16.3407L20.7637 16.3403C20.877 16.1323 20.7826 15.9357 20.7663 15.9046L18.7131 12.3486C18.1266 11.3328 18.4747 10.0335 19.4907 9.4471C20.5067 8.86052 21.8058 9.20843 22.3924 10.2244L23.3445 11.8737L24.2949 10.2274C24.8815 9.21155 26.1806 8.86327 27.1966 9.45004C28.2127 10.0366 28.5607 11.3355 27.9742 12.3516L19.3236 27.3346C19.2858 27.4259 19.2742 27.5691 19.5557 27.5942H24.7264L24.7275 27.6447C24.7275 27.6447 27.716 27.6912 28.1231 30.482Z"
-                fill="white"
-              />
-            </G>
-            <Defs>
-              <LinearGradient
-                id="paint0_linear_5579_30535"
-                x1="2350"
-                y1="0.589844"
-                x2="2350"
-                y2="4700.59"
-                gradientUnits="userSpaceOnUse">
-                <Stop stop-color="#17C9FB" />
-                <Stop offset="1" stop-color="#1A74E8" />
-              </LinearGradient>
-            </Defs>
-          </Svg>
-
-          <View style={styles.Check}>
-            <Text style={{color: '#fff', fontFamily: 'CamptonMedium'}}>
-              Download and Review App on Apple Store
-            </Text>
-            <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'CamptonBook',
-                paddingTop: 10,
-                fontSize: 12,
-              }}>
-              Download and review selected app on the Apple store and earn ₦60
-              per review, Increased productivity translates to increased
-              earnings.
-            </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                paddingVertical: 10,
-                gap: 7,
-                paddingRight: 50,
-              }}>
-              <View style={{flexDirection: 'row', gap: 3}}>
-                <View style={styles.wallet}>
-                  <Svg
-                    width="17"
-                    height="18"
-                    viewBox="0 0 17 18"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <Path
-                      d="M3.60683 14.6021L3.83382 14.1566L3.60683 14.6021ZM2.98772 13.983L3.43322 13.756H3.43322L2.98772 13.983ZM13.3931 14.6021L13.1661 14.1566L13.1661 14.1566L13.3931 14.6021ZM14.0122 13.983L13.5667 13.756V13.756L14.0122 13.983ZM13.3931 4.99429L13.1661 5.43979L13.1661 5.43979L13.3931 4.99429ZM14.0122 5.6134L13.5667 5.84039L14.0122 5.6134ZM3.60683 4.99429L3.37983 4.54879L3.60683 4.99429ZM2.98772 5.6134L2.54222 5.3864L2.98772 5.6134ZM11.0117 11.1377L11.2387 10.6922L11.0117 11.1377ZM10.7022 10.8281L11.1477 10.6011L10.7022 10.8281ZM15.5061 10.8281L15.0606 10.6011L15.5061 10.8281ZM15.1966 11.1377L14.9696 10.6922L15.1966 11.1377ZM15.1966 8.45875L14.9696 8.90426L15.1966 8.45875ZM15.5061 8.76831L15.0606 8.9953L15.5061 8.76831ZM11.0117 8.45875L11.2387 8.90426L11.0117 8.45875ZM10.7022 8.76831L11.1477 8.9953L10.7022 8.76831ZM4.06428 4.37565C3.80789 4.4782 3.68318 4.76919 3.78574 5.02558C3.8883 5.28197 4.17928 5.40668 4.43567 5.30412L4.06428 4.37565ZM10.3619 2.39511L10.1762 1.93087L10.1762 1.93087L10.3619 2.39511ZM10.8333 4.83988C10.8333 5.11603 11.0572 5.33988 11.3333 5.33988C11.6095 5.33988 11.8333 5.11603 11.8333 4.83988H10.8333ZM5.09998 5.33988H11.9V4.33988H5.09998V5.33988ZM11.9 14.2565H5.09998V15.2565H11.9V14.2565ZM3.33331 12.4899V7.10655H2.33331V12.4899H3.33331ZM13.6666 7.10655V8.55863H14.6666V7.10655H13.6666ZM13.6666 11.3477V12.4899H14.6666V11.3477H13.6666ZM5.09998 14.2565C4.69503 14.2565 4.42138 14.2562 4.21023 14.2389C4.00492 14.2221 3.90311 14.1919 3.83382 14.1566L3.37983 15.0476C3.61359 15.1667 3.86165 15.2138 4.1288 15.2356C4.39012 15.2569 4.71153 15.2565 5.09998 15.2565V14.2565ZM2.33331 12.4899C2.33331 12.8783 2.33292 13.1997 2.35427 13.4611C2.3761 13.7282 2.42311 13.9763 2.54222 14.21L3.43322 13.756C3.39792 13.6868 3.36773 13.5849 3.35095 13.3796C3.3337 13.1685 3.33331 12.8948 3.33331 12.4899H2.33331ZM3.83382 14.1566C3.66134 14.0688 3.52111 13.9285 3.43322 13.756L2.54222 14.21C2.72597 14.5707 3.01919 14.8639 3.37983 15.0476L3.83382 14.1566ZM11.9 15.2565C12.2884 15.2565 12.6098 15.2569 12.8712 15.2356C13.1383 15.2138 13.3864 15.1667 13.6201 15.0476L13.1661 14.1566C13.0969 14.1919 12.995 14.2221 12.7897 14.2389C12.5786 14.2562 12.3049 14.2565 11.9 14.2565V15.2565ZM13.6666 12.4899C13.6666 12.8948 13.6663 13.1685 13.649 13.3796C13.6322 13.5849 13.602 13.6868 13.5667 13.756L14.4577 14.21C14.5768 13.9763 14.6239 13.7282 14.6457 13.4611C14.667 13.1997 14.6666 12.8783 14.6666 12.4899H13.6666ZM13.6201 15.0476C13.9808 14.8639 14.274 14.5707 14.4577 14.21L13.5667 13.756C13.4789 13.9285 13.3386 14.0688 13.1661 14.1566L13.6201 15.0476ZM11.9 5.33988C12.3049 5.33988 12.5786 5.34027 12.7897 5.35752C12.995 5.3743 13.0969 5.40449 13.1661 5.43979L13.6201 4.54879C13.3864 4.42968 13.1383 4.38267 12.8712 4.36084C12.6098 4.33949 12.2884 4.33988 11.9 4.33988V5.33988ZM14.6666 7.10655C14.6666 6.7181 14.667 6.39669 14.6457 6.13537C14.6239 5.86822 14.5768 5.62016 14.4577 5.3864L13.5667 5.84039C13.602 5.90968 13.6322 6.01149 13.649 6.2168C13.6663 6.42795 13.6666 6.7016 13.6666 7.10655H14.6666ZM13.1661 5.43979C13.3386 5.52768 13.4789 5.66791 13.5667 5.84039L14.4577 5.3864C14.274 5.02576 13.9808 4.73254 13.6201 4.54879L13.1661 5.43979ZM5.09998 4.33988C4.71153 4.33988 4.39012 4.33949 4.1288 4.36084C3.86165 4.38267 3.61359 4.42968 3.37983 4.54879L3.83382 5.43979C3.90311 5.40449 4.00492 5.3743 4.21023 5.35752C4.42138 5.34027 4.69503 5.33988 5.09998 5.33988V4.33988ZM3.33331 7.10655C3.33331 6.7016 3.3337 6.42795 3.35095 6.2168C3.36773 6.01149 3.39792 5.90968 3.43322 5.84039L2.54222 5.3864C2.42311 5.62016 2.3761 5.86822 2.35427 6.13537C2.33292 6.39669 2.33331 6.7181 2.33331 7.10655H3.33331ZM3.37983 4.54879C3.01919 4.73254 2.72597 5.02576 2.54222 5.3864L3.43322 5.84039C3.52111 5.66791 3.66134 5.52768 3.83382 5.43979L3.37983 4.54879ZM11.7583 8.88155H14.45V7.88155H11.7583V8.88155ZM15.0833 9.51488V10.0815H16.0833V9.51488H15.0833ZM14.45 10.7149H11.7583V11.7149H14.45V10.7149ZM11.125 10.0815V9.51488H10.125V10.0815H11.125ZM11.7583 10.7149C11.5517 10.7149 11.4268 10.7145 11.3338 10.7069C11.2466 10.6998 11.2323 10.6889 11.2387 10.6922L10.7847 11.5832C10.9427 11.6637 11.1033 11.6914 11.2524 11.7036C11.3956 11.7153 11.5682 11.7149 11.7583 11.7149V10.7149ZM10.125 10.0815C10.125 10.2717 10.1246 10.4443 10.1363 10.5875C10.1485 10.7365 10.1762 10.8971 10.2567 11.0551L11.1477 10.6011C11.151 10.6076 11.1401 10.5933 11.133 10.5061C11.1254 10.413 11.125 10.2882 11.125 10.0815H10.125ZM11.2387 10.6922C11.1995 10.6722 11.1677 10.6403 11.1477 10.6011L10.2567 11.0551C10.3725 11.2825 10.5574 11.4673 10.7847 11.5832L11.2387 10.6922ZM15.0833 10.0815C15.0833 10.2882 15.0829 10.413 15.0753 10.5061C15.0682 10.5933 15.0573 10.6076 15.0606 10.6011L15.9516 11.0551C16.0321 10.8971 16.0598 10.7365 16.072 10.5875C16.0837 10.4443 16.0833 10.2717 16.0833 10.0815H15.0833ZM14.45 11.7149C14.6401 11.7149 14.8127 11.7153 14.9559 11.7036C15.105 11.6914 15.2656 11.6637 15.4236 11.5832L14.9696 10.6922C14.976 10.6889 14.9617 10.6998 14.8745 10.7069C14.7815 10.7145 14.6566 10.7149 14.45 10.7149V11.7149ZM15.0606 10.6011C15.0406 10.6403 15.0088 10.6722 14.9696 10.6922L15.4236 11.5832C15.6509 11.4673 15.8358 11.2825 15.9516 11.0551L15.0606 10.6011ZM14.45 8.88155C14.6566 8.88155 14.7815 8.88194 14.8745 8.88954C14.9617 8.89666 14.976 8.90756 14.9696 8.90426L15.4236 8.01325C15.2656 7.93275 15.105 7.90504 14.9559 7.89286C14.8127 7.88116 14.6401 7.88155 14.45 7.88155V8.88155ZM16.0833 9.51488C16.0833 9.32478 16.0837 9.15213 16.072 9.00893C16.0598 8.8599 16.0321 8.69931 15.9516 8.54131L15.0606 8.9953C15.0573 8.98883 15.0682 9.00317 15.0753 9.09037C15.0829 9.1834 15.0833 9.30828 15.0833 9.51488H16.0833ZM14.9696 8.90426C15.0088 8.92423 15.0406 8.9561 15.0606 8.9953L15.9516 8.54131C15.8358 8.31395 15.6509 8.1291 15.4236 8.01325L14.9696 8.90426ZM11.7583 7.88155C11.5682 7.88155 11.3956 7.88116 11.2524 7.89286C11.1033 7.90504 10.9427 7.93275 10.7847 8.01325L11.2387 8.90426C11.2323 8.90756 11.2466 8.89666 11.3338 8.88954C11.4268 8.88194 11.5517 8.88155 11.7583 8.88155V7.88155ZM11.125 9.51488C11.125 9.30828 11.1254 9.1834 11.133 9.09037C11.1401 9.00317 11.151 8.98883 11.1477 8.9953L10.2567 8.54131C10.1762 8.69931 10.1485 8.8599 10.1363 9.00894C10.1246 9.15213 10.125 9.32478 10.125 9.51488H11.125ZM10.7847 8.01325C10.5574 8.1291 10.3725 8.31395 10.2567 8.54131L11.1477 8.9953C11.1677 8.9561 11.1995 8.92423 11.2387 8.90426L10.7847 8.01325ZM4.43567 5.30412L10.5476 2.85935L10.1762 1.93087L4.06428 4.37565L4.43567 5.30412ZM10.8333 3.05278V4.83988H11.8333V3.05278H10.8333ZM10.5476 2.85935C10.6845 2.80461 10.8333 2.90539 10.8333 3.05278H11.8333C11.8333 2.19793 10.9699 1.61339 10.1762 1.93087L10.5476 2.85935Z"
-                      fill="#B1B1B1"
-                    />
-                  </Svg>
-                </View>
-
-                <Text
-                  style={{
-                    color: '#808080',
-                    fontFamily: 'CamptonMedium',
-                    fontSize: 12,
-                  }}>
-                  Earning:
-                </Text>
-              </View>
-              <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'Campton Bold',
-                  fontSize: 12,
-                }}>
-                ₦60 per Download and Review
-              </Text>
-            </View>
-            <View>
-              <TouchableOpacity
-                style={{
-                  height: 35,
-                  backgroundColor: '#FF6DFB',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: 109,
-                  borderTopRightRadius: 4,
-                  borderTopLeftRadius: 4,
-                }}
-                onPress={() => navigation.navigate('Earn1Apple')}>
-                <Text
-                  style={{
-                    color: '#fff',
-                    fontFamily: 'CamptonMedium',
-                    fontSize: 10,
-                  }}>
-                  Generate Task
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: '#4C4C4C',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: 109,
-                  borderBottomRightRadius: 4,
-                  borderBottomLeftRadius: 4,
-                }}>
-                <Text
-                  style={{
-                    color: '#fff',
-                    fontFamily: 'CamptonMedium',
-                    fontSize: 10,
-                  }}>
-                  124 Task Available
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </View>
-
-      <View style={styles.Container1}>
-        <View style={styles.Advert1}>
-          <Svg
-            width="47"
-            height="48"
-            viewBox="0 0 47 48"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg">
-            <G id="logos:youtube-icon">
-              <Path
-                id="Vector"
-                d="M45.9569 7.92054C45.6874 6.50363 45.1616 5.21189 44.432 4.17393C43.7024 3.13597 42.7943 2.38801 41.7982 2.00454C38.1517 0.589844 23.4755 0.589844 23.4755 0.589844C23.4755 0.589844 8.79857 0.632666 5.15201 2.04737C4.15593 2.43086 3.24786 3.17885 2.51821 4.21686C1.78857 5.25487 1.26282 6.54667 0.993319 7.96362C-0.109681 17.1803 -0.537554 31.2244 1.02361 40.0725C1.29314 41.4894 1.8189 42.7811 2.54854 43.8191C3.27818 44.857 4.18624 45.605 5.18229 45.9885C8.82885 47.4032 23.5054 47.4032 23.5054 47.4032C23.5054 47.4032 38.1818 47.4032 41.8282 45.9885C42.8242 45.605 43.7323 44.8571 44.462 43.8191C45.1917 42.7812 45.7175 41.4894 45.987 40.0725C47.1504 30.8427 47.5089 16.8072 45.9569 7.92054Z"
-                fill="#FF0000"
-              />
-              <Path
-                id="Vector_2"
-                d="M18.8047 34.0277L30.9797 23.9963L18.8047 13.965V34.0277Z"
-                fill="white"
-              />
-            </G>
-          </Svg>
-
-          <View style={styles.Check}>
-            <Text style={{color: '#fff', fontFamily: 'CamptonMedium'}}>
-              Subscribe, View and Like on YouTube
-            </Text>
-            <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'CamptonBook',
-                paddingTop: 10,
-                fontSize: 12,
-              }}>
-              Subscribe on Youtube channels and earn per view, like and comments
-              and earn ₦ 35 per subscription, Engage and earn more.
-            </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                paddingVertical: 10,
-                gap: 7,
-                // paddingRight: 50,
-              }}>
-              <View style={{flexDirection: 'row', gap: 3}}>
-                <View style={styles.wallet}>
-                  <Svg
-                    width="17"
-                    height="18"
-                    viewBox="0 0 17 18"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <Path
-                      d="M3.60683 14.6021L3.83382 14.1566L3.60683 14.6021ZM2.98772 13.983L3.43322 13.756H3.43322L2.98772 13.983ZM13.3931 14.6021L13.1661 14.1566L13.1661 14.1566L13.3931 14.6021ZM14.0122 13.983L13.5667 13.756V13.756L14.0122 13.983ZM13.3931 4.99429L13.1661 5.43979L13.1661 5.43979L13.3931 4.99429ZM14.0122 5.6134L13.5667 5.84039L14.0122 5.6134ZM3.60683 4.99429L3.37983 4.54879L3.60683 4.99429ZM2.98772 5.6134L2.54222 5.3864L2.98772 5.6134ZM11.0117 11.1377L11.2387 10.6922L11.0117 11.1377ZM10.7022 10.8281L11.1477 10.6011L10.7022 10.8281ZM15.5061 10.8281L15.0606 10.6011L15.5061 10.8281ZM15.1966 11.1377L14.9696 10.6922L15.1966 11.1377ZM15.1966 8.45875L14.9696 8.90426L15.1966 8.45875ZM15.5061 8.76831L15.0606 8.9953L15.5061 8.76831ZM11.0117 8.45875L11.2387 8.90426L11.0117 8.45875ZM10.7022 8.76831L11.1477 8.9953L10.7022 8.76831ZM4.06428 4.37565C3.80789 4.4782 3.68318 4.76919 3.78574 5.02558C3.8883 5.28197 4.17928 5.40668 4.43567 5.30412L4.06428 4.37565ZM10.3619 2.39511L10.1762 1.93087L10.1762 1.93087L10.3619 2.39511ZM10.8333 4.83988C10.8333 5.11603 11.0572 5.33988 11.3333 5.33988C11.6095 5.33988 11.8333 5.11603 11.8333 4.83988H10.8333ZM5.09998 5.33988H11.9V4.33988H5.09998V5.33988ZM11.9 14.2565H5.09998V15.2565H11.9V14.2565ZM3.33331 12.4899V7.10655H2.33331V12.4899H3.33331ZM13.6666 7.10655V8.55863H14.6666V7.10655H13.6666ZM13.6666 11.3477V12.4899H14.6666V11.3477H13.6666ZM5.09998 14.2565C4.69503 14.2565 4.42138 14.2562 4.21023 14.2389C4.00492 14.2221 3.90311 14.1919 3.83382 14.1566L3.37983 15.0476C3.61359 15.1667 3.86165 15.2138 4.1288 15.2356C4.39012 15.2569 4.71153 15.2565 5.09998 15.2565V14.2565ZM2.33331 12.4899C2.33331 12.8783 2.33292 13.1997 2.35427 13.4611C2.3761 13.7282 2.42311 13.9763 2.54222 14.21L3.43322 13.756C3.39792 13.6868 3.36773 13.5849 3.35095 13.3796C3.3337 13.1685 3.33331 12.8948 3.33331 12.4899H2.33331ZM3.83382 14.1566C3.66134 14.0688 3.52111 13.9285 3.43322 13.756L2.54222 14.21C2.72597 14.5707 3.01919 14.8639 3.37983 15.0476L3.83382 14.1566ZM11.9 15.2565C12.2884 15.2565 12.6098 15.2569 12.8712 15.2356C13.1383 15.2138 13.3864 15.1667 13.6201 15.0476L13.1661 14.1566C13.0969 14.1919 12.995 14.2221 12.7897 14.2389C12.5786 14.2562 12.3049 14.2565 11.9 14.2565V15.2565ZM13.6666 12.4899C13.6666 12.8948 13.6663 13.1685 13.649 13.3796C13.6322 13.5849 13.602 13.6868 13.5667 13.756L14.4577 14.21C14.5768 13.9763 14.6239 13.7282 14.6457 13.4611C14.667 13.1997 14.6666 12.8783 14.6666 12.4899H13.6666ZM13.6201 15.0476C13.9808 14.8639 14.274 14.5707 14.4577 14.21L13.5667 13.756C13.4789 13.9285 13.3386 14.0688 13.1661 14.1566L13.6201 15.0476ZM11.9 5.33988C12.3049 5.33988 12.5786 5.34027 12.7897 5.35752C12.995 5.3743 13.0969 5.40449 13.1661 5.43979L13.6201 4.54879C13.3864 4.42968 13.1383 4.38267 12.8712 4.36084C12.6098 4.33949 12.2884 4.33988 11.9 4.33988V5.33988ZM14.6666 7.10655C14.6666 6.7181 14.667 6.39669 14.6457 6.13537C14.6239 5.86822 14.5768 5.62016 14.4577 5.3864L13.5667 5.84039C13.602 5.90968 13.6322 6.01149 13.649 6.2168C13.6663 6.42795 13.6666 6.7016 13.6666 7.10655H14.6666ZM13.1661 5.43979C13.3386 5.52768 13.4789 5.66791 13.5667 5.84039L14.4577 5.3864C14.274 5.02576 13.9808 4.73254 13.6201 4.54879L13.1661 5.43979ZM5.09998 4.33988C4.71153 4.33988 4.39012 4.33949 4.1288 4.36084C3.86165 4.38267 3.61359 4.42968 3.37983 4.54879L3.83382 5.43979C3.90311 5.40449 4.00492 5.3743 4.21023 5.35752C4.42138 5.34027 4.69503 5.33988 5.09998 5.33988V4.33988ZM3.33331 7.10655C3.33331 6.7016 3.3337 6.42795 3.35095 6.2168C3.36773 6.01149 3.39792 5.90968 3.43322 5.84039L2.54222 5.3864C2.42311 5.62016 2.3761 5.86822 2.35427 6.13537C2.33292 6.39669 2.33331 6.7181 2.33331 7.10655H3.33331ZM3.37983 4.54879C3.01919 4.73254 2.72597 5.02576 2.54222 5.3864L3.43322 5.84039C3.52111 5.66791 3.66134 5.52768 3.83382 5.43979L3.37983 4.54879ZM11.7583 8.88155H14.45V7.88155H11.7583V8.88155ZM15.0833 9.51488V10.0815H16.0833V9.51488H15.0833ZM14.45 10.7149H11.7583V11.7149H14.45V10.7149ZM11.125 10.0815V9.51488H10.125V10.0815H11.125ZM11.7583 10.7149C11.5517 10.7149 11.4268 10.7145 11.3338 10.7069C11.2466 10.6998 11.2323 10.6889 11.2387 10.6922L10.7847 11.5832C10.9427 11.6637 11.1033 11.6914 11.2524 11.7036C11.3956 11.7153 11.5682 11.7149 11.7583 11.7149V10.7149ZM10.125 10.0815C10.125 10.2717 10.1246 10.4443 10.1363 10.5875C10.1485 10.7365 10.1762 10.8971 10.2567 11.0551L11.1477 10.6011C11.151 10.6076 11.1401 10.5933 11.133 10.5061C11.1254 10.413 11.125 10.2882 11.125 10.0815H10.125ZM11.2387 10.6922C11.1995 10.6722 11.1677 10.6403 11.1477 10.6011L10.2567 11.0551C10.3725 11.2825 10.5574 11.4673 10.7847 11.5832L11.2387 10.6922ZM15.0833 10.0815C15.0833 10.2882 15.0829 10.413 15.0753 10.5061C15.0682 10.5933 15.0573 10.6076 15.0606 10.6011L15.9516 11.0551C16.0321 10.8971 16.0598 10.7365 16.072 10.5875C16.0837 10.4443 16.0833 10.2717 16.0833 10.0815H15.0833ZM14.45 11.7149C14.6401 11.7149 14.8127 11.7153 14.9559 11.7036C15.105 11.6914 15.2656 11.6637 15.4236 11.5832L14.9696 10.6922C14.976 10.6889 14.9617 10.6998 14.8745 10.7069C14.7815 10.7145 14.6566 10.7149 14.45 10.7149V11.7149ZM15.0606 10.6011C15.0406 10.6403 15.0088 10.6722 14.9696 10.6922L15.4236 11.5832C15.6509 11.4673 15.8358 11.2825 15.9516 11.0551L15.0606 10.6011ZM14.45 8.88155C14.6566 8.88155 14.7815 8.88194 14.8745 8.88954C14.9617 8.89666 14.976 8.90756 14.9696 8.90426L15.4236 8.01325C15.2656 7.93275 15.105 7.90504 14.9559 7.89286C14.8127 7.88116 14.6401 7.88155 14.45 7.88155V8.88155ZM16.0833 9.51488C16.0833 9.32478 16.0837 9.15213 16.072 9.00893C16.0598 8.8599 16.0321 8.69931 15.9516 8.54131L15.0606 8.9953C15.0573 8.98883 15.0682 9.00317 15.0753 9.09037C15.0829 9.1834 15.0833 9.30828 15.0833 9.51488H16.0833ZM14.9696 8.90426C15.0088 8.92423 15.0406 8.9561 15.0606 8.9953L15.9516 8.54131C15.8358 8.31395 15.6509 8.1291 15.4236 8.01325L14.9696 8.90426ZM11.7583 7.88155C11.5682 7.88155 11.3956 7.88116 11.2524 7.89286C11.1033 7.90504 10.9427 7.93275 10.7847 8.01325L11.2387 8.90426C11.2323 8.90756 11.2466 8.89666 11.3338 8.88954C11.4268 8.88194 11.5517 8.88155 11.7583 8.88155V7.88155ZM11.125 9.51488C11.125 9.30828 11.1254 9.1834 11.133 9.09037C11.1401 9.00317 11.151 8.98883 11.1477 8.9953L10.2567 8.54131C10.1762 8.69931 10.1485 8.8599 10.1363 9.00894C10.1246 9.15213 10.125 9.32478 10.125 9.51488H11.125ZM10.7847 8.01325C10.5574 8.1291 10.3725 8.31395 10.2567 8.54131L11.1477 8.9953C11.1677 8.9561 11.1995 8.92423 11.2387 8.90426L10.7847 8.01325ZM4.43567 5.30412L10.5476 2.85935L10.1762 1.93087L4.06428 4.37565L4.43567 5.30412ZM10.8333 3.05278V4.83988H11.8333V3.05278H10.8333ZM10.5476 2.85935C10.6845 2.80461 10.8333 2.90539 10.8333 3.05278H11.8333C11.8333 2.19793 10.9699 1.61339 10.1762 1.93087L10.5476 2.85935Z"
-                      fill="#B1B1B1"
-                    />
-                  </Svg>
-                </View>
-
-                <Text
-                  style={{
-                    color: '#808080',
-                    fontFamily: 'CamptonMedium',
-                    fontSize: 12,
-                  }}>
-                  Earning:
-                </Text>
-              </View>
-              <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'Campton Bold',
-                  fontSize: 12,
-                }}>
-                ₦35 per Subscription
-              </Text>
-            </View>
-            <View>
-              <TouchableOpacity
-                style={{
-                  height: 35,
-                  backgroundColor: '#FF6DFB',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: 109,
-                  borderTopRightRadius: 4,
-                  borderTopLeftRadius: 4,
-                }}
-                onPress={() => navigation.navigate('Earn1Youtube')}>
-                <Text
-                  style={{
-                    color: '#fff',
-                    fontFamily: 'CamptonMedium',
-                    fontSize: 10,
-                  }}>
-                  Generate Task
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: '#4C4C4C',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: 109,
-                  borderBottomRightRadius: 4,
-                  borderBottomLeftRadius: 4,
-                }}
-                onPress={() => navigation.navigate('Earn1')}>
-                <Text
-                  style={{
-                    color: '#fff',
-                    fontFamily: 'CamptonMedium',
-                    fontSize: 10,
-                  }}>
-                  124 Task Available
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </View>
-      <View style={styles.Container1}>
-        <View style={styles.Advert1}>
-          <Svg
-            width="44"
-            height="45"
-            viewBox="0 0 44 45"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg">
-            <Path
-              id="Vector"
-              d="M28.4231 26.9898C31.3225 26.9898 34.1031 28.1488 36.1532 30.2117C38.2033 32.2746 39.3551 35.0725 39.3551 37.9898V40.1898C39.3551 41.3568 38.8944 42.476 38.0743 43.3011C37.2543 44.1263 36.142 44.5898 34.9823 44.5898H4.37279C3.21305 44.5898 2.10082 44.1263 1.28076 43.3011C0.460703 42.476 0 41.3568 0 40.1898V37.9898C0 35.0725 1.15176 32.2746 3.2019 30.2117C5.25204 28.1488 8.03263 26.9898 10.932 26.9898H28.4231ZM40.2603 16.168C40.6528 15.7693 41.182 15.5366 41.7395 15.5175C42.2969 15.4985 42.8406 15.6946 43.2591 16.0657C43.6776 16.4367 43.9393 16.9547 43.9907 17.5136C44.0421 18.0725 43.8792 18.63 43.5355 19.072L43.3518 19.281L37.1687 25.5026C36.7922 25.8814 36.2913 26.109 35.76 26.1426C35.2286 26.1762 34.7033 26.0136 34.2827 25.6852L34.0771 25.5026L30.9856 22.3918C30.5893 21.9969 30.358 21.4644 30.3391 20.9034C30.3202 20.3425 30.5151 19.7955 30.8838 19.3744C31.2526 18.9533 31.7674 18.6899 32.3228 18.6382C32.8783 18.5865 33.4323 18.7504 33.8716 19.0962L34.0771 19.281L35.6229 20.8364L40.2603 16.168ZM19.6775 0.589844C22.5769 0.589844 25.3575 1.74877 27.4076 3.81167C29.4578 5.87457 30.6095 8.67246 30.6095 11.5898C30.6095 14.5072 29.4578 17.3051 27.4076 19.368C25.3575 21.4309 22.5769 22.5898 19.6775 22.5898C16.7782 22.5898 13.9976 21.4309 11.9475 19.368C9.89734 17.3051 8.74558 14.5072 8.74558 11.5898C8.74558 8.67246 9.89734 5.87457 11.9475 3.81167C13.9976 1.74877 16.7782 0.589844 19.6775 0.589844Z"
-              fill="#FC11F5"
-            />
-          </Svg>
-
-          <View style={styles.Check}>
-            <Text style={{color: '#fff', fontFamily: 'CamptonMedium'}}>
-              Follow peoples and Business pages
-            </Text>
-            <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'CamptonBook',
-                paddingTop: 10,
-                fontSize: 12,
-              }}>
-              Follow people and pages on selected social media account like
-              Facebook, Instagram, Tiktok, and others and earn ₦3.5 per follow
-              the more people you follow the more you earn.
-            </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                paddingVertical: 10,
-                gap: 7,
-                paddingRight: 50,
-              }}>
-              <View style={{flexDirection: 'row', gap: 3}}>
-                <View style={styles.wallet}>
-                  <Svg
-                    width="17"
-                    height="18"
-                    viewBox="0 0 17 18"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <Path
-                      d="M3.60683 14.6021L3.83382 14.1566L3.60683 14.6021ZM2.98772 13.983L3.43322 13.756H3.43322L2.98772 13.983ZM13.3931 14.6021L13.1661 14.1566L13.1661 14.1566L13.3931 14.6021ZM14.0122 13.983L13.5667 13.756V13.756L14.0122 13.983ZM13.3931 4.99429L13.1661 5.43979L13.1661 5.43979L13.3931 4.99429ZM14.0122 5.6134L13.5667 5.84039L14.0122 5.6134ZM3.60683 4.99429L3.37983 4.54879L3.60683 4.99429ZM2.98772 5.6134L2.54222 5.3864L2.98772 5.6134ZM11.0117 11.1377L11.2387 10.6922L11.0117 11.1377ZM10.7022 10.8281L11.1477 10.6011L10.7022 10.8281ZM15.5061 10.8281L15.0606 10.6011L15.5061 10.8281ZM15.1966 11.1377L14.9696 10.6922L15.1966 11.1377ZM15.1966 8.45875L14.9696 8.90426L15.1966 8.45875ZM15.5061 8.76831L15.0606 8.9953L15.5061 8.76831ZM11.0117 8.45875L11.2387 8.90426L11.0117 8.45875ZM10.7022 8.76831L11.1477 8.9953L10.7022 8.76831ZM4.06428 4.37565C3.80789 4.4782 3.68318 4.76919 3.78574 5.02558C3.8883 5.28197 4.17928 5.40668 4.43567 5.30412L4.06428 4.37565ZM10.3619 2.39511L10.1762 1.93087L10.1762 1.93087L10.3619 2.39511ZM10.8333 4.83988C10.8333 5.11603 11.0572 5.33988 11.3333 5.33988C11.6095 5.33988 11.8333 5.11603 11.8333 4.83988H10.8333ZM5.09998 5.33988H11.9V4.33988H5.09998V5.33988ZM11.9 14.2565H5.09998V15.2565H11.9V14.2565ZM3.33331 12.4899V7.10655H2.33331V12.4899H3.33331ZM13.6666 7.10655V8.55863H14.6666V7.10655H13.6666ZM13.6666 11.3477V12.4899H14.6666V11.3477H13.6666ZM5.09998 14.2565C4.69503 14.2565 4.42138 14.2562 4.21023 14.2389C4.00492 14.2221 3.90311 14.1919 3.83382 14.1566L3.37983 15.0476C3.61359 15.1667 3.86165 15.2138 4.1288 15.2356C4.39012 15.2569 4.71153 15.2565 5.09998 15.2565V14.2565ZM2.33331 12.4899C2.33331 12.8783 2.33292 13.1997 2.35427 13.4611C2.3761 13.7282 2.42311 13.9763 2.54222 14.21L3.43322 13.756C3.39792 13.6868 3.36773 13.5849 3.35095 13.3796C3.3337 13.1685 3.33331 12.8948 3.33331 12.4899H2.33331ZM3.83382 14.1566C3.66134 14.0688 3.52111 13.9285 3.43322 13.756L2.54222 14.21C2.72597 14.5707 3.01919 14.8639 3.37983 15.0476L3.83382 14.1566ZM11.9 15.2565C12.2884 15.2565 12.6098 15.2569 12.8712 15.2356C13.1383 15.2138 13.3864 15.1667 13.6201 15.0476L13.1661 14.1566C13.0969 14.1919 12.995 14.2221 12.7897 14.2389C12.5786 14.2562 12.3049 14.2565 11.9 14.2565V15.2565ZM13.6666 12.4899C13.6666 12.8948 13.6663 13.1685 13.649 13.3796C13.6322 13.5849 13.602 13.6868 13.5667 13.756L14.4577 14.21C14.5768 13.9763 14.6239 13.7282 14.6457 13.4611C14.667 13.1997 14.6666 12.8783 14.6666 12.4899H13.6666ZM13.6201 15.0476C13.9808 14.8639 14.274 14.5707 14.4577 14.21L13.5667 13.756C13.4789 13.9285 13.3386 14.0688 13.1661 14.1566L13.6201 15.0476ZM11.9 5.33988C12.3049 5.33988 12.5786 5.34027 12.7897 5.35752C12.995 5.3743 13.0969 5.40449 13.1661 5.43979L13.6201 4.54879C13.3864 4.42968 13.1383 4.38267 12.8712 4.36084C12.6098 4.33949 12.2884 4.33988 11.9 4.33988V5.33988ZM14.6666 7.10655C14.6666 6.7181 14.667 6.39669 14.6457 6.13537C14.6239 5.86822 14.5768 5.62016 14.4577 5.3864L13.5667 5.84039C13.602 5.90968 13.6322 6.01149 13.649 6.2168C13.6663 6.42795 13.6666 6.7016 13.6666 7.10655H14.6666ZM13.1661 5.43979C13.3386 5.52768 13.4789 5.66791 13.5667 5.84039L14.4577 5.3864C14.274 5.02576 13.9808 4.73254 13.6201 4.54879L13.1661 5.43979ZM5.09998 4.33988C4.71153 4.33988 4.39012 4.33949 4.1288 4.36084C3.86165 4.38267 3.61359 4.42968 3.37983 4.54879L3.83382 5.43979C3.90311 5.40449 4.00492 5.3743 4.21023 5.35752C4.42138 5.34027 4.69503 5.33988 5.09998 5.33988V4.33988ZM3.33331 7.10655C3.33331 6.7016 3.3337 6.42795 3.35095 6.2168C3.36773 6.01149 3.39792 5.90968 3.43322 5.84039L2.54222 5.3864C2.42311 5.62016 2.3761 5.86822 2.35427 6.13537C2.33292 6.39669 2.33331 6.7181 2.33331 7.10655H3.33331ZM3.37983 4.54879C3.01919 4.73254 2.72597 5.02576 2.54222 5.3864L3.43322 5.84039C3.52111 5.66791 3.66134 5.52768 3.83382 5.43979L3.37983 4.54879ZM11.7583 8.88155H14.45V7.88155H11.7583V8.88155ZM15.0833 9.51488V10.0815H16.0833V9.51488H15.0833ZM14.45 10.7149H11.7583V11.7149H14.45V10.7149ZM11.125 10.0815V9.51488H10.125V10.0815H11.125ZM11.7583 10.7149C11.5517 10.7149 11.4268 10.7145 11.3338 10.7069C11.2466 10.6998 11.2323 10.6889 11.2387 10.6922L10.7847 11.5832C10.9427 11.6637 11.1033 11.6914 11.2524 11.7036C11.3956 11.7153 11.5682 11.7149 11.7583 11.7149V10.7149ZM10.125 10.0815C10.125 10.2717 10.1246 10.4443 10.1363 10.5875C10.1485 10.7365 10.1762 10.8971 10.2567 11.0551L11.1477 10.6011C11.151 10.6076 11.1401 10.5933 11.133 10.5061C11.1254 10.413 11.125 10.2882 11.125 10.0815H10.125ZM11.2387 10.6922C11.1995 10.6722 11.1677 10.6403 11.1477 10.6011L10.2567 11.0551C10.3725 11.2825 10.5574 11.4673 10.7847 11.5832L11.2387 10.6922ZM15.0833 10.0815C15.0833 10.2882 15.0829 10.413 15.0753 10.5061C15.0682 10.5933 15.0573 10.6076 15.0606 10.6011L15.9516 11.0551C16.0321 10.8971 16.0598 10.7365 16.072 10.5875C16.0837 10.4443 16.0833 10.2717 16.0833 10.0815H15.0833ZM14.45 11.7149C14.6401 11.7149 14.8127 11.7153 14.9559 11.7036C15.105 11.6914 15.2656 11.6637 15.4236 11.5832L14.9696 10.6922C14.976 10.6889 14.9617 10.6998 14.8745 10.7069C14.7815 10.7145 14.6566 10.7149 14.45 10.7149V11.7149ZM15.0606 10.6011C15.0406 10.6403 15.0088 10.6722 14.9696 10.6922L15.4236 11.5832C15.6509 11.4673 15.8358 11.2825 15.9516 11.0551L15.0606 10.6011ZM14.45 8.88155C14.6566 8.88155 14.7815 8.88194 14.8745 8.88954C14.9617 8.89666 14.976 8.90756 14.9696 8.90426L15.4236 8.01325C15.2656 7.93275 15.105 7.90504 14.9559 7.89286C14.8127 7.88116 14.6401 7.88155 14.45 7.88155V8.88155ZM16.0833 9.51488C16.0833 9.32478 16.0837 9.15213 16.072 9.00893C16.0598 8.8599 16.0321 8.69931 15.9516 8.54131L15.0606 8.9953C15.0573 8.98883 15.0682 9.00317 15.0753 9.09037C15.0829 9.1834 15.0833 9.30828 15.0833 9.51488H16.0833ZM14.9696 8.90426C15.0088 8.92423 15.0406 8.9561 15.0606 8.9953L15.9516 8.54131C15.8358 8.31395 15.6509 8.1291 15.4236 8.01325L14.9696 8.90426ZM11.7583 7.88155C11.5682 7.88155 11.3956 7.88116 11.2524 7.89286C11.1033 7.90504 10.9427 7.93275 10.7847 8.01325L11.2387 8.90426C11.2323 8.90756 11.2466 8.89666 11.3338 8.88954C11.4268 8.88194 11.5517 8.88155 11.7583 8.88155V7.88155ZM11.125 9.51488C11.125 9.30828 11.1254 9.1834 11.133 9.09037C11.1401 9.00317 11.151 8.98883 11.1477 8.9953L10.2567 8.54131C10.1762 8.69931 10.1485 8.8599 10.1363 9.00894C10.1246 9.15213 10.125 9.32478 10.125 9.51488H11.125ZM10.7847 8.01325C10.5574 8.1291 10.3725 8.31395 10.2567 8.54131L11.1477 8.9953C11.1677 8.9561 11.1995 8.92423 11.2387 8.90426L10.7847 8.01325ZM4.43567 5.30412L10.5476 2.85935L10.1762 1.93087L4.06428 4.37565L4.43567 5.30412ZM10.8333 3.05278V4.83988H11.8333V3.05278H10.8333ZM10.5476 2.85935C10.6845 2.80461 10.8333 2.90539 10.8333 3.05278H11.8333C11.8333 2.19793 10.9699 1.61339 10.1762 1.93087L10.5476 2.85935Z"
-                      fill="#B1B1B1"
-                    />
-                  </Svg>
-                </View>
-
-                <Text
-                  style={{
-                    color: '#808080',
-                    fontFamily: 'CamptonMedium',
-                    fontSize: 12,
-                  }}>
-                  Earning:
-                </Text>
-              </View>
-              <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'Campton Bold',
-                  fontSize: 12,
-                }}>
-                ₦3.5 per Follow
-              </Text>
-            </View>
-            <View>
-              <TouchableOpacity
-                style={{
-                  height: 35,
-                  backgroundColor: '#FF6DFB',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: 109,
-                  borderTopRightRadius: 4,
-                  borderTopLeftRadius: 4,
-                }}
-                onPress={() => navigation.navigate('Earn1Follow')}>
-                <Text
-                  style={{
-                    color: '#fff',
-                    fontFamily: 'CamptonMedium',
-                    fontSize: 10,
-                  }}>
-                  Generate Task
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: '#4C4C4C',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: 109,
-                  borderBottomRightRadius: 4,
-                  borderBottomLeftRadius: 4,
-                }}
-                onPress={() => navigation.navigate('Earn1Follow')}>
-                <Text
-                  style={{
-                    color: '#fff',
-                    fontFamily: 'CamptonMedium',
-                    fontSize: 10,
-                  }}>
-                  124 Task Available
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </View>
-      <View style={styles.Container1}>
-        <View style={styles.Advert1}>
-          <Svg
-            width="47"
-            height="48"
-            viewBox="0 0 47 48"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg">
-            <G id="logos:spotify-icon" clip-path="url(#clip0_5579_17671)">
-              <Path
-                id="Vector"
-                d="M23.5 0.589844C10.5214 0.589844 0 11.1114 0 24.0898C0 37.0692 10.5216 47.5898 23.5 47.5898C36.4795 47.5898 47 37.0692 47 24.0898C47 11.1123 36.4795 0.591129 23.4996 0.591129L23.5 0.589844ZM34.2768 34.4838C33.8558 35.1741 32.9521 35.393 32.2618 34.9692C26.7443 31.599 19.7986 30.8356 11.6185 32.7046C11.2398 32.7908 10.8422 32.7231 10.5134 32.5163C10.1845 32.3094 9.95126 31.9805 9.86486 31.6018C9.82181 31.4143 9.81616 31.2201 9.84824 31.0304C9.88033 30.8407 9.94951 30.6592 10.0518 30.4963C10.1542 30.3334 10.2876 30.1923 10.4445 30.081C10.6015 29.9698 10.7788 29.8905 10.9664 29.8479C19.9185 27.8027 27.5969 28.6832 33.7913 32.4689C34.4817 32.8926 34.7005 33.7935 34.2768 34.4838ZM37.1531 28.085C36.6225 28.947 35.4945 29.2193 34.6331 28.6889C28.3164 24.8062 18.6875 23.6817 11.2161 25.9496C10.2471 26.2423 9.22375 25.6963 8.92963 24.7289C8.63772 23.7599 9.18409 22.7384 10.1514 22.4439C18.6858 19.8542 29.2957 21.1087 36.5498 25.5663C37.4113 26.0969 37.6835 27.2247 37.1531 28.085ZM37.4001 21.4219C29.8261 16.9231 17.3301 16.5093 10.0989 18.7043C8.93771 19.0564 7.70965 18.4008 7.35789 17.2396C7.00594 16.0778 7.66082 14.8507 8.82296 14.4976C17.1238 11.9776 30.9234 12.4647 39.6432 17.6413C40.6901 18.2611 41.0323 19.6102 40.4121 20.6532C39.7949 21.6978 38.4421 22.042 37.4012 21.4219H37.4001Z"
-                fill="#1ED760"
-              />
-            </G>
-            <Defs>
-              <ClipPath id="clip0_5579_17671">
-                <Rect
-                  width="47"
-                  height="47"
-                  fill="white"
-                  transform="translate(0 0.589844)"
+      {isLoading ? (
+        <ActivityIndicator size="large" color="#fff" />
+      ) : (
+        <>
+          <View style={styles.Container1}>
+            <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
+              <Svg
+                width="44"
+                height="45"
+                viewBox="0 0 44 45"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <Path
+                  id="Vector"
+                  d="M28.4231 26.9898C31.3225 26.9898 34.1031 28.1488 36.1532 30.2117C38.2033 32.2746 39.3551 35.0725 39.3551 37.9898V40.1898C39.3551 41.3568 38.8944 42.476 38.0743 43.3011C37.2543 44.1263 36.142 44.5898 34.9823 44.5898H4.37279C3.21305 44.5898 2.10082 44.1263 1.28076 43.3011C0.460703 42.476 0 41.3568 0 40.1898V37.9898C0 35.0725 1.15176 32.2746 3.2019 30.2117C5.25204 28.1488 8.03263 26.9898 10.932 26.9898H28.4231ZM40.2603 16.168C40.6528 15.7693 41.182 15.5366 41.7395 15.5175C42.2969 15.4985 42.8406 15.6946 43.2591 16.0657C43.6776 16.4367 43.9393 16.9547 43.9907 17.5136C44.0421 18.0725 43.8792 18.63 43.5355 19.072L43.3518 19.281L37.1687 25.5026C36.7922 25.8814 36.2913 26.109 35.76 26.1426C35.2286 26.1762 34.7033 26.0136 34.2827 25.6852L34.0771 25.5026L30.9856 22.3918C30.5893 21.9969 30.358 21.4644 30.3391 20.9034C30.3202 20.3425 30.5151 19.7955 30.8838 19.3744C31.2526 18.9533 31.7674 18.6899 32.3228 18.6382C32.8783 18.5865 33.4323 18.7504 33.8716 19.0962L34.0771 19.281L35.6229 20.8364L40.2603 16.168ZM19.6775 0.589844C22.5769 0.589844 25.3575 1.74877 27.4076 3.81167C29.4578 5.87457 30.6095 8.67246 30.6095 11.5898C30.6095 14.5072 29.4578 17.3051 27.4076 19.368C25.3575 21.4309 22.5769 22.5898 19.6775 22.5898C16.7782 22.5898 13.9976 21.4309 11.9475 19.368C9.89734 17.3051 8.74558 14.5072 8.74558 11.5898C8.74558 8.67246 9.89734 5.87457 11.9475 3.81167C13.9976 1.74877 16.7782 0.589844 19.6775 0.589844Z"
+                  fill="#FC11F5"
                 />
-              </ClipPath>
-            </Defs>
-          </Svg>
-          <View style={styles.Check}>
-            <Text style={{color: '#fff', fontFamily: 'CamptonMedium'}}>
-              Follow an Account on Spotify
-            </Text>
-            <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'CamptonBook',
-                paddingTop: 10,
-                fontSize: 12,
-              }}>
-              Follow selected and given profiles on Spotify and earn ₦5 per
-              follower. The more you hustle, the more you gain.
-            </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                paddingVertical: 10,
-                gap: 7,
-                paddingRight: 50,
-              }}>
-              <View style={{flexDirection: 'row', gap: 3}}>
-                <View style={styles.wallet}>
+              </Svg>
+
+              <View style={styles.Check}>
+                <Text
+                  style={[
+                    {color: '#fff', fontFamily: 'Manrope-Medium'},
+                    dynamicStyles.TextColor,
+                  ]}>
+                  Follow peoples and Business pages
+                </Text>
+                <Text
+                  style={[
+                    {
+                      color: '#fff',
+                      fontFamily: 'Manrope-Regular',
+                      paddingTop: 10,
+                      fontSize: 12,
+                    },
+                    dynamicStyles.TextColor,
+                  ]}>
+                  Follow people and pages on selected social media account like
+                  Facebook, Instagram, Tiktok, and others and earn ₦3.5 per
+                  follow the more people you follow the more you earn.
+                </Text>
+                <View style={{flexDirection: 'row', gap: 5, paddingTop: 10}}>
+                  <TouchableOpacity>
+                    <Svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 47 47"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <Path
+                        d="M35.9844 0H11.0156C4.93186 0 0 4.93186 0 11.0156V35.9844C0 42.0681 4.93186 47 11.0156 47H35.9844C42.0681 47 47 42.0681 47 35.9844V11.0156C47 4.93186 42.0681 0 35.9844 0Z"
+                        fill="url(#paint0_radial_3204_7466)"
+                      />
+                      <Path
+                        d="M35.9844 0H11.0156C4.93186 0 0 4.93186 0 11.0156V35.9844C0 42.0681 4.93186 47 11.0156 47H35.9844C42.0681 47 47 42.0681 47 35.9844V11.0156C47 4.93186 42.0681 0 35.9844 0Z"
+                        fill="url(#paint1_radial_3204_7466)"
+                      />
+                      <Path
+                        d="M23.5017 5.14062C18.5156 5.14062 17.8897 5.16247 15.9315 5.25152C13.977 5.34111 12.6428 5.65046 11.4755 6.10449C10.2678 6.57339 9.24358 7.20073 8.22316 8.22151C7.20183 9.24211 6.57449 10.2664 6.10413 11.4735C5.64881 12.6412 5.33909 13.9759 5.25115 15.9295C5.16357 17.8879 5.14062 18.514 5.14062 23.5002C5.14062 28.4864 5.16266 29.1103 5.25152 31.0685C5.34148 33.023 5.65083 34.3572 6.10449 35.5245C6.57376 36.7322 7.2011 37.7564 8.22188 38.7768C9.24211 39.7982 10.2664 40.427 11.4731 40.8959C12.6413 41.3499 13.9757 41.6593 15.9299 41.7489C17.8883 41.8379 18.5136 41.8597 23.4994 41.8597C28.486 41.8597 29.1099 41.8379 31.0681 41.7489C33.0226 41.6593 34.3583 41.3499 35.5265 40.8959C36.7336 40.427 37.7564 39.7982 38.7765 38.7768C39.7978 37.7564 40.425 36.7322 40.8955 35.525C41.3468 34.3572 41.6567 33.0226 41.7485 31.0688C41.8364 29.1106 41.8594 28.4864 41.8594 23.5002C41.8594 18.514 41.8364 17.8883 41.7485 15.9299C41.6567 13.9753 41.3468 12.6413 40.8955 11.4741C40.425 10.2664 39.7978 9.24211 38.7765 8.22151C37.7553 7.20036 36.734 6.57302 35.5254 6.10468C34.355 5.65046 33.0201 5.34093 31.0655 5.25152C29.1071 5.16247 28.4837 5.14062 23.496 5.14062H23.5017ZM21.8546 8.44917C22.3435 8.44843 22.889 8.44917 23.5017 8.44917C28.4038 8.44917 28.9847 8.46679 30.9205 8.55473C32.7105 8.63662 33.6821 8.93569 34.3293 9.18703C35.1861 9.5197 35.7969 9.91755 36.4391 10.5603C37.0817 11.2029 37.4794 11.8148 37.813 12.6716C38.0643 13.3179 38.3638 14.2895 38.4453 16.0795C38.5332 18.015 38.5523 18.5962 38.5523 23.496C38.5523 28.3957 38.5332 28.9772 38.4453 30.9124C38.3634 32.7025 38.0643 33.674 37.813 34.3205C37.4803 35.1773 37.0817 35.7874 36.4391 36.4296C35.7966 37.0722 35.1865 37.4698 34.3293 37.8027C33.6828 38.0551 32.7105 38.3535 30.9205 38.4354C28.985 38.5233 28.4038 38.5424 23.5017 38.5424C18.5993 38.5424 18.0183 38.5233 16.083 38.4354C14.293 38.3527 13.3214 38.0537 12.6737 37.8023C11.817 37.4695 11.2049 37.0718 10.5623 36.4292C9.91975 35.7866 9.52209 35.1762 9.1885 34.319C8.93716 33.6726 8.63772 32.701 8.5562 30.9109C8.46826 28.9755 8.45064 28.3942 8.45064 23.4914C8.45064 18.5887 8.46826 18.0104 8.5562 16.0749C8.63809 14.2849 8.93716 13.3133 9.1885 12.6661C9.52136 11.8093 9.91975 11.1974 10.5625 10.5548C11.2051 9.91223 11.817 9.51438 12.6738 9.18097C13.321 8.92853 14.293 8.63019 16.083 8.54794C17.7766 8.47138 18.433 8.44843 21.8546 8.44458V8.44917ZM33.3019 11.4976C32.0856 11.4976 31.0988 12.4835 31.0988 13.6999C31.0988 14.9163 32.0856 15.9031 33.3019 15.9031C34.5182 15.9031 35.505 14.9163 35.505 13.6999C35.505 12.4836 34.5182 11.4968 33.3019 11.4968V11.4976ZM23.5017 14.0717C18.2949 14.0717 14.0734 18.2933 14.0734 23.5002C14.0734 28.7071 18.2949 32.9266 23.5017 32.9266C28.7086 32.9266 32.9286 28.7071 32.9286 23.5002C32.9286 18.2935 28.7082 14.0717 23.5013 14.0717H23.5017ZM23.5017 17.3803C26.8814 17.3803 29.6216 20.12 29.6216 23.5002C29.6216 26.88 26.8814 29.6201 23.5017 29.6201C20.1217 29.6201 17.3819 26.88 17.3819 23.5002C17.3819 20.12 20.1217 17.3803 23.5017 17.3803Z"
+                        fill="white"
+                      />
+                      <Defs>
+                        <RadialGradient
+                          id="paint0_radial_3204_7466"
+                          cx="0"
+                          cy="0"
+                          r="1"
+                          gradientUnits="userSpaceOnUse"
+                          gradientTransform="translate(12.4844 50.6199) rotate(-90) scale(46.5805 43.3235)">
+                          <Stop stop-color="#FFDD55" />
+                          <Stop offset="0.1" stop-color="#FFDD55" />
+                          <Stop offset="0.5" stop-color="#FF543E" />
+                          <Stop offset="1" stop-color="#C837AB" />
+                        </RadialGradient>
+                        <RadialGradient
+                          id="paint1_radial_3204_7466"
+                          cx="0"
+                          cy="0"
+                          r="1"
+                          gradientUnits="userSpaceOnUse"
+                          gradientTransform="translate(-7.87268 3.38565) rotate(78.681) scale(20.8217 85.8279)">
+                          <Stop stop-color="#3771C8" />
+                          <Stop offset="0.128" stop-color="#3771C8" />
+                          <Stop
+                            offset="1"
+                            stop-color="#6600FF"
+                            stop-opacity="0"
+                          />
+                        </RadialGradient>
+                      </Defs>
+                    </Svg>
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Svg width="17" height="18" viewBox="0 0 47 48" fill="none">
+                      <Path
+                        d="M47 24.0898C47 11.1112 36.4786 0.589844 23.5 0.589844C10.5214 0.589844 0 11.1112 0 24.0898C0 35.8193 8.59366 45.5415 19.8281 47.3044V30.8828H13.8613V24.0898H19.8281V18.9125C19.8281 13.0228 23.3366 9.76953 28.7045 9.76953C31.2756 9.76953 33.9648 10.2285 33.9648 10.2285V16.0117H31.0016C28.0823 16.0117 27.1719 17.8232 27.1719 19.6818V24.0898H33.6895L32.6476 30.8828H27.1719V47.3044C38.4063 45.5415 47 35.8195 47 24.0898Z"
+                        fill="#1877F2"
+                      />
+                      <Path
+                        d="M32.6476 30.8828L33.6895 24.0898H27.1719V19.6818C27.1719 17.8231 28.0823 16.0117 31.0016 16.0117H33.9648V10.2285C33.9648 10.2285 31.2756 9.76953 28.7043 9.76953C23.3366 9.76953 19.8281 13.0228 19.8281 18.9125V24.0898H13.8613V30.8828H19.8281V47.3044C21.0428 47.4947 22.2705 47.5902 23.5 47.5898C24.7295 47.5902 25.9572 47.4948 27.1719 47.3044V30.8828H32.6476Z"
+                        fill="white"
+                      />
+                    </Svg>
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Svg width="17" height="18" viewBox="0 0 47 48" fill="none">
+                      <Path
+                        d="M34.8307 17.5134C38.2597 19.6762 42.4604 20.9488 46.9973 20.9488V13.2457C46.1386 13.2458 45.2822 13.1667 44.4422 13.0097V19.0732C39.9057 19.0732 35.7055 17.8008 32.2758 15.6381V31.3582C32.2758 39.2222 25.0507 45.5967 16.1389 45.5967C12.8137 45.5967 9.72286 44.7097 7.15546 43.1884C10.0858 45.8322 14.1723 47.4722 18.6933 47.4722C27.6058 47.4722 34.8311 41.0977 34.8311 33.2333V17.5134H34.8307ZM37.9828 9.7419C36.2303 8.05266 35.0796 5.86959 34.8307 3.45606V2.46533H32.4094C33.0189 5.53281 35.098 8.15347 37.9828 9.7419ZM12.7922 37.1539C11.8131 36.0213 11.2839 34.6355 11.2862 33.2108C11.2862 29.6142 14.5909 26.6979 18.6681 26.6979C19.4278 26.6975 20.183 26.8005 20.9073 27.0031V19.1276C20.0609 19.0254 19.2069 18.9818 18.3533 18.9978V25.1276C17.6287 24.9249 16.8731 24.822 16.113 24.8226C12.036 24.8226 8.73151 27.7385 8.73151 31.3356C8.73151 33.8792 10.3832 36.0812 12.7922 37.1539Z"
+                        fill="#FF004F"
+                      />
+                      <Path
+                        d="M32.2758 15.638C35.7057 17.8006 39.9055 19.073 44.4422 19.073V13.0095C41.9098 12.5335 39.6681 11.366 37.9826 9.7419C35.0976 8.1533 33.0189 5.53265 32.4094 2.46533H26.0496V33.233C26.0351 36.8199 22.7361 39.7242 18.6677 39.7242C16.2705 39.7242 14.1406 38.7159 12.7918 37.1538C10.3832 36.0812 8.73132 33.879 8.73132 31.3358C8.73132 27.739 12.0358 24.8227 16.1128 24.8227C16.894 24.8227 17.6468 24.93 18.3531 25.1278V18.998C9.59764 19.1576 2.55634 25.4699 2.55634 33.2331C2.55634 37.1085 4.30973 40.6217 7.15563 43.1887C9.72303 44.7097 12.8136 45.5971 16.1391 45.5971C25.0511 45.5971 32.276 39.2221 32.276 31.3582L32.2758 15.638Z"
+                        fill="black"
+                      />
+                      <Path
+                        d="M44.4423 13.0092V11.37C42.1587 11.3731 39.9203 10.8088 37.9828 9.74172C39.6978 11.3984 41.9561 12.5409 44.4423 13.0095M32.4094 2.46498C32.3513 2.1719 32.3067 1.87685 32.2758 1.58057V0.589844H23.4943V31.3578C23.4803 34.9444 20.1813 37.8487 16.1128 37.8487C14.9594 37.8502 13.8218 37.6122 12.7918 37.1539C14.1406 38.7158 16.2705 39.7238 18.6677 39.7238C22.7359 39.7238 26.0352 36.8199 26.0496 33.233V2.46514L32.4094 2.46498ZM18.3536 18.9976V17.2523C17.6198 17.1638 16.88 17.1195 16.1394 17.1197C7.22648 17.1197 0.00158691 23.4946 0.00158691 31.3578C0.00158691 36.2878 2.84106 40.6325 7.15598 43.1882C4.31009 40.6214 2.55669 37.108 2.55669 33.2328C2.55669 25.4697 9.59781 19.1573 18.3536 18.9976Z"
+                        fill="#00F2EA"
+                      />
+                    </Svg>
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Svg
+                      width="17"
+                      height="18"
+                      viewBox="0 0 47 47"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <Path
+                        d="M37.0145 2.25781H44.2211L28.4761 20.2549L47 44.7399H32.4966L21.1382 29.8879L8.13883 44.7399H0.92825L17.7699 25.4895L0 2.25977H14.8716L25.1391 15.8349L37.0145 2.25781ZM34.4863 40.4277H38.4793L12.7018 6.34485H8.41692L34.4863 40.4277Z"
+                        fill={strokeColor}
+                      />
+                    </Svg>
+                  </TouchableOpacity>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    paddingVertical: 10,
+                    gap: 7,
+                    paddingRight: 50,
+                  }}>
+                  <View style={{flexDirection: 'row', gap: 3}}>
+                    <View style={styles.wallet}>
+                      <Svg
+                        width="17"
+                        height="18"
+                        viewBox="0 0 17 18"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <Path
+                          d="M3.60683 14.6021L3.83382 14.1566L3.60683 14.6021ZM2.98772 13.983L3.43322 13.756H3.43322L2.98772 13.983ZM13.3931 14.6021L13.1661 14.1566L13.1661 14.1566L13.3931 14.6021ZM14.0122 13.983L13.5667 13.756V13.756L14.0122 13.983ZM13.3931 4.99429L13.1661 5.43979L13.1661 5.43979L13.3931 4.99429ZM14.0122 5.6134L13.5667 5.84039L14.0122 5.6134ZM3.60683 4.99429L3.37983 4.54879L3.60683 4.99429ZM2.98772 5.6134L2.54222 5.3864L2.98772 5.6134ZM11.0117 11.1377L11.2387 10.6922L11.0117 11.1377ZM10.7022 10.8281L11.1477 10.6011L10.7022 10.8281ZM15.5061 10.8281L15.0606 10.6011L15.5061 10.8281ZM15.1966 11.1377L14.9696 10.6922L15.1966 11.1377ZM15.1966 8.45875L14.9696 8.90426L15.1966 8.45875ZM15.5061 8.76831L15.0606 8.9953L15.5061 8.76831ZM11.0117 8.45875L11.2387 8.90426L11.0117 8.45875ZM10.7022 8.76831L11.1477 8.9953L10.7022 8.76831ZM4.06428 4.37565C3.80789 4.4782 3.68318 4.76919 3.78574 5.02558C3.8883 5.28197 4.17928 5.40668 4.43567 5.30412L4.06428 4.37565ZM10.3619 2.39511L10.1762 1.93087L10.1762 1.93087L10.3619 2.39511ZM10.8333 4.83988C10.8333 5.11603 11.0572 5.33988 11.3333 5.33988C11.6095 5.33988 11.8333 5.11603 11.8333 4.83988H10.8333ZM5.09998 5.33988H11.9V4.33988H5.09998V5.33988ZM11.9 14.2565H5.09998V15.2565H11.9V14.2565ZM3.33331 12.4899V7.10655H2.33331V12.4899H3.33331ZM13.6666 7.10655V8.55863H14.6666V7.10655H13.6666ZM13.6666 11.3477V12.4899H14.6666V11.3477H13.6666ZM5.09998 14.2565C4.69503 14.2565 4.42138 14.2562 4.21023 14.2389C4.00492 14.2221 3.90311 14.1919 3.83382 14.1566L3.37983 15.0476C3.61359 15.1667 3.86165 15.2138 4.1288 15.2356C4.39012 15.2569 4.71153 15.2565 5.09998 15.2565V14.2565ZM2.33331 12.4899C2.33331 12.8783 2.33292 13.1997 2.35427 13.4611C2.3761 13.7282 2.42311 13.9763 2.54222 14.21L3.43322 13.756C3.39792 13.6868 3.36773 13.5849 3.35095 13.3796C3.3337 13.1685 3.33331 12.8948 3.33331 12.4899H2.33331ZM3.83382 14.1566C3.66134 14.0688 3.52111 13.9285 3.43322 13.756L2.54222 14.21C2.72597 14.5707 3.01919 14.8639 3.37983 15.0476L3.83382 14.1566ZM11.9 15.2565C12.2884 15.2565 12.6098 15.2569 12.8712 15.2356C13.1383 15.2138 13.3864 15.1667 13.6201 15.0476L13.1661 14.1566C13.0969 14.1919 12.995 14.2221 12.7897 14.2389C12.5786 14.2562 12.3049 14.2565 11.9 14.2565V15.2565ZM13.6666 12.4899C13.6666 12.8948 13.6663 13.1685 13.649 13.3796C13.6322 13.5849 13.602 13.6868 13.5667 13.756L14.4577 14.21C14.5768 13.9763 14.6239 13.7282 14.6457 13.4611C14.667 13.1997 14.6666 12.8783 14.6666 12.4899H13.6666ZM13.6201 15.0476C13.9808 14.8639 14.274 14.5707 14.4577 14.21L13.5667 13.756C13.4789 13.9285 13.3386 14.0688 13.1661 14.1566L13.6201 15.0476ZM11.9 5.33988C12.3049 5.33988 12.5786 5.34027 12.7897 5.35752C12.995 5.3743 13.0969 5.40449 13.1661 5.43979L13.6201 4.54879C13.3864 4.42968 13.1383 4.38267 12.8712 4.36084C12.6098 4.33949 12.2884 4.33988 11.9 4.33988V5.33988ZM14.6666 7.10655C14.6666 6.7181 14.667 6.39669 14.6457 6.13537C14.6239 5.86822 14.5768 5.62016 14.4577 5.3864L13.5667 5.84039C13.602 5.90968 13.6322 6.01149 13.649 6.2168C13.6663 6.42795 13.6666 6.7016 13.6666 7.10655H14.6666ZM13.1661 5.43979C13.3386 5.52768 13.4789 5.66791 13.5667 5.84039L14.4577 5.3864C14.274 5.02576 13.9808 4.73254 13.6201 4.54879L13.1661 5.43979ZM5.09998 4.33988C4.71153 4.33988 4.39012 4.33949 4.1288 4.36084C3.86165 4.38267 3.61359 4.42968 3.37983 4.54879L3.83382 5.43979C3.90311 5.40449 4.00492 5.3743 4.21023 5.35752C4.42138 5.34027 4.69503 5.33988 5.09998 5.33988V4.33988ZM3.33331 7.10655C3.33331 6.7016 3.3337 6.42795 3.35095 6.2168C3.36773 6.01149 3.39792 5.90968 3.43322 5.84039L2.54222 5.3864C2.42311 5.62016 2.3761 5.86822 2.35427 6.13537C2.33292 6.39669 2.33331 6.7181 2.33331 7.10655H3.33331ZM3.37983 4.54879C3.01919 4.73254 2.72597 5.02576 2.54222 5.3864L3.43322 5.84039C3.52111 5.66791 3.66134 5.52768 3.83382 5.43979L3.37983 4.54879ZM11.7583 8.88155H14.45V7.88155H11.7583V8.88155ZM15.0833 9.51488V10.0815H16.0833V9.51488H15.0833ZM14.45 10.7149H11.7583V11.7149H14.45V10.7149ZM11.125 10.0815V9.51488H10.125V10.0815H11.125ZM11.7583 10.7149C11.5517 10.7149 11.4268 10.7145 11.3338 10.7069C11.2466 10.6998 11.2323 10.6889 11.2387 10.6922L10.7847 11.5832C10.9427 11.6637 11.1033 11.6914 11.2524 11.7036C11.3956 11.7153 11.5682 11.7149 11.7583 11.7149V10.7149ZM10.125 10.0815C10.125 10.2717 10.1246 10.4443 10.1363 10.5875C10.1485 10.7365 10.1762 10.8971 10.2567 11.0551L11.1477 10.6011C11.151 10.6076 11.1401 10.5933 11.133 10.5061C11.1254 10.413 11.125 10.2882 11.125 10.0815H10.125ZM11.2387 10.6922C11.1995 10.6722 11.1677 10.6403 11.1477 10.6011L10.2567 11.0551C10.3725 11.2825 10.5574 11.4673 10.7847 11.5832L11.2387 10.6922ZM15.0833 10.0815C15.0833 10.2882 15.0829 10.413 15.0753 10.5061C15.0682 10.5933 15.0573 10.6076 15.0606 10.6011L15.9516 11.0551C16.0321 10.8971 16.0598 10.7365 16.072 10.5875C16.0837 10.4443 16.0833 10.2717 16.0833 10.0815H15.0833ZM14.45 11.7149C14.6401 11.7149 14.8127 11.7153 14.9559 11.7036C15.105 11.6914 15.2656 11.6637 15.4236 11.5832L14.9696 10.6922C14.976 10.6889 14.9617 10.6998 14.8745 10.7069C14.7815 10.7145 14.6566 10.7149 14.45 10.7149V11.7149ZM15.0606 10.6011C15.0406 10.6403 15.0088 10.6722 14.9696 10.6922L15.4236 11.5832C15.6509 11.4673 15.8358 11.2825 15.9516 11.0551L15.0606 10.6011ZM14.45 8.88155C14.6566 8.88155 14.7815 8.88194 14.8745 8.88954C14.9617 8.89666 14.976 8.90756 14.9696 8.90426L15.4236 8.01325C15.2656 7.93275 15.105 7.90504 14.9559 7.89286C14.8127 7.88116 14.6401 7.88155 14.45 7.88155V8.88155ZM16.0833 9.51488C16.0833 9.32478 16.0837 9.15213 16.072 9.00893C16.0598 8.8599 16.0321 8.69931 15.9516 8.54131L15.0606 8.9953C15.0573 8.98883 15.0682 9.00317 15.0753 9.09037C15.0829 9.1834 15.0833 9.30828 15.0833 9.51488H16.0833ZM14.9696 8.90426C15.0088 8.92423 15.0406 8.9561 15.0606 8.9953L15.9516 8.54131C15.8358 8.31395 15.6509 8.1291 15.4236 8.01325L14.9696 8.90426ZM11.7583 7.88155C11.5682 7.88155 11.3956 7.88116 11.2524 7.89286C11.1033 7.90504 10.9427 7.93275 10.7847 8.01325L11.2387 8.90426C11.2323 8.90756 11.2466 8.89666 11.3338 8.88954C11.4268 8.88194 11.5517 8.88155 11.7583 8.88155V7.88155ZM11.125 9.51488C11.125 9.30828 11.1254 9.1834 11.133 9.09037C11.1401 9.00317 11.151 8.98883 11.1477 8.9953L10.2567 8.54131C10.1762 8.69931 10.1485 8.8599 10.1363 9.00894C10.1246 9.15213 10.125 9.32478 10.125 9.51488H11.125ZM10.7847 8.01325C10.5574 8.1291 10.3725 8.31395 10.2567 8.54131L11.1477 8.9953C11.1677 8.9561 11.1995 8.92423 11.2387 8.90426L10.7847 8.01325ZM4.43567 5.30412L10.5476 2.85935L10.1762 1.93087L4.06428 4.37565L4.43567 5.30412ZM10.8333 3.05278V4.83988H11.8333V3.05278H10.8333ZM10.5476 2.85935C10.6845 2.80461 10.8333 2.90539 10.8333 3.05278H11.8333C11.8333 2.19793 10.9699 1.61339 10.1762 1.93087L10.5476 2.85935Z"
+                          fill="#B1B1B1"
+                        />
+                      </Svg>
+                    </View>
+
+                    <Text
+                      style={{
+                        color: '#808080',
+                        fontFamily: 'Manrope-Medium',
+                        fontSize: 12,
+                      }}>
+                      Earning:
+                    </Text>
+                  </View>
+                  <Text
+                    style={[
+                      {
+                        color: '#fff',
+                        fontFamily: 'Manrope-ExtraBold',
+                        fontSize: 12,
+                      },
+                      dynamicStyles.TextColor,
+                    ]}>
+                    ₦3.5 per Follow
+                  </Text>
+                </View>
+                <View>
+                  <TouchableOpacity
+                    style={{
+                      height: 35,
+                      backgroundColor: '#FF6DFB',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      width: 109,
+                      borderTopRightRadius: 4,
+                      borderTopLeftRadius: 4,
+                    }}
+                    onPress={() => setModalVisible(true)}>
+                    <Text
+                      style={{
+                        color: '#fff',
+                        fontFamily: 'Manrope-Medium',
+                        fontSize: 10,
+                      }}>
+                      Generate Task
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </View>
+          <View style={styles.Container1}>
+            <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
+              <Svg width="48" height="47" viewBox="0 0 47 48" fill="none">
+                <Path
+                  d="M47 24.0898C47 11.1112 36.4786 0.589844 23.5 0.589844C10.5214 0.589844 0 11.1112 0 24.0898C0 35.8193 8.59366 45.5415 19.8281 47.3044V30.8828H13.8613V24.0898H19.8281V18.9125C19.8281 13.0228 23.3366 9.76953 28.7045 9.76953C31.2756 9.76953 33.9648 10.2285 33.9648 10.2285V16.0117H31.0016C28.0823 16.0117 27.1719 17.8232 27.1719 19.6818V24.0898H33.6895L32.6476 30.8828H27.1719V47.3044C38.4063 45.5415 47 35.8195 47 24.0898Z"
+                  fill="#1877F2"
+                />
+                <Path
+                  d="M32.6476 30.8828L33.6895 24.0898H27.1719V19.6818C27.1719 17.8231 28.0823 16.0117 31.0016 16.0117H33.9648V10.2285C33.9648 10.2285 31.2756 9.76953 28.7043 9.76953C23.3366 9.76953 19.8281 13.0228 19.8281 18.9125V24.0898H13.8613V30.8828H19.8281V47.3044C21.0428 47.4947 22.2705 47.5902 23.5 47.5898C24.7295 47.5902 25.9572 47.4948 27.1719 47.3044V30.8828H32.6476Z"
+                  fill="white"
+                />
+              </Svg>
+
+              <View style={styles.Check}>
+                <Text
+                  style={[
+                    {color: '#fff', fontFamily: 'Manrope-Medium'},
+                    dynamicStyles.TextColor,
+                  ]}>
+                  Like and Follow Facebook Business Pages
+                </Text>
+                <Text
+                  style={[
+                    {
+                      color: '#fff',
+                      fontFamily: 'Manrope-Regular',
+                      paddingTop: 10,
+                      fontSize: 12,
+                    },
+                    dynamicStyles.TextColor,
+                  ]}>
+                  Like and follow pages for businesses and organisations and
+                  earn ₦3.5 per like and follow Unlock your earning potential,
+                  By performing one task at a time
+                </Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    paddingVertical: 10,
+                    gap: 7,
+                    paddingRight: 50,
+                  }}>
+                  <View style={{flexDirection: 'row', gap: 3}}>
+                    <Svg
+                      width="17"
+                      height="18"
+                      viewBox="0 0 17 18"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <Path
+                        d="M3.60683 14.6021L3.83382 14.1566L3.60683 14.6021ZM2.98772 13.983L3.43322 13.756H3.43322L2.98772 13.983ZM13.3931 14.6021L13.1661 14.1566L13.1661 14.1566L13.3931 14.6021ZM14.0122 13.983L13.5667 13.756V13.756L14.0122 13.983ZM13.3931 4.99429L13.1661 5.43979L13.1661 5.43979L13.3931 4.99429ZM14.0122 5.6134L13.5667 5.84039L14.0122 5.6134ZM3.60683 4.99429L3.37983 4.54879L3.60683 4.99429ZM2.98772 5.6134L2.54222 5.3864L2.98772 5.6134ZM11.0117 11.1377L11.2387 10.6922L11.0117 11.1377ZM10.7022 10.8281L11.1477 10.6011L10.7022 10.8281ZM15.5061 10.8281L15.0606 10.6011L15.5061 10.8281ZM15.1966 11.1377L14.9696 10.6922L15.1966 11.1377ZM15.1966 8.45875L14.9696 8.90426L15.1966 8.45875ZM15.5061 8.76831L15.0606 8.9953L15.5061 8.76831ZM11.0117 8.45875L11.2387 8.90426L11.0117 8.45875ZM10.7022 8.76831L11.1477 8.9953L10.7022 8.76831ZM4.06428 4.37565C3.80789 4.4782 3.68318 4.76919 3.78574 5.02558C3.8883 5.28197 4.17928 5.40668 4.43567 5.30412L4.06428 4.37565ZM10.3619 2.39511L10.1762 1.93087L10.1762 1.93087L10.3619 2.39511ZM10.8333 4.83988C10.8333 5.11603 11.0572 5.33988 11.3333 5.33988C11.6095 5.33988 11.8333 5.11603 11.8333 4.83988H10.8333ZM5.09998 5.33988H11.9V4.33988H5.09998V5.33988ZM11.9 14.2565H5.09998V15.2565H11.9V14.2565ZM3.33331 12.4899V7.10655H2.33331V12.4899H3.33331ZM13.6666 7.10655V8.55863H14.6666V7.10655H13.6666ZM13.6666 11.3477V12.4899H14.6666V11.3477H13.6666ZM5.09998 14.2565C4.69503 14.2565 4.42138 14.2562 4.21023 14.2389C4.00492 14.2221 3.90311 14.1919 3.83382 14.1566L3.37983 15.0476C3.61359 15.1667 3.86165 15.2138 4.1288 15.2356C4.39012 15.2569 4.71153 15.2565 5.09998 15.2565V14.2565ZM2.33331 12.4899C2.33331 12.8783 2.33292 13.1997 2.35427 13.4611C2.3761 13.7282 2.42311 13.9763 2.54222 14.21L3.43322 13.756C3.39792 13.6868 3.36773 13.5849 3.35095 13.3796C3.3337 13.1685 3.33331 12.8948 3.33331 12.4899H2.33331ZM3.83382 14.1566C3.66134 14.0688 3.52111 13.9285 3.43322 13.756L2.54222 14.21C2.72597 14.5707 3.01919 14.8639 3.37983 15.0476L3.83382 14.1566ZM11.9 15.2565C12.2884 15.2565 12.6098 15.2569 12.8712 15.2356C13.1383 15.2138 13.3864 15.1667 13.6201 15.0476L13.1661 14.1566C13.0969 14.1919 12.995 14.2221 12.7897 14.2389C12.5786 14.2562 12.3049 14.2565 11.9 14.2565V15.2565ZM13.6666 12.4899C13.6666 12.8948 13.6663 13.1685 13.649 13.3796C13.6322 13.5849 13.602 13.6868 13.5667 13.756L14.4577 14.21C14.5768 13.9763 14.6239 13.7282 14.6457 13.4611C14.667 13.1997 14.6666 12.8783 14.6666 12.4899H13.6666ZM13.6201 15.0476C13.9808 14.8639 14.274 14.5707 14.4577 14.21L13.5667 13.756C13.4789 13.9285 13.3386 14.0688 13.1661 14.1566L13.6201 15.0476ZM11.9 5.33988C12.3049 5.33988 12.5786 5.34027 12.7897 5.35752C12.995 5.3743 13.0969 5.40449 13.1661 5.43979L13.6201 4.54879C13.3864 4.42968 13.1383 4.38267 12.8712 4.36084C12.6098 4.33949 12.2884 4.33988 11.9 4.33988V5.33988ZM14.6666 7.10655C14.6666 6.7181 14.667 6.39669 14.6457 6.13537C14.6239 5.86822 14.5768 5.62016 14.4577 5.3864L13.5667 5.84039C13.602 5.90968 13.6322 6.01149 13.649 6.2168C13.6663 6.42795 13.6666 6.7016 13.6666 7.10655H14.6666ZM13.1661 5.43979C13.3386 5.52768 13.4789 5.66791 13.5667 5.84039L14.4577 5.3864C14.274 5.02576 13.9808 4.73254 13.6201 4.54879L13.1661 5.43979ZM5.09998 4.33988C4.71153 4.33988 4.39012 4.33949 4.1288 4.36084C3.86165 4.38267 3.61359 4.42968 3.37983 4.54879L3.83382 5.43979C3.90311 5.40449 4.00492 5.3743 4.21023 5.35752C4.42138 5.34027 4.69503 5.33988 5.09998 5.33988V4.33988ZM3.33331 7.10655C3.33331 6.7016 3.3337 6.42795 3.35095 6.2168C3.36773 6.01149 3.39792 5.90968 3.43322 5.84039L2.54222 5.3864C2.42311 5.62016 2.3761 5.86822 2.35427 6.13537C2.33292 6.39669 2.33331 6.7181 2.33331 7.10655H3.33331ZM3.37983 4.54879C3.01919 4.73254 2.72597 5.02576 2.54222 5.3864L3.43322 5.84039C3.52111 5.66791 3.66134 5.52768 3.83382 5.43979L3.37983 4.54879ZM11.7583 8.88155H14.45V7.88155H11.7583V8.88155ZM15.0833 9.51488V10.0815H16.0833V9.51488H15.0833ZM14.45 10.7149H11.7583V11.7149H14.45V10.7149ZM11.125 10.0815V9.51488H10.125V10.0815H11.125ZM11.7583 10.7149C11.5517 10.7149 11.4268 10.7145 11.3338 10.7069C11.2466 10.6998 11.2323 10.6889 11.2387 10.6922L10.7847 11.5832C10.9427 11.6637 11.1033 11.6914 11.2524 11.7036C11.3956 11.7153 11.5682 11.7149 11.7583 11.7149V10.7149ZM10.125 10.0815C10.125 10.2717 10.1246 10.4443 10.1363 10.5875C10.1485 10.7365 10.1762 10.8971 10.2567 11.0551L11.1477 10.6011C11.151 10.6076 11.1401 10.5933 11.133 10.5061C11.1254 10.413 11.125 10.2882 11.125 10.0815H10.125ZM11.2387 10.6922C11.1995 10.6722 11.1677 10.6403 11.1477 10.6011L10.2567 11.0551C10.3725 11.2825 10.5574 11.4673 10.7847 11.5832L11.2387 10.6922ZM15.0833 10.0815C15.0833 10.2882 15.0829 10.413 15.0753 10.5061C15.0682 10.5933 15.0573 10.6076 15.0606 10.6011L15.9516 11.0551C16.0321 10.8971 16.0598 10.7365 16.072 10.5875C16.0837 10.4443 16.0833 10.2717 16.0833 10.0815H15.0833ZM14.45 11.7149C14.6401 11.7149 14.8127 11.7153 14.9559 11.7036C15.105 11.6914 15.2656 11.6637 15.4236 11.5832L14.9696 10.6922C14.976 10.6889 14.9617 10.6998 14.8745 10.7069C14.7815 10.7145 14.6566 10.7149 14.45 10.7149V11.7149ZM15.0606 10.6011C15.0406 10.6403 15.0088 10.6722 14.9696 10.6922L15.4236 11.5832C15.6509 11.4673 15.8358 11.2825 15.9516 11.0551L15.0606 10.6011ZM14.45 8.88155C14.6566 8.88155 14.7815 8.88194 14.8745 8.88954C14.9617 8.89666 14.976 8.90756 14.9696 8.90426L15.4236 8.01325C15.2656 7.93275 15.105 7.90504 14.9559 7.89286C14.8127 7.88116 14.6401 7.88155 14.45 7.88155V8.88155ZM16.0833 9.51488C16.0833 9.32478 16.0837 9.15213 16.072 9.00893C16.0598 8.8599 16.0321 8.69931 15.9516 8.54131L15.0606 8.9953C15.0573 8.98883 15.0682 9.00317 15.0753 9.09037C15.0829 9.1834 15.0833 9.30828 15.0833 9.51488H16.0833ZM14.9696 8.90426C15.0088 8.92423 15.0406 8.9561 15.0606 8.9953L15.9516 8.54131C15.8358 8.31395 15.6509 8.1291 15.4236 8.01325L14.9696 8.90426ZM11.7583 7.88155C11.5682 7.88155 11.3956 7.88116 11.2524 7.89286C11.1033 7.90504 10.9427 7.93275 10.7847 8.01325L11.2387 8.90426C11.2323 8.90756 11.2466 8.89666 11.3338 8.88954C11.4268 8.88194 11.5517 8.88155 11.7583 8.88155V7.88155ZM11.125 9.51488C11.125 9.30828 11.1254 9.1834 11.133 9.09037C11.1401 9.00317 11.151 8.98883 11.1477 8.9953L10.2567 8.54131C10.1762 8.69931 10.1485 8.8599 10.1363 9.00894C10.1246 9.15213 10.125 9.32478 10.125 9.51488H11.125ZM10.7847 8.01325C10.5574 8.1291 10.3725 8.31395 10.2567 8.54131L11.1477 8.9953C11.1677 8.9561 11.1995 8.92423 11.2387 8.90426L10.7847 8.01325ZM4.43567 5.30412L10.5476 2.85935L10.1762 1.93087L4.06428 4.37565L4.43567 5.30412ZM10.8333 3.05278V4.83988H11.8333V3.05278H10.8333ZM10.5476 2.85935C10.6845 2.80461 10.8333 2.90539 10.8333 3.05278H11.8333C11.8333 2.19793 10.9699 1.61339 10.1762 1.93087L10.5476 2.85935Z"
+                        fill="#B1B1B1"
+                      />
+                    </Svg>
+                    <Text
+                      style={{
+                        color: '#808080',
+                        fontFamily: 'Manrope-Medium',
+                        fontSize: 12,
+                      }}>
+                      Earning:
+                    </Text>
+                  </View>
+                  <Text
+                    style={[
+                      {
+                        color: '#fff',
+                        fontFamily: 'Manrope-ExtraBold',
+                        fontSize: 12,
+                      },
+                      dynamicStyles.TextColor,
+                    ]}>
+                    ₦3.5 per Like and Follow
+                  </Text>
+                </View>
+
+                <View>
+                  <TouchableOpacity
+                    style={{
+                      height: 35,
+                      backgroundColor: '#FF6DFB',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      width: 109,
+                      borderTopRightRadius: 4,
+                      borderTopLeftRadius: 4,
+                    }}
+                    onPress={() => setModalVisible(true)}>
+                    <Text
+                      style={{
+                        color: '#fff',
+                        fontFamily: 'Manrope-Medium',
+                        fontSize: 10,
+                      }}>
+                      Generate Task
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </View>
+          <View style={styles.Container1}>
+            <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
+              <Svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="48"
+                height="47"
+                viewBox="0 0 48 47"
+                fill="none">
+                <Path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M4.41652 23.4993C4.41652 12.6835 13.184 3.91602 23.9999 3.91602C34.8157 3.91602 43.5832 12.6835 43.5832 23.4993C43.5832 34.3152 34.8157 43.0827 23.9999 43.0827C21.1142 43.0866 18.2637 42.4506 15.6534 41.2203L6.76848 43.0416C6.45124 43.1064 6.12288 43.0916 5.81278 42.9984C5.50268 42.9052 5.22052 42.7366 4.99156 42.5076C4.7626 42.2787 4.59399 41.9965 4.50081 41.6864C4.40764 41.3763 4.3928 41.048 4.45765 40.7307L6.2789 31.8458C5.04866 29.2355 4.41259 26.385 4.41652 23.4993ZM15.1874 20.5618C14.4083 20.5618 13.6611 20.8713 13.1102 21.4222C12.5593 21.9731 12.2499 22.7203 12.2499 23.4993V23.5189C12.2499 24.298 12.5593 25.0452 13.1102 25.5961C13.6611 26.1469 14.4083 26.4564 15.1874 26.4564H15.2069C15.986 26.4564 16.7332 26.1469 17.2841 25.5961C17.835 25.0452 18.1444 24.298 18.1444 23.5189V23.4993C18.1444 22.7203 17.835 21.9731 17.2841 21.4222C16.7332 20.8713 15.986 20.5618 15.2069 20.5618H15.1874ZM23.9999 20.5618C23.2208 20.5618 22.4736 20.8713 21.9227 21.4222C21.3718 21.9731 21.0624 22.7203 21.0624 23.4993V23.5189C21.0624 24.298 21.3718 25.0452 21.9227 25.5961C22.4736 26.1469 23.2208 26.4564 23.9999 26.4564H24.0194C24.7985 26.4564 25.5457 26.1469 26.0966 25.5961C26.6475 25.0452 26.9569 24.298 26.9569 23.5189V23.4993C26.9569 22.7203 26.6475 21.9731 26.0966 21.4222C25.5457 20.8713 24.7985 20.5618 24.0194 20.5618H23.9999ZM29.8749 23.4993C29.8749 22.7203 30.1843 21.9731 30.7352 21.4222C31.2861 20.8713 32.0333 20.5618 32.8124 20.5618H32.8319C33.611 20.5618 34.3582 20.8713 34.9091 21.4222C35.46 21.9731 35.7694 22.7203 35.7694 23.4993V23.5189C35.7694 24.298 35.46 25.0452 34.9091 25.5961C34.3582 26.1469 33.611 26.4564 32.8319 26.4564H32.8124C32.0333 26.4564 31.2861 26.1469 30.7352 25.5961C30.1843 25.0452 29.8749 24.298 29.8749 23.5189V23.4993Z"
+                  fill="#36E232"
+                />
+              </Svg>
+
+              <View style={styles.Check}>
+                <Text
+                  style={[
+                    {color: '#fff', fontFamily: 'Manrope-Medium'},
+                    dynamicStyles.TextColor,
+                  ]}>
+                  Post Comments on Pages and Post on Several Social Media
+                  Platforms
+                </Text>
+                <Text
+                  style={[
+                    {
+                      color: '#fff',
+                      fontFamily: 'Manrope-Regular',
+                      paddingTop: 10,
+                      fontSize: 12,
+                    },
+                    dynamicStyles.TextColor,
+                  ]}>
+                  Post comment on peoples , businesss or organisation pages or
+                  post on Social media platform like X, Instagram, Facebook,
+                  TikTok and others to earn ₦ 20 per comment. Hustle more, earn
+                  more
+                </Text>
+                <View style={{flexDirection: 'row', gap: 5, paddingTop: 10}}>
+                  <TouchableOpacity>
+                    <Svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 47 47"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <Path
+                        d="M35.9844 0H11.0156C4.93186 0 0 4.93186 0 11.0156V35.9844C0 42.0681 4.93186 47 11.0156 47H35.9844C42.0681 47 47 42.0681 47 35.9844V11.0156C47 4.93186 42.0681 0 35.9844 0Z"
+                        fill="url(#paint0_radial_3204_7466)"
+                      />
+                      <Path
+                        d="M35.9844 0H11.0156C4.93186 0 0 4.93186 0 11.0156V35.9844C0 42.0681 4.93186 47 11.0156 47H35.9844C42.0681 47 47 42.0681 47 35.9844V11.0156C47 4.93186 42.0681 0 35.9844 0Z"
+                        fill="url(#paint1_radial_3204_7466)"
+                      />
+                      <Path
+                        d="M23.5017 5.14062C18.5156 5.14062 17.8897 5.16247 15.9315 5.25152C13.977 5.34111 12.6428 5.65046 11.4755 6.10449C10.2678 6.57339 9.24358 7.20073 8.22316 8.22151C7.20183 9.24211 6.57449 10.2664 6.10413 11.4735C5.64881 12.6412 5.33909 13.9759 5.25115 15.9295C5.16357 17.8879 5.14062 18.514 5.14062 23.5002C5.14062 28.4864 5.16266 29.1103 5.25152 31.0685C5.34148 33.023 5.65083 34.3572 6.10449 35.5245C6.57376 36.7322 7.2011 37.7564 8.22188 38.7768C9.24211 39.7982 10.2664 40.427 11.4731 40.8959C12.6413 41.3499 13.9757 41.6593 15.9299 41.7489C17.8883 41.8379 18.5136 41.8597 23.4994 41.8597C28.486 41.8597 29.1099 41.8379 31.0681 41.7489C33.0226 41.6593 34.3583 41.3499 35.5265 40.8959C36.7336 40.427 37.7564 39.7982 38.7765 38.7768C39.7978 37.7564 40.425 36.7322 40.8955 35.525C41.3468 34.3572 41.6567 33.0226 41.7485 31.0688C41.8364 29.1106 41.8594 28.4864 41.8594 23.5002C41.8594 18.514 41.8364 17.8883 41.7485 15.9299C41.6567 13.9753 41.3468 12.6413 40.8955 11.4741C40.425 10.2664 39.7978 9.24211 38.7765 8.22151C37.7553 7.20036 36.734 6.57302 35.5254 6.10468C34.355 5.65046 33.0201 5.34093 31.0655 5.25152C29.1071 5.16247 28.4837 5.14062 23.496 5.14062H23.5017ZM21.8546 8.44917C22.3435 8.44843 22.889 8.44917 23.5017 8.44917C28.4038 8.44917 28.9847 8.46679 30.9205 8.55473C32.7105 8.63662 33.6821 8.93569 34.3293 9.18703C35.1861 9.5197 35.7969 9.91755 36.4391 10.5603C37.0817 11.2029 37.4794 11.8148 37.813 12.6716C38.0643 13.3179 38.3638 14.2895 38.4453 16.0795C38.5332 18.015 38.5523 18.5962 38.5523 23.496C38.5523 28.3957 38.5332 28.9772 38.4453 30.9124C38.3634 32.7025 38.0643 33.674 37.813 34.3205C37.4803 35.1773 37.0817 35.7874 36.4391 36.4296C35.7966 37.0722 35.1865 37.4698 34.3293 37.8027C33.6828 38.0551 32.7105 38.3535 30.9205 38.4354C28.985 38.5233 28.4038 38.5424 23.5017 38.5424C18.5993 38.5424 18.0183 38.5233 16.083 38.4354C14.293 38.3527 13.3214 38.0537 12.6737 37.8023C11.817 37.4695 11.2049 37.0718 10.5623 36.4292C9.91975 35.7866 9.52209 35.1762 9.1885 34.319C8.93716 33.6726 8.63772 32.701 8.5562 30.9109C8.46826 28.9755 8.45064 28.3942 8.45064 23.4914C8.45064 18.5887 8.46826 18.0104 8.5562 16.0749C8.63809 14.2849 8.93716 13.3133 9.1885 12.6661C9.52136 11.8093 9.91975 11.1974 10.5625 10.5548C11.2051 9.91223 11.817 9.51438 12.6738 9.18097C13.321 8.92853 14.293 8.63019 16.083 8.54794C17.7766 8.47138 18.433 8.44843 21.8546 8.44458V8.44917ZM33.3019 11.4976C32.0856 11.4976 31.0988 12.4835 31.0988 13.6999C31.0988 14.9163 32.0856 15.9031 33.3019 15.9031C34.5182 15.9031 35.505 14.9163 35.505 13.6999C35.505 12.4836 34.5182 11.4968 33.3019 11.4968V11.4976ZM23.5017 14.0717C18.2949 14.0717 14.0734 18.2933 14.0734 23.5002C14.0734 28.7071 18.2949 32.9266 23.5017 32.9266C28.7086 32.9266 32.9286 28.7071 32.9286 23.5002C32.9286 18.2935 28.7082 14.0717 23.5013 14.0717H23.5017ZM23.5017 17.3803C26.8814 17.3803 29.6216 20.12 29.6216 23.5002C29.6216 26.88 26.8814 29.6201 23.5017 29.6201C20.1217 29.6201 17.3819 26.88 17.3819 23.5002C17.3819 20.12 20.1217 17.3803 23.5017 17.3803Z"
+                        fill="white"
+                      />
+                      <Defs>
+                        <RadialGradient
+                          id="paint0_radial_3204_7466"
+                          cx="0"
+                          cy="0"
+                          r="1"
+                          gradientUnits="userSpaceOnUse"
+                          gradientTransform="translate(12.4844 50.6199) rotate(-90) scale(46.5805 43.3235)">
+                          <Stop stop-color="#FFDD55" />
+                          <Stop offset="0.1" stop-color="#FFDD55" />
+                          <Stop offset="0.5" stop-color="#FF543E" />
+                          <Stop offset="1" stop-color="#C837AB" />
+                        </RadialGradient>
+                        <RadialGradient
+                          id="paint1_radial_3204_7466"
+                          cx="0"
+                          cy="0"
+                          r="1"
+                          gradientUnits="userSpaceOnUse"
+                          gradientTransform="translate(-7.87268 3.38565) rotate(78.681) scale(20.8217 85.8279)">
+                          <Stop stop-color="#3771C8" />
+                          <Stop offset="0.128" stop-color="#3771C8" />
+                          <Stop
+                            offset="1"
+                            stop-color="#6600FF"
+                            stop-opacity="0"
+                          />
+                        </RadialGradient>
+                      </Defs>
+                    </Svg>
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Svg width="17" height="18" viewBox="0 0 47 48" fill="none">
+                      <Path
+                        d="M47 24.0898C47 11.1112 36.4786 0.589844 23.5 0.589844C10.5214 0.589844 0 11.1112 0 24.0898C0 35.8193 8.59366 45.5415 19.8281 47.3044V30.8828H13.8613V24.0898H19.8281V18.9125C19.8281 13.0228 23.3366 9.76953 28.7045 9.76953C31.2756 9.76953 33.9648 10.2285 33.9648 10.2285V16.0117H31.0016C28.0823 16.0117 27.1719 17.8232 27.1719 19.6818V24.0898H33.6895L32.6476 30.8828H27.1719V47.3044C38.4063 45.5415 47 35.8195 47 24.0898Z"
+                        fill="#1877F2"
+                      />
+                      <Path
+                        d="M32.6476 30.8828L33.6895 24.0898H27.1719V19.6818C27.1719 17.8231 28.0823 16.0117 31.0016 16.0117H33.9648V10.2285C33.9648 10.2285 31.2756 9.76953 28.7043 9.76953C23.3366 9.76953 19.8281 13.0228 19.8281 18.9125V24.0898H13.8613V30.8828H19.8281V47.3044C21.0428 47.4947 22.2705 47.5902 23.5 47.5898C24.7295 47.5902 25.9572 47.4948 27.1719 47.3044V30.8828H32.6476Z"
+                        fill="white"
+                      />
+                    </Svg>
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Svg width="17" height="18" viewBox="0 0 47 48" fill="none">
+                      <Path
+                        d="M34.8307 17.5134C38.2597 19.6762 42.4604 20.9488 46.9973 20.9488V13.2457C46.1386 13.2458 45.2822 13.1667 44.4422 13.0097V19.0732C39.9057 19.0732 35.7055 17.8008 32.2758 15.6381V31.3582C32.2758 39.2222 25.0507 45.5967 16.1389 45.5967C12.8137 45.5967 9.72286 44.7097 7.15546 43.1884C10.0858 45.8322 14.1723 47.4722 18.6933 47.4722C27.6058 47.4722 34.8311 41.0977 34.8311 33.2333V17.5134H34.8307ZM37.9828 9.7419C36.2303 8.05266 35.0796 5.86959 34.8307 3.45606V2.46533H32.4094C33.0189 5.53281 35.098 8.15347 37.9828 9.7419ZM12.7922 37.1539C11.8131 36.0213 11.2839 34.6355 11.2862 33.2108C11.2862 29.6142 14.5909 26.6979 18.6681 26.6979C19.4278 26.6975 20.183 26.8005 20.9073 27.0031V19.1276C20.0609 19.0254 19.2069 18.9818 18.3533 18.9978V25.1276C17.6287 24.9249 16.8731 24.822 16.113 24.8226C12.036 24.8226 8.73151 27.7385 8.73151 31.3356C8.73151 33.8792 10.3832 36.0812 12.7922 37.1539Z"
+                        fill="#FF004F"
+                      />
+                      <Path
+                        d="M32.2758 15.638C35.7057 17.8006 39.9055 19.073 44.4422 19.073V13.0095C41.9098 12.5335 39.6681 11.366 37.9826 9.7419C35.0976 8.1533 33.0189 5.53265 32.4094 2.46533H26.0496V33.233C26.0351 36.8199 22.7361 39.7242 18.6677 39.7242C16.2705 39.7242 14.1406 38.7159 12.7918 37.1538C10.3832 36.0812 8.73132 33.879 8.73132 31.3358C8.73132 27.739 12.0358 24.8227 16.1128 24.8227C16.894 24.8227 17.6468 24.93 18.3531 25.1278V18.998C9.59764 19.1576 2.55634 25.4699 2.55634 33.2331C2.55634 37.1085 4.30973 40.6217 7.15563 43.1887C9.72303 44.7097 12.8136 45.5971 16.1391 45.5971C25.0511 45.5971 32.276 39.2221 32.276 31.3582L32.2758 15.638Z"
+                        fill="black"
+                      />
+                      <Path
+                        d="M44.4423 13.0092V11.37C42.1587 11.3731 39.9203 10.8088 37.9828 9.74172C39.6978 11.3984 41.9561 12.5409 44.4423 13.0095M32.4094 2.46498C32.3513 2.1719 32.3067 1.87685 32.2758 1.58057V0.589844H23.4943V31.3578C23.4803 34.9444 20.1813 37.8487 16.1128 37.8487C14.9594 37.8502 13.8218 37.6122 12.7918 37.1539C14.1406 38.7158 16.2705 39.7238 18.6677 39.7238C22.7359 39.7238 26.0352 36.8199 26.0496 33.233V2.46514L32.4094 2.46498ZM18.3536 18.9976V17.2523C17.6198 17.1638 16.88 17.1195 16.1394 17.1197C7.22648 17.1197 0.00158691 23.4946 0.00158691 31.3578C0.00158691 36.2878 2.84106 40.6325 7.15598 43.1882C4.31009 40.6214 2.55669 37.108 2.55669 33.2328C2.55669 25.4697 9.59781 19.1573 18.3536 18.9976Z"
+                        fill="#00F2EA"
+                      />
+                    </Svg>
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Svg
+                      width="17"
+                      height="18"
+                      viewBox="0 0 47 47"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <Path
+                        d="M37.0145 2.25781H44.2211L28.4761 20.2549L47 44.7399H32.4966L21.1382 29.8879L8.13883 44.7399H0.92825L17.7699 25.4895L0 2.25977H14.8716L25.1391 15.8349L37.0145 2.25781ZM34.4863 40.4277H38.4793L12.7018 6.34485H8.41692L34.4863 40.4277Z"
+                        fill={strokeColor}
+                      />
+                    </Svg>
+                  </TouchableOpacity>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    paddingVertical: 10,
+                    gap: 7,
+                    paddingRight: 50,
+                  }}>
+                  <View style={{flexDirection: 'row', gap: 3}}>
+                    <Svg
+                      width="17"
+                      height="18"
+                      viewBox="0 0 17 18"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <Path
+                        d="M3.60683 14.6021L3.83382 14.1566L3.60683 14.6021ZM2.98772 13.983L3.43322 13.756H3.43322L2.98772 13.983ZM13.3931 14.6021L13.1661 14.1566L13.1661 14.1566L13.3931 14.6021ZM14.0122 13.983L13.5667 13.756V13.756L14.0122 13.983ZM13.3931 4.99429L13.1661 5.43979L13.1661 5.43979L13.3931 4.99429ZM14.0122 5.6134L13.5667 5.84039L14.0122 5.6134ZM3.60683 4.99429L3.37983 4.54879L3.60683 4.99429ZM2.98772 5.6134L2.54222 5.3864L2.98772 5.6134ZM11.0117 11.1377L11.2387 10.6922L11.0117 11.1377ZM10.7022 10.8281L11.1477 10.6011L10.7022 10.8281ZM15.5061 10.8281L15.0606 10.6011L15.5061 10.8281ZM15.1966 11.1377L14.9696 10.6922L15.1966 11.1377ZM15.1966 8.45875L14.9696 8.90426L15.1966 8.45875ZM15.5061 8.76831L15.0606 8.9953L15.5061 8.76831ZM11.0117 8.45875L11.2387 8.90426L11.0117 8.45875ZM10.7022 8.76831L11.1477 8.9953L10.7022 8.76831ZM4.06428 4.37565C3.80789 4.4782 3.68318 4.76919 3.78574 5.02558C3.8883 5.28197 4.17928 5.40668 4.43567 5.30412L4.06428 4.37565ZM10.3619 2.39511L10.1762 1.93087L10.1762 1.93087L10.3619 2.39511ZM10.8333 4.83988C10.8333 5.11603 11.0572 5.33988 11.3333 5.33988C11.6095 5.33988 11.8333 5.11603 11.8333 4.83988H10.8333ZM5.09998 5.33988H11.9V4.33988H5.09998V5.33988ZM11.9 14.2565H5.09998V15.2565H11.9V14.2565ZM3.33331 12.4899V7.10655H2.33331V12.4899H3.33331ZM13.6666 7.10655V8.55863H14.6666V7.10655H13.6666ZM13.6666 11.3477V12.4899H14.6666V11.3477H13.6666ZM5.09998 14.2565C4.69503 14.2565 4.42138 14.2562 4.21023 14.2389C4.00492 14.2221 3.90311 14.1919 3.83382 14.1566L3.37983 15.0476C3.61359 15.1667 3.86165 15.2138 4.1288 15.2356C4.39012 15.2569 4.71153 15.2565 5.09998 15.2565V14.2565ZM2.33331 12.4899C2.33331 12.8783 2.33292 13.1997 2.35427 13.4611C2.3761 13.7282 2.42311 13.9763 2.54222 14.21L3.43322 13.756C3.39792 13.6868 3.36773 13.5849 3.35095 13.3796C3.3337 13.1685 3.33331 12.8948 3.33331 12.4899H2.33331ZM3.83382 14.1566C3.66134 14.0688 3.52111 13.9285 3.43322 13.756L2.54222 14.21C2.72597 14.5707 3.01919 14.8639 3.37983 15.0476L3.83382 14.1566ZM11.9 15.2565C12.2884 15.2565 12.6098 15.2569 12.8712 15.2356C13.1383 15.2138 13.3864 15.1667 13.6201 15.0476L13.1661 14.1566C13.0969 14.1919 12.995 14.2221 12.7897 14.2389C12.5786 14.2562 12.3049 14.2565 11.9 14.2565V15.2565ZM13.6666 12.4899C13.6666 12.8948 13.6663 13.1685 13.649 13.3796C13.6322 13.5849 13.602 13.6868 13.5667 13.756L14.4577 14.21C14.5768 13.9763 14.6239 13.7282 14.6457 13.4611C14.667 13.1997 14.6666 12.8783 14.6666 12.4899H13.6666ZM13.6201 15.0476C13.9808 14.8639 14.274 14.5707 14.4577 14.21L13.5667 13.756C13.4789 13.9285 13.3386 14.0688 13.1661 14.1566L13.6201 15.0476ZM11.9 5.33988C12.3049 5.33988 12.5786 5.34027 12.7897 5.35752C12.995 5.3743 13.0969 5.40449 13.1661 5.43979L13.6201 4.54879C13.3864 4.42968 13.1383 4.38267 12.8712 4.36084C12.6098 4.33949 12.2884 4.33988 11.9 4.33988V5.33988ZM14.6666 7.10655C14.6666 6.7181 14.667 6.39669 14.6457 6.13537C14.6239 5.86822 14.5768 5.62016 14.4577 5.3864L13.5667 5.84039C13.602 5.90968 13.6322 6.01149 13.649 6.2168C13.6663 6.42795 13.6666 6.7016 13.6666 7.10655H14.6666ZM13.1661 5.43979C13.3386 5.52768 13.4789 5.66791 13.5667 5.84039L14.4577 5.3864C14.274 5.02576 13.9808 4.73254 13.6201 4.54879L13.1661 5.43979ZM5.09998 4.33988C4.71153 4.33988 4.39012 4.33949 4.1288 4.36084C3.86165 4.38267 3.61359 4.42968 3.37983 4.54879L3.83382 5.43979C3.90311 5.40449 4.00492 5.3743 4.21023 5.35752C4.42138 5.34027 4.69503 5.33988 5.09998 5.33988V4.33988ZM3.33331 7.10655C3.33331 6.7016 3.3337 6.42795 3.35095 6.2168C3.36773 6.01149 3.39792 5.90968 3.43322 5.84039L2.54222 5.3864C2.42311 5.62016 2.3761 5.86822 2.35427 6.13537C2.33292 6.39669 2.33331 6.7181 2.33331 7.10655H3.33331ZM3.37983 4.54879C3.01919 4.73254 2.72597 5.02576 2.54222 5.3864L3.43322 5.84039C3.52111 5.66791 3.66134 5.52768 3.83382 5.43979L3.37983 4.54879ZM11.7583 8.88155H14.45V7.88155H11.7583V8.88155ZM15.0833 9.51488V10.0815H16.0833V9.51488H15.0833ZM14.45 10.7149H11.7583V11.7149H14.45V10.7149ZM11.125 10.0815V9.51488H10.125V10.0815H11.125ZM11.7583 10.7149C11.5517 10.7149 11.4268 10.7145 11.3338 10.7069C11.2466 10.6998 11.2323 10.6889 11.2387 10.6922L10.7847 11.5832C10.9427 11.6637 11.1033 11.6914 11.2524 11.7036C11.3956 11.7153 11.5682 11.7149 11.7583 11.7149V10.7149ZM10.125 10.0815C10.125 10.2717 10.1246 10.4443 10.1363 10.5875C10.1485 10.7365 10.1762 10.8971 10.2567 11.0551L11.1477 10.6011C11.151 10.6076 11.1401 10.5933 11.133 10.5061C11.1254 10.413 11.125 10.2882 11.125 10.0815H10.125ZM11.2387 10.6922C11.1995 10.6722 11.1677 10.6403 11.1477 10.6011L10.2567 11.0551C10.3725 11.2825 10.5574 11.4673 10.7847 11.5832L11.2387 10.6922ZM15.0833 10.0815C15.0833 10.2882 15.0829 10.413 15.0753 10.5061C15.0682 10.5933 15.0573 10.6076 15.0606 10.6011L15.9516 11.0551C16.0321 10.8971 16.0598 10.7365 16.072 10.5875C16.0837 10.4443 16.0833 10.2717 16.0833 10.0815H15.0833ZM14.45 11.7149C14.6401 11.7149 14.8127 11.7153 14.9559 11.7036C15.105 11.6914 15.2656 11.6637 15.4236 11.5832L14.9696 10.6922C14.976 10.6889 14.9617 10.6998 14.8745 10.7069C14.7815 10.7145 14.6566 10.7149 14.45 10.7149V11.7149ZM15.0606 10.6011C15.0406 10.6403 15.0088 10.6722 14.9696 10.6922L15.4236 11.5832C15.6509 11.4673 15.8358 11.2825 15.9516 11.0551L15.0606 10.6011ZM14.45 8.88155C14.6566 8.88155 14.7815 8.88194 14.8745 8.88954C14.9617 8.89666 14.976 8.90756 14.9696 8.90426L15.4236 8.01325C15.2656 7.93275 15.105 7.90504 14.9559 7.89286C14.8127 7.88116 14.6401 7.88155 14.45 7.88155V8.88155ZM16.0833 9.51488C16.0833 9.32478 16.0837 9.15213 16.072 9.00893C16.0598 8.8599 16.0321 8.69931 15.9516 8.54131L15.0606 8.9953C15.0573 8.98883 15.0682 9.00317 15.0753 9.09037C15.0829 9.1834 15.0833 9.30828 15.0833 9.51488H16.0833ZM14.9696 8.90426C15.0088 8.92423 15.0406 8.9561 15.0606 8.9953L15.9516 8.54131C15.8358 8.31395 15.6509 8.1291 15.4236 8.01325L14.9696 8.90426ZM11.7583 7.88155C11.5682 7.88155 11.3956 7.88116 11.2524 7.89286C11.1033 7.90504 10.9427 7.93275 10.7847 8.01325L11.2387 8.90426C11.2323 8.90756 11.2466 8.89666 11.3338 8.88954C11.4268 8.88194 11.5517 8.88155 11.7583 8.88155V7.88155ZM11.125 9.51488C11.125 9.30828 11.1254 9.1834 11.133 9.09037C11.1401 9.00317 11.151 8.98883 11.1477 8.9953L10.2567 8.54131C10.1762 8.69931 10.1485 8.8599 10.1363 9.00894C10.1246 9.15213 10.125 9.32478 10.125 9.51488H11.125ZM10.7847 8.01325C10.5574 8.1291 10.3725 8.31395 10.2567 8.54131L11.1477 8.9953C11.1677 8.9561 11.1995 8.92423 11.2387 8.90426L10.7847 8.01325ZM4.43567 5.30412L10.5476 2.85935L10.1762 1.93087L4.06428 4.37565L4.43567 5.30412ZM10.8333 3.05278V4.83988H11.8333V3.05278H10.8333ZM10.5476 2.85935C10.6845 2.80461 10.8333 2.90539 10.8333 3.05278H11.8333C11.8333 2.19793 10.9699 1.61339 10.1762 1.93087L10.5476 2.85935Z"
+                        fill="#B1B1B1"
+                      />
+                    </Svg>
+                    <Text
+                      style={{
+                        color: '#808080',
+                        fontFamily: 'Manrope-Medium',
+                        fontSize: 12,
+                      }}>
+                      Earning:
+                    </Text>
+                  </View>
+                  <Text
+                    style={[
+                      {
+                        color: '#fff',
+                        fontFamily: 'Manrope-ExtraBold',
+                        fontSize: 12,
+                      },
+                      dynamicStyles.TextColor,
+                    ]}>
+                    ₦20 per Comment
+                  </Text>
+                </View>
+                <View>
+                  <TouchableOpacity
+                    style={{
+                      height: 35,
+                      backgroundColor: '#FF6DFB',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      width: 109,
+                      borderTopRightRadius: 4,
+                      borderTopLeftRadius: 4,
+                    }}
+                    onPress={() => setModalVisible(true)}>
+                    <Text
+                      style={{
+                        color: '#fff',
+                        fontFamily: 'Manrope-Medium',
+                        fontSize: 10,
+                      }}>
+                      Generate Task
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </View>
+          <View style={styles.Container1}>
+            <View style={[styles.Advert1, dynamicStyles.DivContainer]}>
+              <Svg
+                width="47"
+                height="48"
+                viewBox="0 0 47 48"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <G id="like">
+                  <Path
+                    id="Vector"
+                    d="M40.6614 25.0858C41.4325 24.0669 41.8594 22.8184 41.8594 21.5195C41.8594 19.4587 40.7073 17.508 38.853 16.4202C38.3757 16.1402 37.8321 15.9928 37.2787 15.9933H26.2723L26.5477 10.3524C26.6119 8.98924 26.13 7.69491 25.1937 6.70809C24.7341 6.2217 24.1798 5.8347 23.5648 5.57103C22.9498 5.30735 22.2873 5.17259 21.6182 5.17508C19.2314 5.17508 17.1201 6.78153 16.4867 9.08104L12.544 23.3555H12.5303V43H34.2081C34.6304 43 35.0435 42.9174 35.4244 42.7521C37.6092 41.8204 39.0183 39.6861 39.0183 37.3178C39.0183 36.7394 38.9356 36.1703 38.7704 35.6195C39.5415 34.6006 39.9684 33.3521 39.9684 32.0532C39.9684 31.4749 39.8857 30.9057 39.7205 30.355C40.4916 29.336 40.9185 28.0876 40.9185 26.7887C40.9093 26.2103 40.8267 25.6366 40.6614 25.0858ZM5.14062 24.8242V41.5312C5.14062 42.3436 5.79697 43 6.60938 43H9.59277V23.3555H6.60938C5.79697 23.3555 5.14062 24.0118 5.14062 24.8242Z"
+                    fill="#1877F2"
+                  />
+                </G>
+              </Svg>
+
+              <View style={styles.Check}>
+                <Text
+                  style={[
+                    {color: '#fff', fontFamily: 'Manrope-Medium'},
+                    dynamicStyles.TextColor,
+                  ]}>
+                  Like Social Media Posts
+                </Text>
+                <Text
+                  style={[
+                    {
+                      color: '#fff',
+                      fontFamily: 'Manrope-Regular',
+                      paddingTop: 10,
+                      fontSize: 12,
+                    },
+                    dynamicStyles.TextColor,
+                  ]}>
+                  Like and follow people on different social media platform and
+                  earn ₦3.5 per likes. the more you like post the more you earn
+                </Text>
+                <View style={{flexDirection: 'row', gap: 5, paddingTop: 10}}>
+                  <TouchableOpacity>
+                    <Svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 47 47"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <Path
+                        d="M35.9844 0H11.0156C4.93186 0 0 4.93186 0 11.0156V35.9844C0 42.0681 4.93186 47 11.0156 47H35.9844C42.0681 47 47 42.0681 47 35.9844V11.0156C47 4.93186 42.0681 0 35.9844 0Z"
+                        fill="url(#paint0_radial_3204_7466)"
+                      />
+                      <Path
+                        d="M35.9844 0H11.0156C4.93186 0 0 4.93186 0 11.0156V35.9844C0 42.0681 4.93186 47 11.0156 47H35.9844C42.0681 47 47 42.0681 47 35.9844V11.0156C47 4.93186 42.0681 0 35.9844 0Z"
+                        fill="url(#paint1_radial_3204_7466)"
+                      />
+                      <Path
+                        d="M23.5017 5.14062C18.5156 5.14062 17.8897 5.16247 15.9315 5.25152C13.977 5.34111 12.6428 5.65046 11.4755 6.10449C10.2678 6.57339 9.24358 7.20073 8.22316 8.22151C7.20183 9.24211 6.57449 10.2664 6.10413 11.4735C5.64881 12.6412 5.33909 13.9759 5.25115 15.9295C5.16357 17.8879 5.14062 18.514 5.14062 23.5002C5.14062 28.4864 5.16266 29.1103 5.25152 31.0685C5.34148 33.023 5.65083 34.3572 6.10449 35.5245C6.57376 36.7322 7.2011 37.7564 8.22188 38.7768C9.24211 39.7982 10.2664 40.427 11.4731 40.8959C12.6413 41.3499 13.9757 41.6593 15.9299 41.7489C17.8883 41.8379 18.5136 41.8597 23.4994 41.8597C28.486 41.8597 29.1099 41.8379 31.0681 41.7489C33.0226 41.6593 34.3583 41.3499 35.5265 40.8959C36.7336 40.427 37.7564 39.7982 38.7765 38.7768C39.7978 37.7564 40.425 36.7322 40.8955 35.525C41.3468 34.3572 41.6567 33.0226 41.7485 31.0688C41.8364 29.1106 41.8594 28.4864 41.8594 23.5002C41.8594 18.514 41.8364 17.8883 41.7485 15.9299C41.6567 13.9753 41.3468 12.6413 40.8955 11.4741C40.425 10.2664 39.7978 9.24211 38.7765 8.22151C37.7553 7.20036 36.734 6.57302 35.5254 6.10468C34.355 5.65046 33.0201 5.34093 31.0655 5.25152C29.1071 5.16247 28.4837 5.14062 23.496 5.14062H23.5017ZM21.8546 8.44917C22.3435 8.44843 22.889 8.44917 23.5017 8.44917C28.4038 8.44917 28.9847 8.46679 30.9205 8.55473C32.7105 8.63662 33.6821 8.93569 34.3293 9.18703C35.1861 9.5197 35.7969 9.91755 36.4391 10.5603C37.0817 11.2029 37.4794 11.8148 37.813 12.6716C38.0643 13.3179 38.3638 14.2895 38.4453 16.0795C38.5332 18.015 38.5523 18.5962 38.5523 23.496C38.5523 28.3957 38.5332 28.9772 38.4453 30.9124C38.3634 32.7025 38.0643 33.674 37.813 34.3205C37.4803 35.1773 37.0817 35.7874 36.4391 36.4296C35.7966 37.0722 35.1865 37.4698 34.3293 37.8027C33.6828 38.0551 32.7105 38.3535 30.9205 38.4354C28.985 38.5233 28.4038 38.5424 23.5017 38.5424C18.5993 38.5424 18.0183 38.5233 16.083 38.4354C14.293 38.3527 13.3214 38.0537 12.6737 37.8023C11.817 37.4695 11.2049 37.0718 10.5623 36.4292C9.91975 35.7866 9.52209 35.1762 9.1885 34.319C8.93716 33.6726 8.63772 32.701 8.5562 30.9109C8.46826 28.9755 8.45064 28.3942 8.45064 23.4914C8.45064 18.5887 8.46826 18.0104 8.5562 16.0749C8.63809 14.2849 8.93716 13.3133 9.1885 12.6661C9.52136 11.8093 9.91975 11.1974 10.5625 10.5548C11.2051 9.91223 11.817 9.51438 12.6738 9.18097C13.321 8.92853 14.293 8.63019 16.083 8.54794C17.7766 8.47138 18.433 8.44843 21.8546 8.44458V8.44917ZM33.3019 11.4976C32.0856 11.4976 31.0988 12.4835 31.0988 13.6999C31.0988 14.9163 32.0856 15.9031 33.3019 15.9031C34.5182 15.9031 35.505 14.9163 35.505 13.6999C35.505 12.4836 34.5182 11.4968 33.3019 11.4968V11.4976ZM23.5017 14.0717C18.2949 14.0717 14.0734 18.2933 14.0734 23.5002C14.0734 28.7071 18.2949 32.9266 23.5017 32.9266C28.7086 32.9266 32.9286 28.7071 32.9286 23.5002C32.9286 18.2935 28.7082 14.0717 23.5013 14.0717H23.5017ZM23.5017 17.3803C26.8814 17.3803 29.6216 20.12 29.6216 23.5002C29.6216 26.88 26.8814 29.6201 23.5017 29.6201C20.1217 29.6201 17.3819 26.88 17.3819 23.5002C17.3819 20.12 20.1217 17.3803 23.5017 17.3803Z"
+                        fill="white"
+                      />
+                      <Defs>
+                        <RadialGradient
+                          id="paint0_radial_3204_7466"
+                          cx="0"
+                          cy="0"
+                          r="1"
+                          gradientUnits="userSpaceOnUse"
+                          gradientTransform="translate(12.4844 50.6199) rotate(-90) scale(46.5805 43.3235)">
+                          <Stop stop-color="#FFDD55" />
+                          <Stop offset="0.1" stop-color="#FFDD55" />
+                          <Stop offset="0.5" stop-color="#FF543E" />
+                          <Stop offset="1" stop-color="#C837AB" />
+                        </RadialGradient>
+                        <RadialGradient
+                          id="paint1_radial_3204_7466"
+                          cx="0"
+                          cy="0"
+                          r="1"
+                          gradientUnits="userSpaceOnUse"
+                          gradientTransform="translate(-7.87268 3.38565) rotate(78.681) scale(20.8217 85.8279)">
+                          <Stop stop-color="#3771C8" />
+                          <Stop offset="0.128" stop-color="#3771C8" />
+                          <Stop
+                            offset="1"
+                            stop-color="#6600FF"
+                            stop-opacity="0"
+                          />
+                        </RadialGradient>
+                      </Defs>
+                    </Svg>
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Svg width="17" height="18" viewBox="0 0 47 48" fill="none">
+                      <Path
+                        d="M47 24.0898C47 11.1112 36.4786 0.589844 23.5 0.589844C10.5214 0.589844 0 11.1112 0 24.0898C0 35.8193 8.59366 45.5415 19.8281 47.3044V30.8828H13.8613V24.0898H19.8281V18.9125C19.8281 13.0228 23.3366 9.76953 28.7045 9.76953C31.2756 9.76953 33.9648 10.2285 33.9648 10.2285V16.0117H31.0016C28.0823 16.0117 27.1719 17.8232 27.1719 19.6818V24.0898H33.6895L32.6476 30.8828H27.1719V47.3044C38.4063 45.5415 47 35.8195 47 24.0898Z"
+                        fill="#1877F2"
+                      />
+                      <Path
+                        d="M32.6476 30.8828L33.6895 24.0898H27.1719V19.6818C27.1719 17.8231 28.0823 16.0117 31.0016 16.0117H33.9648V10.2285C33.9648 10.2285 31.2756 9.76953 28.7043 9.76953C23.3366 9.76953 19.8281 13.0228 19.8281 18.9125V24.0898H13.8613V30.8828H19.8281V47.3044C21.0428 47.4947 22.2705 47.5902 23.5 47.5898C24.7295 47.5902 25.9572 47.4948 27.1719 47.3044V30.8828H32.6476Z"
+                        fill="white"
+                      />
+                    </Svg>
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Svg width="17" height="18" viewBox="0 0 47 48" fill="none">
+                      <Path
+                        d="M34.8307 17.5134C38.2597 19.6762 42.4604 20.9488 46.9973 20.9488V13.2457C46.1386 13.2458 45.2822 13.1667 44.4422 13.0097V19.0732C39.9057 19.0732 35.7055 17.8008 32.2758 15.6381V31.3582C32.2758 39.2222 25.0507 45.5967 16.1389 45.5967C12.8137 45.5967 9.72286 44.7097 7.15546 43.1884C10.0858 45.8322 14.1723 47.4722 18.6933 47.4722C27.6058 47.4722 34.8311 41.0977 34.8311 33.2333V17.5134H34.8307ZM37.9828 9.7419C36.2303 8.05266 35.0796 5.86959 34.8307 3.45606V2.46533H32.4094C33.0189 5.53281 35.098 8.15347 37.9828 9.7419ZM12.7922 37.1539C11.8131 36.0213 11.2839 34.6355 11.2862 33.2108C11.2862 29.6142 14.5909 26.6979 18.6681 26.6979C19.4278 26.6975 20.183 26.8005 20.9073 27.0031V19.1276C20.0609 19.0254 19.2069 18.9818 18.3533 18.9978V25.1276C17.6287 24.9249 16.8731 24.822 16.113 24.8226C12.036 24.8226 8.73151 27.7385 8.73151 31.3356C8.73151 33.8792 10.3832 36.0812 12.7922 37.1539Z"
+                        fill="#FF004F"
+                      />
+                      <Path
+                        d="M32.2758 15.638C35.7057 17.8006 39.9055 19.073 44.4422 19.073V13.0095C41.9098 12.5335 39.6681 11.366 37.9826 9.7419C35.0976 8.1533 33.0189 5.53265 32.4094 2.46533H26.0496V33.233C26.0351 36.8199 22.7361 39.7242 18.6677 39.7242C16.2705 39.7242 14.1406 38.7159 12.7918 37.1538C10.3832 36.0812 8.73132 33.879 8.73132 31.3358C8.73132 27.739 12.0358 24.8227 16.1128 24.8227C16.894 24.8227 17.6468 24.93 18.3531 25.1278V18.998C9.59764 19.1576 2.55634 25.4699 2.55634 33.2331C2.55634 37.1085 4.30973 40.6217 7.15563 43.1887C9.72303 44.7097 12.8136 45.5971 16.1391 45.5971C25.0511 45.5971 32.276 39.2221 32.276 31.3582L32.2758 15.638Z"
+                        fill="black"
+                      />
+                      <Path
+                        d="M44.4423 13.0092V11.37C42.1587 11.3731 39.9203 10.8088 37.9828 9.74172C39.6978 11.3984 41.9561 12.5409 44.4423 13.0095M32.4094 2.46498C32.3513 2.1719 32.3067 1.87685 32.2758 1.58057V0.589844H23.4943V31.3578C23.4803 34.9444 20.1813 37.8487 16.1128 37.8487C14.9594 37.8502 13.8218 37.6122 12.7918 37.1539C14.1406 38.7158 16.2705 39.7238 18.6677 39.7238C22.7359 39.7238 26.0352 36.8199 26.0496 33.233V2.46514L32.4094 2.46498ZM18.3536 18.9976V17.2523C17.6198 17.1638 16.88 17.1195 16.1394 17.1197C7.22648 17.1197 0.00158691 23.4946 0.00158691 31.3578C0.00158691 36.2878 2.84106 40.6325 7.15598 43.1882C4.31009 40.6214 2.55669 37.108 2.55669 33.2328C2.55669 25.4697 9.59781 19.1573 18.3536 18.9976Z"
+                        fill="#00F2EA"
+                      />
+                    </Svg>
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Svg
+                      width="17"
+                      height="18"
+                      viewBox="0 0 47 47"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <Path
+                        d="M37.0145 2.25781H44.2211L28.4761 20.2549L47 44.7399H32.4966L21.1382 29.8879L8.13883 44.7399H0.92825L17.7699 25.4895L0 2.25977H14.8716L25.1391 15.8349L37.0145 2.25781ZM34.4863 40.4277H38.4793L12.7018 6.34485H8.41692L34.4863 40.4277Z"
+                        fill={strokeColor}
+                      />
+                    </Svg>
+                  </TouchableOpacity>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    paddingVertical: 10,
+                    gap: 7,
+                    paddingRight: 50,
+                  }}>
+                  <View style={{flexDirection: 'row', gap: 3}}>
+                    <View style={styles.wallet}>
+                      <Svg
+                        width="17"
+                        height="18"
+                        viewBox="0 0 17 18"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <Path
+                          d="M3.60683 14.6021L3.83382 14.1566L3.60683 14.6021ZM2.98772 13.983L3.43322 13.756H3.43322L2.98772 13.983ZM13.3931 14.6021L13.1661 14.1566L13.1661 14.1566L13.3931 14.6021ZM14.0122 13.983L13.5667 13.756V13.756L14.0122 13.983ZM13.3931 4.99429L13.1661 5.43979L13.1661 5.43979L13.3931 4.99429ZM14.0122 5.6134L13.5667 5.84039L14.0122 5.6134ZM3.60683 4.99429L3.37983 4.54879L3.60683 4.99429ZM2.98772 5.6134L2.54222 5.3864L2.98772 5.6134ZM11.0117 11.1377L11.2387 10.6922L11.0117 11.1377ZM10.7022 10.8281L11.1477 10.6011L10.7022 10.8281ZM15.5061 10.8281L15.0606 10.6011L15.5061 10.8281ZM15.1966 11.1377L14.9696 10.6922L15.1966 11.1377ZM15.1966 8.45875L14.9696 8.90426L15.1966 8.45875ZM15.5061 8.76831L15.0606 8.9953L15.5061 8.76831ZM11.0117 8.45875L11.2387 8.90426L11.0117 8.45875ZM10.7022 8.76831L11.1477 8.9953L10.7022 8.76831ZM4.06428 4.37565C3.80789 4.4782 3.68318 4.76919 3.78574 5.02558C3.8883 5.28197 4.17928 5.40668 4.43567 5.30412L4.06428 4.37565ZM10.3619 2.39511L10.1762 1.93087L10.1762 1.93087L10.3619 2.39511ZM10.8333 4.83988C10.8333 5.11603 11.0572 5.33988 11.3333 5.33988C11.6095 5.33988 11.8333 5.11603 11.8333 4.83988H10.8333ZM5.09998 5.33988H11.9V4.33988H5.09998V5.33988ZM11.9 14.2565H5.09998V15.2565H11.9V14.2565ZM3.33331 12.4899V7.10655H2.33331V12.4899H3.33331ZM13.6666 7.10655V8.55863H14.6666V7.10655H13.6666ZM13.6666 11.3477V12.4899H14.6666V11.3477H13.6666ZM5.09998 14.2565C4.69503 14.2565 4.42138 14.2562 4.21023 14.2389C4.00492 14.2221 3.90311 14.1919 3.83382 14.1566L3.37983 15.0476C3.61359 15.1667 3.86165 15.2138 4.1288 15.2356C4.39012 15.2569 4.71153 15.2565 5.09998 15.2565V14.2565ZM2.33331 12.4899C2.33331 12.8783 2.33292 13.1997 2.35427 13.4611C2.3761 13.7282 2.42311 13.9763 2.54222 14.21L3.43322 13.756C3.39792 13.6868 3.36773 13.5849 3.35095 13.3796C3.3337 13.1685 3.33331 12.8948 3.33331 12.4899H2.33331ZM3.83382 14.1566C3.66134 14.0688 3.52111 13.9285 3.43322 13.756L2.54222 14.21C2.72597 14.5707 3.01919 14.8639 3.37983 15.0476L3.83382 14.1566ZM11.9 15.2565C12.2884 15.2565 12.6098 15.2569 12.8712 15.2356C13.1383 15.2138 13.3864 15.1667 13.6201 15.0476L13.1661 14.1566C13.0969 14.1919 12.995 14.2221 12.7897 14.2389C12.5786 14.2562 12.3049 14.2565 11.9 14.2565V15.2565ZM13.6666 12.4899C13.6666 12.8948 13.6663 13.1685 13.649 13.3796C13.6322 13.5849 13.602 13.6868 13.5667 13.756L14.4577 14.21C14.5768 13.9763 14.6239 13.7282 14.6457 13.4611C14.667 13.1997 14.6666 12.8783 14.6666 12.4899H13.6666ZM13.6201 15.0476C13.9808 14.8639 14.274 14.5707 14.4577 14.21L13.5667 13.756C13.4789 13.9285 13.3386 14.0688 13.1661 14.1566L13.6201 15.0476ZM11.9 5.33988C12.3049 5.33988 12.5786 5.34027 12.7897 5.35752C12.995 5.3743 13.0969 5.40449 13.1661 5.43979L13.6201 4.54879C13.3864 4.42968 13.1383 4.38267 12.8712 4.36084C12.6098 4.33949 12.2884 4.33988 11.9 4.33988V5.33988ZM14.6666 7.10655C14.6666 6.7181 14.667 6.39669 14.6457 6.13537C14.6239 5.86822 14.5768 5.62016 14.4577 5.3864L13.5667 5.84039C13.602 5.90968 13.6322 6.01149 13.649 6.2168C13.6663 6.42795 13.6666 6.7016 13.6666 7.10655H14.6666ZM13.1661 5.43979C13.3386 5.52768 13.4789 5.66791 13.5667 5.84039L14.4577 5.3864C14.274 5.02576 13.9808 4.73254 13.6201 4.54879L13.1661 5.43979ZM5.09998 4.33988C4.71153 4.33988 4.39012 4.33949 4.1288 4.36084C3.86165 4.38267 3.61359 4.42968 3.37983 4.54879L3.83382 5.43979C3.90311 5.40449 4.00492 5.3743 4.21023 5.35752C4.42138 5.34027 4.69503 5.33988 5.09998 5.33988V4.33988ZM3.33331 7.10655C3.33331 6.7016 3.3337 6.42795 3.35095 6.2168C3.36773 6.01149 3.39792 5.90968 3.43322 5.84039L2.54222 5.3864C2.42311 5.62016 2.3761 5.86822 2.35427 6.13537C2.33292 6.39669 2.33331 6.7181 2.33331 7.10655H3.33331ZM3.37983 4.54879C3.01919 4.73254 2.72597 5.02576 2.54222 5.3864L3.43322 5.84039C3.52111 5.66791 3.66134 5.52768 3.83382 5.43979L3.37983 4.54879ZM11.7583 8.88155H14.45V7.88155H11.7583V8.88155ZM15.0833 9.51488V10.0815H16.0833V9.51488H15.0833ZM14.45 10.7149H11.7583V11.7149H14.45V10.7149ZM11.125 10.0815V9.51488H10.125V10.0815H11.125ZM11.7583 10.7149C11.5517 10.7149 11.4268 10.7145 11.3338 10.7069C11.2466 10.6998 11.2323 10.6889 11.2387 10.6922L10.7847 11.5832C10.9427 11.6637 11.1033 11.6914 11.2524 11.7036C11.3956 11.7153 11.5682 11.7149 11.7583 11.7149V10.7149ZM10.125 10.0815C10.125 10.2717 10.1246 10.4443 10.1363 10.5875C10.1485 10.7365 10.1762 10.8971 10.2567 11.0551L11.1477 10.6011C11.151 10.6076 11.1401 10.5933 11.133 10.5061C11.1254 10.413 11.125 10.2882 11.125 10.0815H10.125ZM11.2387 10.6922C11.1995 10.6722 11.1677 10.6403 11.1477 10.6011L10.2567 11.0551C10.3725 11.2825 10.5574 11.4673 10.7847 11.5832L11.2387 10.6922ZM15.0833 10.0815C15.0833 10.2882 15.0829 10.413 15.0753 10.5061C15.0682 10.5933 15.0573 10.6076 15.0606 10.6011L15.9516 11.0551C16.0321 10.8971 16.0598 10.7365 16.072 10.5875C16.0837 10.4443 16.0833 10.2717 16.0833 10.0815H15.0833ZM14.45 11.7149C14.6401 11.7149 14.8127 11.7153 14.9559 11.7036C15.105 11.6914 15.2656 11.6637 15.4236 11.5832L14.9696 10.6922C14.976 10.6889 14.9617 10.6998 14.8745 10.7069C14.7815 10.7145 14.6566 10.7149 14.45 10.7149V11.7149ZM15.0606 10.6011C15.0406 10.6403 15.0088 10.6722 14.9696 10.6922L15.4236 11.5832C15.6509 11.4673 15.8358 11.2825 15.9516 11.0551L15.0606 10.6011ZM14.45 8.88155C14.6566 8.88155 14.7815 8.88194 14.8745 8.88954C14.9617 8.89666 14.976 8.90756 14.9696 8.90426L15.4236 8.01325C15.2656 7.93275 15.105 7.90504 14.9559 7.89286C14.8127 7.88116 14.6401 7.88155 14.45 7.88155V8.88155ZM16.0833 9.51488C16.0833 9.32478 16.0837 9.15213 16.072 9.00893C16.0598 8.8599 16.0321 8.69931 15.9516 8.54131L15.0606 8.9953C15.0573 8.98883 15.0682 9.00317 15.0753 9.09037C15.0829 9.1834 15.0833 9.30828 15.0833 9.51488H16.0833ZM14.9696 8.90426C15.0088 8.92423 15.0406 8.9561 15.0606 8.9953L15.9516 8.54131C15.8358 8.31395 15.6509 8.1291 15.4236 8.01325L14.9696 8.90426ZM11.7583 7.88155C11.5682 7.88155 11.3956 7.88116 11.2524 7.89286C11.1033 7.90504 10.9427 7.93275 10.7847 8.01325L11.2387 8.90426C11.2323 8.90756 11.2466 8.89666 11.3338 8.88954C11.4268 8.88194 11.5517 8.88155 11.7583 8.88155V7.88155ZM11.125 9.51488C11.125 9.30828 11.1254 9.1834 11.133 9.09037C11.1401 9.00317 11.151 8.98883 11.1477 8.9953L10.2567 8.54131C10.1762 8.69931 10.1485 8.8599 10.1363 9.00894C10.1246 9.15213 10.125 9.32478 10.125 9.51488H11.125ZM10.7847 8.01325C10.5574 8.1291 10.3725 8.31395 10.2567 8.54131L11.1477 8.9953C11.1677 8.9561 11.1995 8.92423 11.2387 8.90426L10.7847 8.01325ZM4.43567 5.30412L10.5476 2.85935L10.1762 1.93087L4.06428 4.37565L4.43567 5.30412ZM10.8333 3.05278V4.83988H11.8333V3.05278H10.8333ZM10.5476 2.85935C10.6845 2.80461 10.8333 2.90539 10.8333 3.05278H11.8333C11.8333 2.19793 10.9699 1.61339 10.1762 1.93087L10.5476 2.85935Z"
+                          fill="#B1B1B1"
+                        />
+                      </Svg>
+                    </View>
+
+                    <Text
+                      style={{
+                        color: '#808080',
+                        fontFamily: 'Manrope-Medium',
+                        fontSize: 12,
+                      }}>
+                      Earning:
+                    </Text>
+                  </View>
+                  <Text
+                    style={[
+                      {
+                        color: '#fff',
+                        fontFamily: 'Manrope-ExtraBold',
+                        fontSize: 12,
+                      },
+                      dynamicStyles.TextColor,
+                    ]}>
+                    ₦3.5 per Page Like
+                  </Text>
+                </View>
+                <View>
+                  <TouchableOpacity
+                    style={{
+                      height: 35,
+                      backgroundColor: '#FF6DFB',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      width: 109,
+                      borderTopRightRadius: 4,
+                      borderTopLeftRadius: 4,
+                    }}
+                    onPress={() => setModalVisible(true)}>
+                    <Text
+                      style={{
+                        color: '#fff',
+                        fontFamily: 'Manrope-Medium',
+                        fontSize: 10,
+                      }}>
+                      Generate Task
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </View>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              setModalVisible(!modalVisible);
+            }}>
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <TouchableOpacity
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: 50,
+                    height: 50,
+                    borderRadius: 50,
+                    position: 'absolute',
+                    top: 0,
+                    alignSelf: 'flex-end',
+                  }}
+                  onPress={() => setModalVisible(false)}>
+                  <View
+                    style={{
+                      backgroundColor: '#FF6DFB',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      width: 50,
+                      height: 50,
+                      borderRadius: 50,
+                      position: 'absolute',
+                      top: -20,
+                      alignSelf: 'flex-end',
+                    }}>
+                    <Svg
+                      width="30"
+                      height="30"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <Path
+                        d="M18 6L6 18M18 18L6 6.00001"
+                        stroke="white"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                      />
+                    </Svg>
+                  </View>
+                </TouchableOpacity>
+                <View style={{alignSelf: 'center'}}>
                   <Svg
-                    width="17"
-                    height="18"
-                    viewBox="0 0 17 18"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg">
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="46"
+                    height="47"
+                    viewBox="0 0 46 47"
+                    fill="none">
                     <Path
-                      d="M3.60683 14.6021L3.83382 14.1566L3.60683 14.6021ZM2.98772 13.983L3.43322 13.756H3.43322L2.98772 13.983ZM13.3931 14.6021L13.1661 14.1566L13.1661 14.1566L13.3931 14.6021ZM14.0122 13.983L13.5667 13.756V13.756L14.0122 13.983ZM13.3931 4.99429L13.1661 5.43979L13.1661 5.43979L13.3931 4.99429ZM14.0122 5.6134L13.5667 5.84039L14.0122 5.6134ZM3.60683 4.99429L3.37983 4.54879L3.60683 4.99429ZM2.98772 5.6134L2.54222 5.3864L2.98772 5.6134ZM11.0117 11.1377L11.2387 10.6922L11.0117 11.1377ZM10.7022 10.8281L11.1477 10.6011L10.7022 10.8281ZM15.5061 10.8281L15.0606 10.6011L15.5061 10.8281ZM15.1966 11.1377L14.9696 10.6922L15.1966 11.1377ZM15.1966 8.45875L14.9696 8.90426L15.1966 8.45875ZM15.5061 8.76831L15.0606 8.9953L15.5061 8.76831ZM11.0117 8.45875L11.2387 8.90426L11.0117 8.45875ZM10.7022 8.76831L11.1477 8.9953L10.7022 8.76831ZM4.06428 4.37565C3.80789 4.4782 3.68318 4.76919 3.78574 5.02558C3.8883 5.28197 4.17928 5.40668 4.43567 5.30412L4.06428 4.37565ZM10.3619 2.39511L10.1762 1.93087L10.1762 1.93087L10.3619 2.39511ZM10.8333 4.83988C10.8333 5.11603 11.0572 5.33988 11.3333 5.33988C11.6095 5.33988 11.8333 5.11603 11.8333 4.83988H10.8333ZM5.09998 5.33988H11.9V4.33988H5.09998V5.33988ZM11.9 14.2565H5.09998V15.2565H11.9V14.2565ZM3.33331 12.4899V7.10655H2.33331V12.4899H3.33331ZM13.6666 7.10655V8.55863H14.6666V7.10655H13.6666ZM13.6666 11.3477V12.4899H14.6666V11.3477H13.6666ZM5.09998 14.2565C4.69503 14.2565 4.42138 14.2562 4.21023 14.2389C4.00492 14.2221 3.90311 14.1919 3.83382 14.1566L3.37983 15.0476C3.61359 15.1667 3.86165 15.2138 4.1288 15.2356C4.39012 15.2569 4.71153 15.2565 5.09998 15.2565V14.2565ZM2.33331 12.4899C2.33331 12.8783 2.33292 13.1997 2.35427 13.4611C2.3761 13.7282 2.42311 13.9763 2.54222 14.21L3.43322 13.756C3.39792 13.6868 3.36773 13.5849 3.35095 13.3796C3.3337 13.1685 3.33331 12.8948 3.33331 12.4899H2.33331ZM3.83382 14.1566C3.66134 14.0688 3.52111 13.9285 3.43322 13.756L2.54222 14.21C2.72597 14.5707 3.01919 14.8639 3.37983 15.0476L3.83382 14.1566ZM11.9 15.2565C12.2884 15.2565 12.6098 15.2569 12.8712 15.2356C13.1383 15.2138 13.3864 15.1667 13.6201 15.0476L13.1661 14.1566C13.0969 14.1919 12.995 14.2221 12.7897 14.2389C12.5786 14.2562 12.3049 14.2565 11.9 14.2565V15.2565ZM13.6666 12.4899C13.6666 12.8948 13.6663 13.1685 13.649 13.3796C13.6322 13.5849 13.602 13.6868 13.5667 13.756L14.4577 14.21C14.5768 13.9763 14.6239 13.7282 14.6457 13.4611C14.667 13.1997 14.6666 12.8783 14.6666 12.4899H13.6666ZM13.6201 15.0476C13.9808 14.8639 14.274 14.5707 14.4577 14.21L13.5667 13.756C13.4789 13.9285 13.3386 14.0688 13.1661 14.1566L13.6201 15.0476ZM11.9 5.33988C12.3049 5.33988 12.5786 5.34027 12.7897 5.35752C12.995 5.3743 13.0969 5.40449 13.1661 5.43979L13.6201 4.54879C13.3864 4.42968 13.1383 4.38267 12.8712 4.36084C12.6098 4.33949 12.2884 4.33988 11.9 4.33988V5.33988ZM14.6666 7.10655C14.6666 6.7181 14.667 6.39669 14.6457 6.13537C14.6239 5.86822 14.5768 5.62016 14.4577 5.3864L13.5667 5.84039C13.602 5.90968 13.6322 6.01149 13.649 6.2168C13.6663 6.42795 13.6666 6.7016 13.6666 7.10655H14.6666ZM13.1661 5.43979C13.3386 5.52768 13.4789 5.66791 13.5667 5.84039L14.4577 5.3864C14.274 5.02576 13.9808 4.73254 13.6201 4.54879L13.1661 5.43979ZM5.09998 4.33988C4.71153 4.33988 4.39012 4.33949 4.1288 4.36084C3.86165 4.38267 3.61359 4.42968 3.37983 4.54879L3.83382 5.43979C3.90311 5.40449 4.00492 5.3743 4.21023 5.35752C4.42138 5.34027 4.69503 5.33988 5.09998 5.33988V4.33988ZM3.33331 7.10655C3.33331 6.7016 3.3337 6.42795 3.35095 6.2168C3.36773 6.01149 3.39792 5.90968 3.43322 5.84039L2.54222 5.3864C2.42311 5.62016 2.3761 5.86822 2.35427 6.13537C2.33292 6.39669 2.33331 6.7181 2.33331 7.10655H3.33331ZM3.37983 4.54879C3.01919 4.73254 2.72597 5.02576 2.54222 5.3864L3.43322 5.84039C3.52111 5.66791 3.66134 5.52768 3.83382 5.43979L3.37983 4.54879ZM11.7583 8.88155H14.45V7.88155H11.7583V8.88155ZM15.0833 9.51488V10.0815H16.0833V9.51488H15.0833ZM14.45 10.7149H11.7583V11.7149H14.45V10.7149ZM11.125 10.0815V9.51488H10.125V10.0815H11.125ZM11.7583 10.7149C11.5517 10.7149 11.4268 10.7145 11.3338 10.7069C11.2466 10.6998 11.2323 10.6889 11.2387 10.6922L10.7847 11.5832C10.9427 11.6637 11.1033 11.6914 11.2524 11.7036C11.3956 11.7153 11.5682 11.7149 11.7583 11.7149V10.7149ZM10.125 10.0815C10.125 10.2717 10.1246 10.4443 10.1363 10.5875C10.1485 10.7365 10.1762 10.8971 10.2567 11.0551L11.1477 10.6011C11.151 10.6076 11.1401 10.5933 11.133 10.5061C11.1254 10.413 11.125 10.2882 11.125 10.0815H10.125ZM11.2387 10.6922C11.1995 10.6722 11.1677 10.6403 11.1477 10.6011L10.2567 11.0551C10.3725 11.2825 10.5574 11.4673 10.7847 11.5832L11.2387 10.6922ZM15.0833 10.0815C15.0833 10.2882 15.0829 10.413 15.0753 10.5061C15.0682 10.5933 15.0573 10.6076 15.0606 10.6011L15.9516 11.0551C16.0321 10.8971 16.0598 10.7365 16.072 10.5875C16.0837 10.4443 16.0833 10.2717 16.0833 10.0815H15.0833ZM14.45 11.7149C14.6401 11.7149 14.8127 11.7153 14.9559 11.7036C15.105 11.6914 15.2656 11.6637 15.4236 11.5832L14.9696 10.6922C14.976 10.6889 14.9617 10.6998 14.8745 10.7069C14.7815 10.7145 14.6566 10.7149 14.45 10.7149V11.7149ZM15.0606 10.6011C15.0406 10.6403 15.0088 10.6722 14.9696 10.6922L15.4236 11.5832C15.6509 11.4673 15.8358 11.2825 15.9516 11.0551L15.0606 10.6011ZM14.45 8.88155C14.6566 8.88155 14.7815 8.88194 14.8745 8.88954C14.9617 8.89666 14.976 8.90756 14.9696 8.90426L15.4236 8.01325C15.2656 7.93275 15.105 7.90504 14.9559 7.89286C14.8127 7.88116 14.6401 7.88155 14.45 7.88155V8.88155ZM16.0833 9.51488C16.0833 9.32478 16.0837 9.15213 16.072 9.00893C16.0598 8.8599 16.0321 8.69931 15.9516 8.54131L15.0606 8.9953C15.0573 8.98883 15.0682 9.00317 15.0753 9.09037C15.0829 9.1834 15.0833 9.30828 15.0833 9.51488H16.0833ZM14.9696 8.90426C15.0088 8.92423 15.0406 8.9561 15.0606 8.9953L15.9516 8.54131C15.8358 8.31395 15.6509 8.1291 15.4236 8.01325L14.9696 8.90426ZM11.7583 7.88155C11.5682 7.88155 11.3956 7.88116 11.2524 7.89286C11.1033 7.90504 10.9427 7.93275 10.7847 8.01325L11.2387 8.90426C11.2323 8.90756 11.2466 8.89666 11.3338 8.88954C11.4268 8.88194 11.5517 8.88155 11.7583 8.88155V7.88155ZM11.125 9.51488C11.125 9.30828 11.1254 9.1834 11.133 9.09037C11.1401 9.00317 11.151 8.98883 11.1477 8.9953L10.2567 8.54131C10.1762 8.69931 10.1485 8.8599 10.1363 9.00894C10.1246 9.15213 10.125 9.32478 10.125 9.51488H11.125ZM10.7847 8.01325C10.5574 8.1291 10.3725 8.31395 10.2567 8.54131L11.1477 8.9953C11.1677 8.9561 11.1995 8.92423 11.2387 8.90426L10.7847 8.01325ZM4.43567 5.30412L10.5476 2.85935L10.1762 1.93087L4.06428 4.37565L4.43567 5.30412ZM10.8333 3.05278V4.83988H11.8333V3.05278H10.8333ZM10.5476 2.85935C10.6845 2.80461 10.8333 2.90539 10.8333 3.05278H11.8333C11.8333 2.19793 10.9699 1.61339 10.1762 1.93087L10.5476 2.85935Z"
-                      fill="#B1B1B1"
+                      d="M30.6653 17.75V13.9167C30.6653 9.68248 27.2328 6.25 22.9986 6.25C21.0542 6.25 19.2789 6.9738 17.9274 8.16667M15.7154 40.75H30.282C32.4289 40.75 33.5023 40.75 34.3223 40.3322C35.0436 39.9647 35.63 39.3783 35.9976 38.657C36.4154 37.837 36.4154 36.7635 36.4154 34.6167V23.8833C36.4154 21.7365 36.4154 20.663 35.9976 19.843C35.63 19.1217 35.0436 18.5353 34.3223 18.1678C33.5023 17.75 32.4289 17.75 30.282 17.75H15.7154C13.5685 17.75 12.4951 17.75 11.6751 18.1678C10.9538 18.5353 10.3674 19.1217 9.99984 19.843C9.58203 20.663 9.58203 21.7365 9.58203 23.8833V34.6167C9.58203 36.7635 9.58203 37.837 9.99984 38.657C10.3674 39.3783 10.9538 39.9647 11.6751 40.3322C12.4951 40.75 13.5685 40.75 15.7154 40.75Z"
+                      stroke="#FFD0FE"
+                      stroke-width="2"
+                      stroke-linecap="round"
                     />
                   </Svg>
                 </View>
-
-                <Text
-                  style={{
-                    color: '#808080',
-                    fontFamily: 'CamptonMedium',
-                    fontSize: 12,
-                  }}>
-                  Earning:
-                </Text>
-              </View>
-              <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'Campton Bold',
-                  fontSize: 12,
-                }}>
-                ₦5 per Follow
-              </Text>
-            </View>
-            <View>
-              <TouchableOpacity
-                style={{
-                  height: 35,
-                  backgroundColor: '#FF6DFB',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: 109,
-                  borderTopRightRadius: 4,
-                  borderTopLeftRadius: 4,
-                }}
-                onPress={() => navigation.navigate('Earn1Spotify')}>
-                <Text
-                  style={{
-                    color: '#fff',
-                    fontFamily: 'CamptonMedium',
-                    fontSize: 10,
-                  }}>
-                  Generate Task
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: '#4C4C4C',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: 109,
-                  borderBottomRightRadius: 4,
-                  borderBottomLeftRadius: 4,
-                }}
-                onPress={() => navigation.navigate('Earn1Spotify')}>
-                <Text
-                  style={{
-                    color: '#fff',
-                    fontFamily: 'CamptonMedium',
-                    fontSize: 10,
-                  }}>
-                  124 Task Available
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </View>
-      <View style={styles.Container1}>
-        <View style={styles.Advert1}>
-          <Svg
-            width="47"
-            height="48"
-            viewBox="0 0 47 48"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg">
-            <G id="like">
-              <Path
-                id="Vector"
-                d="M40.6614 25.0858C41.4325 24.0669 41.8594 22.8184 41.8594 21.5195C41.8594 19.4587 40.7073 17.508 38.853 16.4202C38.3757 16.1402 37.8321 15.9928 37.2787 15.9933H26.2723L26.5477 10.3524C26.6119 8.98924 26.13 7.69491 25.1937 6.70809C24.7341 6.2217 24.1798 5.8347 23.5648 5.57103C22.9498 5.30735 22.2873 5.17259 21.6182 5.17508C19.2314 5.17508 17.1201 6.78153 16.4867 9.08104L12.544 23.3555H12.5303V43H34.2081C34.6304 43 35.0435 42.9174 35.4244 42.7521C37.6092 41.8204 39.0183 39.6861 39.0183 37.3178C39.0183 36.7394 38.9356 36.1703 38.7704 35.6195C39.5415 34.6006 39.9684 33.3521 39.9684 32.0532C39.9684 31.4749 39.8857 30.9057 39.7205 30.355C40.4916 29.336 40.9185 28.0876 40.9185 26.7887C40.9093 26.2103 40.8267 25.6366 40.6614 25.0858ZM5.14062 24.8242V41.5312C5.14062 42.3436 5.79697 43 6.60938 43H9.59277V23.3555H6.60938C5.79697 23.3555 5.14062 24.0118 5.14062 24.8242Z"
-                fill="#1877F2"
-              />
-            </G>
-          </Svg>
-
-          <View style={styles.Check}>
-            <Text style={{color: '#fff', fontFamily: 'CamptonMedium'}}>
-              Like Social Media Posts
-            </Text>
-            <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'CamptonBook',
-                paddingTop: 10,
-                fontSize: 12,
-              }}>
-              Like and follow people on different social media platform and earn
-              ₦3.5 per likes. the more you like post the more you earn
-            </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                paddingVertical: 10,
-                gap: 7,
-                paddingRight: 50,
-              }}>
-              <View style={{flexDirection: 'row', gap: 3}}>
-                <View style={styles.wallet}>
-                  <Svg
-                    width="17"
-                    height="18"
-                    viewBox="0 0 17 18"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <Path
-                      d="M3.60683 14.6021L3.83382 14.1566L3.60683 14.6021ZM2.98772 13.983L3.43322 13.756H3.43322L2.98772 13.983ZM13.3931 14.6021L13.1661 14.1566L13.1661 14.1566L13.3931 14.6021ZM14.0122 13.983L13.5667 13.756V13.756L14.0122 13.983ZM13.3931 4.99429L13.1661 5.43979L13.1661 5.43979L13.3931 4.99429ZM14.0122 5.6134L13.5667 5.84039L14.0122 5.6134ZM3.60683 4.99429L3.37983 4.54879L3.60683 4.99429ZM2.98772 5.6134L2.54222 5.3864L2.98772 5.6134ZM11.0117 11.1377L11.2387 10.6922L11.0117 11.1377ZM10.7022 10.8281L11.1477 10.6011L10.7022 10.8281ZM15.5061 10.8281L15.0606 10.6011L15.5061 10.8281ZM15.1966 11.1377L14.9696 10.6922L15.1966 11.1377ZM15.1966 8.45875L14.9696 8.90426L15.1966 8.45875ZM15.5061 8.76831L15.0606 8.9953L15.5061 8.76831ZM11.0117 8.45875L11.2387 8.90426L11.0117 8.45875ZM10.7022 8.76831L11.1477 8.9953L10.7022 8.76831ZM4.06428 4.37565C3.80789 4.4782 3.68318 4.76919 3.78574 5.02558C3.8883 5.28197 4.17928 5.40668 4.43567 5.30412L4.06428 4.37565ZM10.3619 2.39511L10.1762 1.93087L10.1762 1.93087L10.3619 2.39511ZM10.8333 4.83988C10.8333 5.11603 11.0572 5.33988 11.3333 5.33988C11.6095 5.33988 11.8333 5.11603 11.8333 4.83988H10.8333ZM5.09998 5.33988H11.9V4.33988H5.09998V5.33988ZM11.9 14.2565H5.09998V15.2565H11.9V14.2565ZM3.33331 12.4899V7.10655H2.33331V12.4899H3.33331ZM13.6666 7.10655V8.55863H14.6666V7.10655H13.6666ZM13.6666 11.3477V12.4899H14.6666V11.3477H13.6666ZM5.09998 14.2565C4.69503 14.2565 4.42138 14.2562 4.21023 14.2389C4.00492 14.2221 3.90311 14.1919 3.83382 14.1566L3.37983 15.0476C3.61359 15.1667 3.86165 15.2138 4.1288 15.2356C4.39012 15.2569 4.71153 15.2565 5.09998 15.2565V14.2565ZM2.33331 12.4899C2.33331 12.8783 2.33292 13.1997 2.35427 13.4611C2.3761 13.7282 2.42311 13.9763 2.54222 14.21L3.43322 13.756C3.39792 13.6868 3.36773 13.5849 3.35095 13.3796C3.3337 13.1685 3.33331 12.8948 3.33331 12.4899H2.33331ZM3.83382 14.1566C3.66134 14.0688 3.52111 13.9285 3.43322 13.756L2.54222 14.21C2.72597 14.5707 3.01919 14.8639 3.37983 15.0476L3.83382 14.1566ZM11.9 15.2565C12.2884 15.2565 12.6098 15.2569 12.8712 15.2356C13.1383 15.2138 13.3864 15.1667 13.6201 15.0476L13.1661 14.1566C13.0969 14.1919 12.995 14.2221 12.7897 14.2389C12.5786 14.2562 12.3049 14.2565 11.9 14.2565V15.2565ZM13.6666 12.4899C13.6666 12.8948 13.6663 13.1685 13.649 13.3796C13.6322 13.5849 13.602 13.6868 13.5667 13.756L14.4577 14.21C14.5768 13.9763 14.6239 13.7282 14.6457 13.4611C14.667 13.1997 14.6666 12.8783 14.6666 12.4899H13.6666ZM13.6201 15.0476C13.9808 14.8639 14.274 14.5707 14.4577 14.21L13.5667 13.756C13.4789 13.9285 13.3386 14.0688 13.1661 14.1566L13.6201 15.0476ZM11.9 5.33988C12.3049 5.33988 12.5786 5.34027 12.7897 5.35752C12.995 5.3743 13.0969 5.40449 13.1661 5.43979L13.6201 4.54879C13.3864 4.42968 13.1383 4.38267 12.8712 4.36084C12.6098 4.33949 12.2884 4.33988 11.9 4.33988V5.33988ZM14.6666 7.10655C14.6666 6.7181 14.667 6.39669 14.6457 6.13537C14.6239 5.86822 14.5768 5.62016 14.4577 5.3864L13.5667 5.84039C13.602 5.90968 13.6322 6.01149 13.649 6.2168C13.6663 6.42795 13.6666 6.7016 13.6666 7.10655H14.6666ZM13.1661 5.43979C13.3386 5.52768 13.4789 5.66791 13.5667 5.84039L14.4577 5.3864C14.274 5.02576 13.9808 4.73254 13.6201 4.54879L13.1661 5.43979ZM5.09998 4.33988C4.71153 4.33988 4.39012 4.33949 4.1288 4.36084C3.86165 4.38267 3.61359 4.42968 3.37983 4.54879L3.83382 5.43979C3.90311 5.40449 4.00492 5.3743 4.21023 5.35752C4.42138 5.34027 4.69503 5.33988 5.09998 5.33988V4.33988ZM3.33331 7.10655C3.33331 6.7016 3.3337 6.42795 3.35095 6.2168C3.36773 6.01149 3.39792 5.90968 3.43322 5.84039L2.54222 5.3864C2.42311 5.62016 2.3761 5.86822 2.35427 6.13537C2.33292 6.39669 2.33331 6.7181 2.33331 7.10655H3.33331ZM3.37983 4.54879C3.01919 4.73254 2.72597 5.02576 2.54222 5.3864L3.43322 5.84039C3.52111 5.66791 3.66134 5.52768 3.83382 5.43979L3.37983 4.54879ZM11.7583 8.88155H14.45V7.88155H11.7583V8.88155ZM15.0833 9.51488V10.0815H16.0833V9.51488H15.0833ZM14.45 10.7149H11.7583V11.7149H14.45V10.7149ZM11.125 10.0815V9.51488H10.125V10.0815H11.125ZM11.7583 10.7149C11.5517 10.7149 11.4268 10.7145 11.3338 10.7069C11.2466 10.6998 11.2323 10.6889 11.2387 10.6922L10.7847 11.5832C10.9427 11.6637 11.1033 11.6914 11.2524 11.7036C11.3956 11.7153 11.5682 11.7149 11.7583 11.7149V10.7149ZM10.125 10.0815C10.125 10.2717 10.1246 10.4443 10.1363 10.5875C10.1485 10.7365 10.1762 10.8971 10.2567 11.0551L11.1477 10.6011C11.151 10.6076 11.1401 10.5933 11.133 10.5061C11.1254 10.413 11.125 10.2882 11.125 10.0815H10.125ZM11.2387 10.6922C11.1995 10.6722 11.1677 10.6403 11.1477 10.6011L10.2567 11.0551C10.3725 11.2825 10.5574 11.4673 10.7847 11.5832L11.2387 10.6922ZM15.0833 10.0815C15.0833 10.2882 15.0829 10.413 15.0753 10.5061C15.0682 10.5933 15.0573 10.6076 15.0606 10.6011L15.9516 11.0551C16.0321 10.8971 16.0598 10.7365 16.072 10.5875C16.0837 10.4443 16.0833 10.2717 16.0833 10.0815H15.0833ZM14.45 11.7149C14.6401 11.7149 14.8127 11.7153 14.9559 11.7036C15.105 11.6914 15.2656 11.6637 15.4236 11.5832L14.9696 10.6922C14.976 10.6889 14.9617 10.6998 14.8745 10.7069C14.7815 10.7145 14.6566 10.7149 14.45 10.7149V11.7149ZM15.0606 10.6011C15.0406 10.6403 15.0088 10.6722 14.9696 10.6922L15.4236 11.5832C15.6509 11.4673 15.8358 11.2825 15.9516 11.0551L15.0606 10.6011ZM14.45 8.88155C14.6566 8.88155 14.7815 8.88194 14.8745 8.88954C14.9617 8.89666 14.976 8.90756 14.9696 8.90426L15.4236 8.01325C15.2656 7.93275 15.105 7.90504 14.9559 7.89286C14.8127 7.88116 14.6401 7.88155 14.45 7.88155V8.88155ZM16.0833 9.51488C16.0833 9.32478 16.0837 9.15213 16.072 9.00893C16.0598 8.8599 16.0321 8.69931 15.9516 8.54131L15.0606 8.9953C15.0573 8.98883 15.0682 9.00317 15.0753 9.09037C15.0829 9.1834 15.0833 9.30828 15.0833 9.51488H16.0833ZM14.9696 8.90426C15.0088 8.92423 15.0406 8.9561 15.0606 8.9953L15.9516 8.54131C15.8358 8.31395 15.6509 8.1291 15.4236 8.01325L14.9696 8.90426ZM11.7583 7.88155C11.5682 7.88155 11.3956 7.88116 11.2524 7.89286C11.1033 7.90504 10.9427 7.93275 10.7847 8.01325L11.2387 8.90426C11.2323 8.90756 11.2466 8.89666 11.3338 8.88954C11.4268 8.88194 11.5517 8.88155 11.7583 8.88155V7.88155ZM11.125 9.51488C11.125 9.30828 11.1254 9.1834 11.133 9.09037C11.1401 9.00317 11.151 8.98883 11.1477 8.9953L10.2567 8.54131C10.1762 8.69931 10.1485 8.8599 10.1363 9.00894C10.1246 9.15213 10.125 9.32478 10.125 9.51488H11.125ZM10.7847 8.01325C10.5574 8.1291 10.3725 8.31395 10.2567 8.54131L11.1477 8.9953C11.1677 8.9561 11.1995 8.92423 11.2387 8.90426L10.7847 8.01325ZM4.43567 5.30412L10.5476 2.85935L10.1762 1.93087L4.06428 4.37565L4.43567 5.30412ZM10.8333 3.05278V4.83988H11.8333V3.05278H10.8333ZM10.5476 2.85935C10.6845 2.80461 10.8333 2.90539 10.8333 3.05278H11.8333C11.8333 2.19793 10.9699 1.61339 10.1762 1.93087L10.5476 2.85935Z"
-                      fill="#B1B1B1"
-                    />
-                  </Svg>
+                <View>
+                  <Text style={styles.modalText}>Become a Member Today!</Text>
                 </View>
-
                 <Text
                   style={{
-                    color: '#808080',
-                    fontFamily: 'CamptonMedium',
                     fontSize: 12,
+                    textAlign: 'center',
+                    paddingBottom: 30,
+                    color: '#fff',
                   }}>
-                  Earning:
+                  To be able to earn daily through advert task , engagement task
+                  or to create an advert on Trendit³ you need to pay for the
+                  membership activation fee which is ₦1,000. To make payment
+                  click on the button below
                 </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    setModal1Visible(true);
+                    setModalVisible(false);
+                  }}
+                  style={{
+                    backgroundColor: '#CB29BE',
+                    height: 40,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '80%',
+                    borderRadius: 110,
+                    alignSelf: 'center',
+                  }}>
+                  <Text style={{color: '#fff'}}>Continue</Text>
+                </TouchableOpacity>
               </View>
-              <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'Campton Bold',
-                  fontSize: 12,
-                }}>
-                ₦3.5 per Page Like
-              </Text>
             </View>
-            <View>
-              <TouchableOpacity
-                style={{
-                  height: 35,
-                  backgroundColor: '#FF6DFB',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: 109,
-                  borderTopRightRadius: 4,
-                  borderTopLeftRadius: 4,
-                }}
-                onPress={() => navigation.navigate('Earn1Like')}>
-                <Text
-                  style={{
-                    color: '#fff',
-                    fontFamily: 'CamptonMedium',
-                    fontSize: 10,
-                  }}>
-                  Generate Task
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: '#4C4C4C',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: 109,
-                  borderBottomRightRadius: 4,
-                  borderBottomLeftRadius: 4,
-                }}
-                onPress={() => navigation.navigate('Earn1Like')}>
-                <Text
-                  style={{
-                    color: '#fff',
-                    fontFamily: 'CamptonMedium',
-                    fontSize: 10,
-                  }}>
-                  124 Task Available
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </View>
+          </Modal>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modal1Visible}
+            onRequestClose={() => {
+              setModal1Visible(!modal1Visible);
+            }}>
+            <ScrollView>
+              <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                  <TouchableOpacity
+                    style={{
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      width: 50,
+                      height: 50,
+                      borderRadius: 50,
+                      position: 'absolute',
+                      top: 0,
+                      alignSelf: 'flex-end',
+                    }}
+                    onPress={() => setModal1Visible(false)}>
+                    <View
+                      style={{
+                        backgroundColor: '#FF6DFB',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: 50,
+                        height: 50,
+                        borderRadius: 50,
+                        position: 'absolute',
+                        top: -20,
+                        alignSelf: 'flex-end',
+                      }}>
+                      <Svg
+                        width="30"
+                        height="30"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <Path
+                          d="M18 6L6 18M18 18L6 6.00001"
+                          stroke="white"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                        />
+                      </Svg>
+                    </View>
+                  </TouchableOpacity>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      gap: 5,
+                      alignContent: 'center',
+                      alignSelf: 'center',
+                    }}>
+                    <Svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none">
+                      <G clip-path="url(#clip0_4535_37461)">
+                        <Path
+                          d="M7.9987 9.66659C10.2999 9.66659 12.1654 7.80111 12.1654 5.49992C12.1654 3.19873 10.2999 1.33325 7.9987 1.33325C5.69751 1.33325 3.83203 3.19873 3.83203 5.49992C3.83203 7.80111 5.69751 9.66659 7.9987 9.66659ZM7.9987 9.66659C4.3168 9.66659 1.33203 11.9052 1.33203 14.6666M7.9987 9.66659C11.6806 9.66659 14.6654 11.9052 14.6654 14.6666"
+                          stroke="white"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                        />
+                      </G>
+                      <Defs>
+                        <ClipPath id="clip0_4535_37461">
+                          <Rect width="16" height="16" fill="white" />
+                        </ClipPath>
+                      </Defs>
+                    </Svg>
+                    <Text style={{textAlign: 'center', color: '#fff'}}>
+                      Become a Member Today!
+                    </Text>
+                  </View>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      textAlign: 'center',
+                      paddingBottom: 20,
+                      paddingTop: 10,
+                      color: '#fff',
+                    }}>
+                    Turn your social media accounts into a daily surce of income
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      paddingTop: 10,
+                      color: '#fff',
+                    }}>
+                    Do you know you can earn daily income by performing social
+                    media task such as likes, follows, comments, subscribe,
+                    share, retweet and others. that is one of the so many
+                    benefit of becoming a member of Trendit³
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      paddingTop: 10,
+                      color: '#fff',
+                    }}>
+                    When you activate your account with a one-time membership
+                    fee of ₦1000, you get an access to enjoy the benefits listed
+                    below:
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      paddingTop: 10,
+                      color: '#fff',
+                      fontFamily: 'Manrope-ExtraBold',
+                    }}>
+                    Earn on Your Terms:{' '}
+                  </Text>
+                  <View style={{flexDirection: 'row', gap: 7}}>
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        paddingTop: 10,
+                        color: '#fff',
+                      }}>
+                      –
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        paddingTop: 10,
+                        color: '#fff',
+                      }}>
+                      Short & Simple Tasks: Unlike time-consuming gigs, our
+                      tasks are quick and easy to complete – perfect for fitting
+                      into your busy schedule. Like posts, follow accounts,
+                      share content – it's that simple
+                    </Text>
+                  </View>
+                  <View style={{flexDirection: 'row', gap: 7}}>
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        paddingTop: 10,
+                        color: '#fff',
+                      }}>
+                      –
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        paddingTop: 10,
+                        color: '#fff',
+                      }}>
+                      Real Money Rewards: Earn real money for your completed
+                      tasks. Redeem your earnings through convenient payment
+                      methods.
+                    </Text>
+                  </View>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      paddingTop: 10,
+                      color: '#fff',
+                      fontFamily: 'Manrope-ExtraBold',
+                    }}>
+                    Boost Your Social Media Presence:
+                  </Text>
+                  <View style={{flexDirection: 'row', gap: 7}}>
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        paddingTop: 10,
+                        color: '#fff',
+                      }}>
+                      –
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        paddingTop: 10,
+                        color: '#fff',
+                      }}>
+                      Expand your social circle and explore engaging content by
+                      following recommended accounts.
+                    </Text>
+                  </View>
+                  <View style={{flexDirection: 'row', gap: 7}}>
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        paddingTop: 10,
+                        color: '#fff',
+                      }}>
+                      –
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        paddingTop: 10,
+                        color: '#fff',
+                      }}>
+                      Increase Brand Awareness: By completing tasks like liking
+                      posts, you can subtly promote your own social media
+                      profiles or favorite brands.
+                    </Text>
+                  </View>
+                  <View style={{flexDirection: 'row', gap: 7}}>
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        paddingTop: 10,
+                        color: '#fff',
+                      }}>
+                      –
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        paddingTop: 10,
+                        color: '#fff',
+                      }}>
+                      Stay Current with Trends: Engaging with the latest viral
+                      content keeps you in the loop and helps you build a more
+                      relevant online presence.
+                    </Text>
+                  </View>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      paddingTop: 10,
+                      color: '#fff',
+                      fontFamily: 'Manrope-ExtraBold',
+                    }}>
+                    More than Just Earnings:
+                  </Text>
+                  <View style={{flexDirection: 'row', gap: 7}}>
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        paddingTop: 10,
+                        color: '#fff',
+                      }}>
+                      –
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        paddingTop: 10,
+                        color: '#fff',
+                      }}>
+                      Interactive Community: Connect with other app users, share
+                      experiences, and learn from each other.
+                    </Text>
+                  </View>
+                  <View style={{flexDirection: 'row', gap: 7}}>
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        paddingTop: 10,
+                        color: '#fff',
+                      }}>
+                      –
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        paddingTop: 10,
+                        color: '#fff',
+                      }}>
+                      Safe & Secure Environment: We prioritize user safety and
+                      security. All tasks comply with social media platform
+                      guidelines.
+                    </Text>
+                  </View>
+                  <View style={{flexDirection: 'row', gap: 7}}>
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        paddingTop: 10,
+                        color: '#fff',
+                      }}>
+                      –
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        paddingTop: 10,
+                        color: '#fff',
+                      }}>
+                      Fun & Rewarding: Make money while enjoying the social
+                      media experience – it's a win-win!
+                    </Text>
+                  </View>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      paddingTop: 15,
+                      color: '#fff',
+                      fontFamily: 'Manrope-ExtraBold',
+                    }}>
+                    Referral Bonuses:
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      paddingTop: 2,
+                      color: '#fff',
+                    }}>
+                    Earn an Instant Referral Commission of ₦500 when you refer
+                    someone to become a Member on Trendit³. The more you refer,
+                    the more you earn.
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 13,
+                      paddingTop: 15,
+                      paddingBottom: 15,
+                      color: '#fff',
+                    }}>
+                    Ready to start earning and take control of your social media
+                    experience? Join Trendit³ today!
+                  </Text>
+                  <View style={{paddingTop: 20}} />
+                  <View
+                    style={[
+                      {
+                        alignSelf: 'center',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        backgroundColor: 'rgba(177, 177, 177, 0.30)',
+                        height: 80,
+                        width: '100%',
+                        paddingHorizontal: 15,
+                        flexDirection: 'row',
+                      },
+                    ]}>
+                    <View style={{flexDirection: 'column'}}>
+                      <Text
+                        style={[
+                          {
+                            color: '#fff',
+                            fontFamily: 'Manrope-Regular',
+                            fontSize: 13,
+                          },
+                        ]}>
+                        Membership Fee
+                      </Text>
+                      <Text
+                        style={[
+                          {
+                            color: '#fff',
+                            fontFamily: 'Manrope-Regular',
+                            fontSize: 30,
+                          },
+                        ]}>
+                        ₦1,000
+                      </Text>
+                    </View>
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: '#CB29BE',
+                        height: 50,
+                        width: 140,
+                        borderRadius: 100,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                      onPress={() => handleMembershipPayment()}>
+                      {isLoading1 ? (
+                        <ActivityIndicator size="small" color="#FFFFFF" />
+                      ) : (
+                        <Text
+                          style={{
+                            fontFamily: 'Manrope-Regular',
+                            color: '#fff',
+                            fontSize: 13,
+                          }}>
+                          Submit and Pay
+                        </Text>
+                      )}
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </ScrollView>
+          </Modal>
+        </>
+      )}
     </View>
   );
 };
@@ -658,18 +1588,40 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 30,
     backgroundColor: '#1E1E1E',
-    width: '100%',
-    paddingHorizontal: 5,
+    paddingHorizontal: 100,
     borderRadius: 10,
   },
 
   Container1: {
     paddingVertical: 10,
-    width: '100%',
-    borderRadius: 10,
   },
-  Check: {
-    width: '80%',
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'black',
+    borderRadius: 20,
+    padding: 35,
+    // alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    width: '90%',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+    color: '#fff',
+    paddingTop: 30,
   },
 });
 

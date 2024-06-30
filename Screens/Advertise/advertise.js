@@ -1,18 +1,28 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {View, Text, SafeAreaView, ScrollView, StyleSheet} from 'react-native';
-import EarnCustomSwitch from '../../Components/CustomSwitches/earnCustomSwitch';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import {useState} from 'react';
 import Headers from '../../Components/Headers/Headers';
 import AdvertiseMenu from '../../Components/Menus/advertiseMenu';
 import {Svg, Path, Defs, ClipPath, Rect, Mask, G} from 'react-native-svg';
 import EngageAdvertiseMenu from '../../Components/Menus/engageAdvertiseMenu';
 import {useTheme} from '../../Components/Contexts/colorTheme';
+import AdvertiseCustomSwitch from '../../Components/CustomSwitches/advertiseCustomSwitch';
+import {useNavigation} from '@react-navigation/native';
 
 const Advertise = () => {
+  const navigation = useNavigation();
   const [earnMenu, setEarnMenu] = useState(1);
   const {theme} = useTheme();
+  const strokeColor = theme === 'dark' ? '#fff' : '#000'; // Choosing color based on theme
 
   const dynamicStyles = StyleSheet.create({
     AppContainer: {
@@ -278,9 +288,6 @@ const Advertise = () => {
                   </Svg>
                 </View>
               )}
-              {earnMenu === 3 && (
-                <Text style={{color: '#fff'}}>wowww ndaboski</Text>
-              )}
             </View>
             <View style={styles.EarnonTContainer}>
               <View style={styles.EarnOnT}>
@@ -297,14 +304,43 @@ const Advertise = () => {
               <Text style={[styles.EarnText, dynamicStyles.TextColor]}>
                 Advertise
               </Text>
-              <View>
-                <EarnCustomSwitch
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  // gap: 5,
+                }}>
+                <AdvertiseCustomSwitch
                   selectionMode={1}
                   option1="Post Advert"
                   option2="Engagement Task"
-                  option3="History"
                   onSelectSwitch={onSelectSwitch}
                 />
+                <TouchableOpacity
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    // gap: 5,
+                  }}
+                  onPress={() => navigation.navigate('History')}>
+                  <Text style={[styles.EarnText2, dynamicStyles.TextColor]}>
+                    History
+                  </Text>
+                  <Svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="17"
+                    viewBox="0 0 16 17"
+                    fill="none">
+                    <Path
+                      d="M6.66797 4.58984L10.1966 8.11844C10.4569 8.37879 10.4569 8.8009 10.1966 9.06125L6.66797 12.5898"
+                      stroke={strokeColor}
+                      stroke-linecap="round"
+                    />
+                  </Svg>
+                </TouchableOpacity>
               </View>
 
               {earnMenu === 1 && (
@@ -316,9 +352,6 @@ const Advertise = () => {
                 <View style={{paddingVertical: 15, paddingHorizontal: 10}}>
                   <EngageAdvertiseMenu />
                 </View>
-              )}
-              {earnMenu === 3 && (
-                <Text style={{color: '#fff'}}>wowww ndaboski</Text>
               )}
             </View>
           </View>
@@ -345,7 +378,7 @@ const styles = StyleSheet.create({
   },
   Box1Text: {
     color: 'red',
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     fontSize: 13,
   },
   earnImage1: {
@@ -361,12 +394,12 @@ const styles = StyleSheet.create({
   },
   EarnOnTText: {
     color: '#fff',
-    fontFamily: 'CamptonSemiBold',
+    fontFamily: 'Manrope-Bold',
     paddingBottom: 7,
   },
   EarnOnTText1: {
     color: '#fff',
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     textAlign: 'center',
     fontSize: 12,
   },
@@ -382,15 +415,20 @@ const styles = StyleSheet.create({
   PayButtonLabel: {
     color: '#000000',
     fontSize: 13,
-    fontFamily: 'CamptonMedium',
+    fontFamily: 'Manrope-Medium',
   },
   EarnText: {
     color: '#fff',
     fontSize: 24,
-    fontFamily: 'CamptonMedium',
+    fontFamily: 'Manrope-Medium',
     paddingHorizontal: 10,
     paddingVertical: 20,
     paddingTop: 50,
+  },
+  EarnText2: {
+    color: '#B1B1B1',
+    fontSize: 13,
+    fontFamily: 'Manrope-ExtraBold',
   },
   EarnMenu: {
     flexDirection: 'row',
@@ -398,7 +436,7 @@ const styles = StyleSheet.create({
   },
   PostText: {
     color: '#fff',
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
     fontSize: 14,
   },
   EngText: {

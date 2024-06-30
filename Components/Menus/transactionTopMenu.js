@@ -23,6 +23,8 @@ import {useIsFocused} from '@react-navigation/native';
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
 import queryString from 'query-string';
+import {useTheme} from '../../Components/Contexts/colorTheme';
+import {ApiLink} from '../../enums/apiLink';
 
 const TransactionTopMenu = () => {
   const navigation = useNavigation();
@@ -41,20 +43,41 @@ const TransactionTopMenu = () => {
   const [hasFetchedBalance, setHasFetchedBalance] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  const {theme} = useTheme();
+  const dynamicStyles = StyleSheet.create({
+    AppContainer: {
+      flex: 1,
+      backgroundColor: theme === 'dark' ? '#121212' : '#FFFFFF', // Dynamic background color
+      width: '100%',
+    },
+    DivContainer: {
+      backgroundColor:
+        theme === 'dark'
+          ? 'rgba(255, 255, 255, 0.03)'
+          : 'rgba(177, 177, 177, 0.20)', // Dynamic background color
+    },
+    TextColor: {
+      color: theme === 'dark' ? '#FFFFFF' : '#000000', // Dynamic text color
+    },
+    Button: {
+      backgroundColor: theme === 'dark' ? '#000' : '#FFF', // Dynamic background color
+    },
+    Btext: {
+      color: theme === 'dark' ? '#FF6DFB' : '#FFF', // Dynamic text color
+    },
+  });
+
   const fetchBalance = async () => {
     setIsLoading(true);
     if (userAccessToken) {
       try {
-        const response = await fetch(
-          'https://api.trendit3.com/api/show_balance',
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${userAccessToken.accessToken}`, // Add the access token to the headers
-            },
+        const response = await fetch(`${ApiLink.ENDPOINT_1}/show_balance`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userAccessToken.accessToken}`, // Add the access token to the headers
           },
-        );
+        });
 
         const data = await response.json();
 
@@ -77,6 +100,24 @@ const TransactionTopMenu = () => {
           setHasFetchedBalance(true);
           setIsLoading(false);
         } else {
+          if (response.status === 401) {
+            console.log('401 Unauthorized: Access token is invalid or expired');
+            await AsyncStorage.removeItem('userbalance');
+            await AsyncStorage.removeItem('userdata1');
+            await AsyncStorage.removeItem('userdata');
+            await AsyncStorage.removeItem('userdata2');
+            await AsyncStorage.removeItem('userdatas');
+            await AsyncStorage.removeItem('userdatafiles1');
+            await AsyncStorage.removeItem('accesstoken');
+            navigation.reset({
+              index: 0,
+              routes: [
+                {
+                  name: 'SignIn',
+                },
+              ],
+            });
+          }
           setIsLoading(false);
           throw new Error(data.message);
         }
@@ -199,7 +240,7 @@ const TransactionTopMenu = () => {
       // Alert.alert('URL: ', `${txRef}, ${transactionId}`);
       setIsLoading1(true);
       const response = await axios.post(
-        'https://api.trendit3.com/api/payment/verify',
+        `${ApiLink.ENDPOINT_1}/payment/verify`,
         {reference: txRef, transaction_id: transactionId},
         {
           headers: {
@@ -232,7 +273,7 @@ const TransactionTopMenu = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
       } else {
@@ -256,7 +297,7 @@ const TransactionTopMenu = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
       }
@@ -282,7 +323,7 @@ const TransactionTopMenu = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
     } finally {
@@ -306,7 +347,7 @@ const TransactionTopMenu = () => {
         return;
       }
       const response = await axios.post(
-        'https://api.trendit3.com/api/payment/credit-wallet',
+        `${ApiLink.ENDPOINT_1}/payment/credit-wallet`,
 
         {amount: Number(amount)},
         {
@@ -339,7 +380,7 @@ const TransactionTopMenu = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
         console.log(response.data);
@@ -372,7 +413,7 @@ const TransactionTopMenu = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
     } finally {
@@ -455,7 +496,7 @@ const TransactionTopMenu = () => {
                     style={{
                       color: '#fff',
                       fontSize: 24,
-                      fontFamily: 'Campton Bold',
+                      fontFamily: 'Manrope-ExtraBold',
                       paddingBottom: 10,
                       paddingTop: 20,
                     }}>
@@ -466,7 +507,7 @@ const TransactionTopMenu = () => {
                       color: '#b1b1b1',
                       fontSize: 12,
                       fontWeight: 400,
-                      fontFamily: 'CamptonBook',
+                      fontFamily: 'Manrope-Regular',
                       textAlign: 'center',
                       paddingHorizontal: 20,
                     }}>
@@ -512,7 +553,7 @@ const TransactionTopMenu = () => {
                     <Text
                       style={{
                         color: '#fff',
-                        fontFamily: 'CamptonBook',
+                        fontFamily: 'Manrope-Regular',
                         fontSize: 14,
                       }}>
                       Fund Wallet
@@ -525,7 +566,8 @@ const TransactionTopMenu = () => {
         </View>
       </Modal>
       <View>
-        <View style={styles.walletBalanceContainer}>
+        <View
+          style={[styles.walletBalanceContainer, dynamicStyles.DivContainer]}>
           <View
             style={{
               flexDirection: 'row',
@@ -553,11 +595,14 @@ const TransactionTopMenu = () => {
                 />
               </Svg>
               <Text
-                style={{
-                  color: '#b1b1b1',
-                  fontSize: 14,
-                  fontFamily: 'CamptonBook',
-                }}>
+                style={[
+                  {
+                    color: '#b1b1b1',
+                    fontSize: 14,
+                    fontFamily: 'Manrope-Regular',
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 Jan 1 - Jan 27, 2023
               </Text>
             </View>
@@ -569,25 +614,31 @@ const TransactionTopMenu = () => {
                 justifyContent: 'center',
               }}>
               <Text
-                style={{
-                  color: '#b1b1b1',
-                  fontSize: 14,
-                  fontFamily: 'CamptonBook',
-                }}>
+                style={[
+                  {
+                    color: '#b1b1b1',
+                    fontSize: 14,
+                    fontFamily: 'Manrope-Regular',
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 Period:
               </Text>
               <Text
-                style={{
-                  color: '#b1b1b1',
-                  fontSize: 14,
-                  fontFamily: 'CamptonBook',
-                }}>
+                style={[
+                  {
+                    color: '#b1b1b1',
+                    fontSize: 14,
+                    fontFamily: 'Manrope-Regular',
+                  },
+                  dynamicStyles.TextColor,
+                ]}>
                 All time
               </Text>
             </View>
           </View>
           <Text style={styles.WalletAmount}>
-            {userData?.userdata?.wallet?.currency_code}{' '}
+            {userData?.userdata?.wallet?.currency_symbol}
             {isLoading ? (
               <ActivityIndicator size="small" color="#0000ff" />
             ) : (
@@ -596,7 +647,7 @@ const TransactionTopMenu = () => {
           </Text>
           <View style={styles.WalletButtonsContainer}>
             <TouchableOpacity
-              style={styles.fundButton}
+              style={[styles.fundButton]}
               onPress={() => setIsModalVisible(true)}>
               <Svg
                 width="18"
@@ -611,7 +662,7 @@ const TransactionTopMenu = () => {
                 />
               </Svg>
 
-              <Text style={styles.fundText}>Fund</Text>
+              <Text style={[styles.fundText]}>Fund</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.withdrawButton}
@@ -628,70 +679,8 @@ const TransactionTopMenu = () => {
                 />
               </Svg>
 
-              <Text style={styles.withdrawText}>Withdraw</Text>
+              <Text style={[styles.withdrawText]}>Withdraw</Text>
             </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              gap: 30,
-              justifyContent: 'space-between',
-              paddingTop: 20,
-            }}>
-            <View>
-              <Text
-                style={{
-                  color: '#fff',
-                  fontSize: 9,
-                  fontFamily: 'CamptonBook',
-                }}>
-                Total earned
-              </Text>
-              <Text
-                style={{
-                  color: '#fff',
-                  fontSize: 13,
-                  fontFamily: 'CamptonBook',
-                }}>
-                {userData?.userdata?.wallet?.currency_code} 30,008.25
-              </Text>
-            </View>
-            <View>
-              <Text
-                style={{
-                  color: '#fff',
-                  fontSize: 9,
-                  fontFamily: 'CamptonBook',
-                }}>
-                Total earned
-              </Text>
-              <Text
-                style={{
-                  color: '#fff',
-                  fontSize: 13,
-                  fontFamily: 'CamptonBook',
-                }}>
-                {userData?.userdata?.wallet?.currency_code} 30,008.25
-              </Text>
-            </View>
-            <View>
-              <Text
-                style={{
-                  color: '#fff',
-                  fontSize: 9,
-                  fontFamily: 'CamptonBook',
-                }}>
-                Total earned
-              </Text>
-              <Text
-                style={{
-                  color: '#fff',
-                  fontSize: 13,
-                  fontFamily: 'CamptonBook',
-                }}>
-                {userData?.userdata?.wallet?.currency_code} 30,008.25
-              </Text>
-            </View>
           </View>
         </View>
       </View>
@@ -751,17 +740,17 @@ const styles = StyleSheet.create({
   fundText: {
     fontSize: 12.8,
     color: '#000',
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
   },
   withdrawText: {
     fontSize: 12.8,
-    fontFamily: 'Campton Bold',
+    fontFamily: 'Manrope-ExtraBold',
     color: '#000',
   },
   WalletAmount: {
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
     fontSize: 40,
-    color: '#FFD0FE',
+    color: '#FF6DFB',
   },
   fundIcon: {
     height: 15,

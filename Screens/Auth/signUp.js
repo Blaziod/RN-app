@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-unused-vars */
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
@@ -12,11 +12,15 @@ import {
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
-  // Dimensions,
+  Alert,
+  Linking,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import queryString from 'query-string';
+import axios from 'axios';
+import {ApiLink} from '../../enums/apiLink';
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
@@ -24,8 +28,10 @@ const SignUp = () => {
   const [signupToken, setSignupToken] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [isFocused1, setIsFocused1] = useState(false);
   const navigation = useNavigation();
-  // const WIDTH = Dimensions.get('window').width;
+  const [ggToken, setGgToken] = useState(null);
+
   useEffect(() => {
     const checkToken = async () => {
       const token = await AsyncStorage.getItem('accesstoken');
@@ -53,12 +59,12 @@ const SignUp = () => {
   const handleSignUp = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('https://api.trendit3.com/api/signup', {
+      const response = await fetch(`${ApiLink.ENDPOINT_1}/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({email}),
+        body: JSON.stringify({email: email, referrer_code: referral}),
       });
 
       if (response.ok) {
@@ -100,7 +106,7 @@ const SignUp = () => {
           text2Style: {
             color: 'green',
             fontSize: 14,
-            fontFamily: 'Campton Bold',
+            fontFamily: 'Manrope-ExtraBold',
           },
         });
       }
@@ -125,7 +131,312 @@ const SignUp = () => {
         text2Style: {
           color: 'green',
           fontSize: 14,
-          fontFamily: 'Campton Bold',
+          fontFamily: 'Manrope-ExtraBold',
+        },
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchUserProfile = async () => {
+    try {
+      setIsLoading(true);
+
+      const response = await axios.get(`${ApiLink.ENDPOINT_1}/profile`, {
+        headers: {
+          Authorization: `Bearer ${ggToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.status >= 200 && response.status < 300) {
+        Alert.alert('Login Successful');
+        console.log(response.data);
+        AsyncStorage.setItem(
+          'userdatafiles1',
+          JSON.stringify({
+            userdata: response.data.user_profile,
+          }),
+        )
+          .then(() => {
+            console.log(response.data.user_profile);
+            console.log('User data stored successfully');
+          })
+          .catch(error => {
+            console.error('Error storing user data:', error);
+          });
+
+        Toast.show({
+          type: 'success',
+          text1: 'Success',
+          text2: response.data.message,
+          style: {
+            borderLeftColor: 'pink',
+            backgroundColor: 'yellow',
+            width: '80%',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          text1Style: {
+            color: 'red',
+            fontSize: 14,
+          },
+          text2Style: {
+            color: 'green',
+            fontSize: 14,
+            fontFamily: 'Manrope-ExtraBold',
+          },
+        });
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: 'Tabs',
+              params: {screen: 'Home', signInToken: ggToken},
+            },
+          ],
+        });
+      } else if (response.status === 401) {
+        console.error('Unauthorized: Access token is invalid or expired.');
+        await AsyncStorage.removeItem('userbalance');
+        await AsyncStorage.removeItem('userdata1');
+        await AsyncStorage.removeItem('userdata');
+        await AsyncStorage.removeItem('userdata2');
+        await AsyncStorage.removeItem('userdatas');
+        await AsyncStorage.removeItem('userdatafiles1');
+        await AsyncStorage.removeItem('accesstoken');
+
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: response.data.message,
+          style: {
+            borderLeftColor: 'pink',
+            backgroundColor: 'yellow',
+            width: '80%',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          text1Style: {
+            color: 'red',
+            fontSize: 14,
+          },
+          text2Style: {
+            color: 'green',
+            fontSize: 14,
+            fontFamily: 'Manrope-ExtraBold',
+          },
+        });
+        navigation.navigate('SignIn');
+      } else {
+        Alert.alert('Error Else');
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: response.data.message,
+          style: {
+            borderLeftColor: 'pink',
+            backgroundColor: 'yellow',
+            width: '80%',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          text1Style: {
+            color: 'red',
+            fontSize: 14,
+          },
+          text2Style: {
+            color: 'green',
+            fontSize: 14,
+            fontFamily: 'Manrope-ExtraBold',
+          },
+        });
+      }
+    } catch (error) {
+      Alert.alert('Error', error.toString());
+      console.error(error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: error.message,
+        style: {
+          borderLeftColor: 'pink',
+          backgroundColor: 'yellow',
+          width: '80%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        text1Style: {
+          color: 'red',
+          fontSize: 14,
+        },
+        text2Style: {
+          color: 'green',
+          fontSize: 14,
+          fontFamily: 'Manrope-ExtraBold',
+        },
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (ggToken !== null) {
+      fetchUserProfile();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const handleUrl = async event => {
+      try {
+        const parsed = queryString.parseUrl(event.url);
+
+        if (parsed.query) {
+          if (parsed.query.access_token) {
+            const {access_token} = parsed.query;
+            await AsyncStorage.setItem(
+              'accesstoken',
+              JSON.stringify({accessToken: access_token}),
+            );
+            console.log('Token stored successfully:', access_token);
+            setGgToken(access_token);
+          } else if (parsed.query.error) {
+            console.error(
+              'Error received from authorization:',
+              parsed.query.error,
+            );
+            handleAuthorizationError(parsed.query.error);
+          } else {
+            console.error('No access token or error information received.');
+            handleAuthorizationError('No access token received');
+          }
+        }
+      } catch (error) {
+        console.error('Error handling the URL:', error);
+        handleAuthorizationError('Failed to process the authorization data');
+      }
+    };
+
+    // Helper function to handle errors and show user feedback
+    const handleAuthorizationError = errorMessage => {
+      Toast.show({
+        type: 'error',
+        text1: 'Authorization Error',
+        text2: errorMessage,
+        style: {
+          borderLeftColor: 'pink',
+          backgroundColor: 'yellow',
+          width: '80%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        text1Style: {
+          color: 'red',
+          fontSize: 14,
+        },
+        text2Style: {
+          color: 'green',
+          fontSize: 14,
+          fontFamily: 'Manrope-ExtraBold',
+        },
+      });
+    };
+
+    // Listen for incoming links
+    Linking.getInitialURL().then(url => {
+      if (url) {
+        handleUrl({url});
+      }
+    });
+
+    const subscription = Linking.addEventListener('url', handleUrl);
+
+    // Clean up the listener on unmount
+    return () => subscription.remove();
+  }, []);
+
+  useEffect(() => {
+    // Fetch user profile when the token is set
+    if (ggToken) {
+      fetchUserProfile();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ggToken]);
+
+  const handleGoogleSignUp = async () => {
+    console.log('Signing in with Google');
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${ApiLink.ENDPOINT_1}/app/gg_signup`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Success signing in:', data);
+        // Open the authorization URL
+        if (data.authorization_url) {
+          Linking.openURL(data.authorization_url);
+        }
+      } else {
+        const errorData = await response.json();
+        console.error('Error signing in:', errorData);
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: errorData.message,
+          style: {
+            borderLeftColor: 'pink',
+            backgroundColor: 'yellow',
+            width: '80%',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          text1Style: {
+            color: 'red',
+            fontSize: 14,
+          },
+          text2Style: {
+            color: 'green',
+            fontSize: 14,
+            fontFamily: 'Manrope-ExtraBold',
+          },
+        });
+      }
+    } catch (error) {
+      console.error('Error signing in:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: error.message,
+        style: {
+          borderLeftColor: 'pink',
+          backgroundColor: 'yellow',
+          width: '80%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        text1Style: {
+          color: 'red',
+          fontSize: 14,
+        },
+        text2Style: {
+          color: 'green',
+          fontSize: 14,
+          fontFamily: 'Manrope-ExtraBold',
         },
       });
     } finally {
@@ -140,11 +451,11 @@ const SignUp = () => {
         <View>
           <View style={styles.header}>
             <Text style={styles.welcomeText}>Welcome to </Text>
-            <Text style={styles.welcomeText2}>Trendit </Text>
-            <Text style={styles.tagline}>Earn money by connecting</Text>
+            <Text style={styles.welcomeText2}>Trendit³!</Text>
             <Text style={styles.tagline}>
-              businesses to their potential customers.
+              Turn Daily Social Tasks into Paychecks!{' '}
             </Text>
+            <Text style={styles.tagline}>Get Paid for your Engagements.</Text>
           </View>
 
           <View style={styles.formContainer}>
@@ -160,15 +471,15 @@ const SignUp = () => {
               onBlur={() => setIsFocused(false)}
             />
             <TextInput
-              style={[styles.textInput, isFocused && styles.focused]}
+              style={[styles.textInput, isFocused1 && styles.focused]}
               placeholder="Referral code/Username(Optional)"
               placeholderTextColor="#888"
               autoCapitalize="none"
               autoCorrect={false}
               onChangeText={setReferral}
               value={referral}
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
+              onFocus={() => setIsFocused1(true)}
+              onBlur={() => setIsFocused1(false)}
             />
             <TouchableOpacity
               style={styles.continueButton}
@@ -184,61 +495,58 @@ const SignUp = () => {
 
           <View style={styles.socialLogins}>
             <Text style={styles.orText}>OR SIGN UP WITH</Text>
-            <View style={styles.buttonRow}>
-              <TouchableOpacity style={styles.socialButton}>
-                <Image
-                  source={require('../assets/google-icon.png')}
-                  style={styles.socialIcon}
-                />
-                <Text style={styles.socialButtonText}>Google</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.socialButton}>
-                <Image
-                  source={require('../../assets/facebook-icon.png')}
-                  style={styles.socialIcon}
-                />
-                <Text style={styles.socialButtonText}>Facebook</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.socialButton}>
-                <Image
-                  source={require('../../assets/tiktok-icon.png')}
-                  style={styles.socialIcon}
-                />
-                <Text style={styles.socialButtonText}>TikTok</Text>
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                gap: 4,
-                paddingTop: 10,
-                alignSelf: 'center',
-              }}
-              onPress={() => navigation.navigate('SignIn')}>
-              <Text
-                style={{
-                  color: '#fff',
-                  fontSize: 14,
-                  fontFamily: 'CamptonBook',
-                }}>
-                Already have an account?
-              </Text>
-              <View onPress={() => navigation.navigate('SignIn')}>
-                <Text
-                  style={{
-                    color: 'red',
-                    fontSize: 14,
-                    fontFamily: 'CamptonBook',
-                  }}
-                  onPress={() => navigation.navigate('SignIn')}>
-                  Sign In
-                </Text>
-              </View>
-            </View>
+
+            <TouchableOpacity
+              style={styles.socialButton}
+              onPress={() => handleGoogleSignUp()}>
+              {isLoading ? (
+                <ActivityIndicator size="small" color="#000" />
+              ) : (
+                <>
+                  <Image
+                    source={require('../../assets/google-icon.png')}
+                    style={styles.socialIcon}
+                  />
+                  <Text style={styles.socialButtonText}>
+                    Sign Up with Google
+                  </Text>
+                </>
+              )}
+            </TouchableOpacity>
           </View>
         </View>
+
         {/* </View> */}
       </ScrollView>
+      <View
+        style={{
+          flexDirection: 'row',
+          gap: 4,
+          alignSelf: 'center',
+          justifyContent: 'flex-end',
+          paddingBottom: 50,
+        }}
+        onPress={() => navigation.navigate('SignIn')}>
+        <Text
+          style={{
+            color: '#fff',
+            fontSize: 14,
+            fontFamily: 'Manrope-Regular',
+          }}>
+          Already have an account?
+        </Text>
+        <View onPress={() => navigation.navigate('SignIn')}>
+          <Text
+            style={{
+              color: 'red',
+              fontSize: 14,
+              fontFamily: 'Manrope-Regular',
+            }}
+            onPress={() => navigation.navigate('SignIn')}>
+            Sign In
+          </Text>
+        </View>
+      </View>
       <View
         style={{
           flexDirection: 'row',
@@ -252,7 +560,7 @@ const SignUp = () => {
           style={{
             color: '#b1b1b1',
             fontSize: 14,
-            fontFamily: 'CamptonBook',
+            fontFamily: 'Manrope-Regular',
           }}>
           By signing up, you agree to our
         </Text>
@@ -261,7 +569,7 @@ const SignUp = () => {
             style={{
               color: '#fff',
               fontSize: 14,
-              fontFamily: 'Campton Bold',
+              fontFamily: 'Manrope-ExtraBold',
             }}>
             Terms and Privacy Policy
           </Text>
@@ -299,13 +607,13 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     textAlign: 'center',
     marginTop: 100,
-    fontFamily: 'CamptonSemiBold',
+    fontFamily: 'Manrope-Bold',
   },
   welcomeText2: {
     fontSize: 32,
     color: '#FFFFFF',
     textAlign: 'center',
-    fontFamily: 'CamptonSemiBold',
+    fontFamily: 'Manrope-Bold',
   },
   focused: {
     borderColor: '#CB29BE',
@@ -315,7 +623,7 @@ const styles = StyleSheet.create({
     color: '#B1B1B1',
     textAlign: 'center',
     marginTop: 5,
-    fontFamily: 'CamptonBook',
+    fontFamily: 'Manrope-Regular',
   },
   formContainer: {
     marginTop: 5,
@@ -328,7 +636,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     width: '92%',
     color: 'white',
-    fontFamily: 'CamptonLight',
+    fontFamily: 'Manrope-Light',
     borderWidth: 2,
   },
   continueButton: {
@@ -343,7 +651,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: 'normal',
-    fontFamily: 'CamptonLight',
+    fontFamily: 'Manrope-Light',
   },
   socialLogins: {
     marginTop: 20,
@@ -354,7 +662,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: 'center',
     color: '#B1B1B1',
-    fontFamily: 'CamptonLight',
+    fontFamily: 'Manrope-Light',
   },
   buttonRow: {
     flexDirection: 'row',
@@ -364,9 +672,14 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#8E60CF3B',
+    backgroundColor: '#FFF',
     padding: 8,
     marginRight: 10,
+    width: 'auto',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    height: 40,
+    borderRadius: 10,
   },
   socialIcon: {
     width: 20,
@@ -375,8 +688,8 @@ const styles = StyleSheet.create({
   },
   socialButtonText: {
     fontSize: 15,
-    color: '#fff',
-    fontFamily: 'Campton Bold',
+    color: '#000',
+    fontFamily: 'Manrope-ExtraBold',
   },
 });
 

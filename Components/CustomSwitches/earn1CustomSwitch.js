@@ -25,7 +25,6 @@ const Earn1CustomSwitch = ({
       <View
         style={{
           height: 44,
-          backgroundColor: '#121212',
           flexDirection: 'row',
           justifyContent: 'center',
         }}>
@@ -44,7 +43,7 @@ const Earn1CustomSwitch = ({
             style={{
               fontSize: 14,
               color: getSelectionMode === 1 ? '#FF6DFB' : '#B1B1B1',
-              fontFamily: 'Campton Bold',
+              fontFamily: 'Manrope-ExtraBold',
             }}>
             {option1}
           </Text>
@@ -64,7 +63,7 @@ const Earn1CustomSwitch = ({
             style={{
               fontSize: 14,
               color: getSelectionMode === 2 ? '#FF6DFB' : '#B1B1B1',
-              fontFamily: 'Campton Bold',
+              fontFamily: 'Manrope-ExtraBold',
             }}>
             <Text>{option2}</Text>
           </Text>
@@ -74,7 +73,7 @@ const Earn1CustomSwitch = ({
           onPress={() => updateSwitchData(5)}
           style={{
             paddingLeft: 20,
-            paddingRight: 70,
+            paddingRight: 90,
             borderBottomWidth: 0.5,
             borderBottomColor: getSelectionMode === 5 ? '#FF6DFB' : '#fff',
             justifyContent: 'center',
@@ -84,7 +83,7 @@ const Earn1CustomSwitch = ({
             style={{
               fontSize: 14,
               color: getSelectionMode === 5 ? '#FF6DFB' : '#B1B1B1',
-              fontFamily: 'Campton Bold',
+              fontFamily: 'Manrope-ExtraBold',
             }}>
             {option5}
           </Text>

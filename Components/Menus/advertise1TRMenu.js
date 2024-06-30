@@ -14,6 +14,7 @@ import {
   SafeAreaView,
   Alert,
   Linking,
+  ScrollView,
 } from 'react-native';
 // import {AdvertiseModal1} from './Modals/AdvertiseModal1';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -34,7 +35,8 @@ import {
 } from '../Modals/AdvertModalPicker';
 
 const Advertise1TRMenu = () => {
-  const [base64Image, setBase64Image] = useState();
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [base64Images, setBase64Images] = useState([]);
   const [religion, setReligion] = useState('Select Religion');
   const [gender, setGender] = useState('Select Gender');
   const [choosePlatform, setChoosePlatform] = useState('Select Platform');
@@ -103,7 +105,6 @@ const Advertise1TRMenu = () => {
       .then(data => {
         const userData1 = JSON.parse(data);
         setUserData1(userData1);
-        console.log('Here I am', userData1);
       })
       .catch(error => {
         console.error('Error retrieving user data:', error);
@@ -154,34 +155,44 @@ const Advertise1TRMenu = () => {
   };
 
   const chooseImage = () => {
-    // requestMediaLibraryPermission();
     let options = {
       mediaType: 'photo',
       includeBase64: true,
-      selectionLimit: 0, // Change this to true
+      selectionLimit: 4, // Allow up to 4 images to be selected
     };
     console.log('chooseImage called');
     launchImageLibrary(options, async response => {
-      console.log('Response:', response);
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else {
-        let selectedImage = response.assets[0];
-        setImage(selectedImage); // Store the selected image in the state variable
-        console.log('Image selected:', selectedImage);
+        console.log(response, 'Response');
+        const images = response.assets.map(asset => ({
+          uri: asset.uri,
+          type: asset.type,
+          name: asset.fileName,
+        }));
+        const base64Strs = response.assets.map(
+          asset => `data:${asset.type};base64,${asset.base64}`,
+        );
 
-        // Convert the image to a base64 string
-        let base64Str = `data:${selectedImage.type};base64,${selectedImage.base64}`;
-        setBase64Image(base64Str); // Store the base64 string in a separate state variable
+        // Update state with the selected images and their base64 strings
+        setSelectedImages(images);
+        setImage(images);
+        setBase64Images(base64Strs);
 
-        // Store the base64 string in AsyncStorage
+        console.log('Images selected:', images);
+
+        // Store the base64 strings in AsyncStorage
         try {
-          await AsyncStorage.setItem('profile_picture', base64Str);
-          console.log('Image stored successfully');
+          await AsyncStorage.setItem(
+            'profile_pictures',
+            JSON.stringify(base64Strs),
+          );
+          console.log('Images stored successfully');
         } catch (error) {
-          console.error('Error storing image:', error);
+          console.error('Error storing images:', error);
         }
       }
     });
@@ -203,12 +214,26 @@ const Advertise1TRMenu = () => {
       taskData.append('amount', chooseNumber * 140);
       taskData.append('target_state', 'Lagos');
       console.log('Task Data:', image?.uri);
-      taskData.append('media', {
-        uri: image?.uri,
-        type: image?.type,
-        name: image?.fileName,
-      });
-      // taskData.append('media_path', imageData);
+
+      // Check if image is an array of images or a single image
+      if (Array.isArray(image)) {
+        // If it's an array, append each image as part of the form data
+        image.forEach((img, index) => {
+          taskData.append(`media[${index}]`, {
+            uri: img.uri,
+            type: img.type,
+            name: img.fileName,
+          });
+        });
+      } else {
+        // If it's a single image, append it directly
+        taskData.append('media', {
+          uri: image?.uri,
+          type: image?.type,
+          name: image?.fileName,
+        });
+      }
+
       const Token = userData?.accessToken;
       console.log('Testing', Token);
 
@@ -230,7 +255,6 @@ const Advertise1TRMenu = () => {
         }
 
         const data = await response.json();
-        //   Alert.alert('Success', data.message);
         setIsModal2Visible(false);
         setIsModal3Visible(true);
         AsyncStorage.removeItem('profile_picture');
@@ -282,14 +306,9 @@ const Advertise1TRMenu = () => {
             fontFamily: 'Manrope-ExtraBold',
           },
         });
-        if (error) {
-          console.error('Response data:', error);
-          console.error('Response status:', error);
-        }
       }
     }
   };
-
   const createTaskPaystack = async (paymentMethod = 'payment_gateway') => {
     setTaskType('advert');
     setAmount(chooseNumber * 140);
@@ -826,11 +845,25 @@ const Advertise1TRMenu = () => {
             width: '50%',
           }}
           onPress={() => chooseImage()}>
-          {image ? (
-            <Image
-              source={{uri: image.uri}}
-              style={{width: 100, height: 100}}
-            />
+          {Array.isArray(image) && image.length > 0 ? (
+            image.length === 1 ? (
+              <Image
+                source={{uri: image[0].uri}}
+                style={{width: 100, height: 100}}
+              />
+            ) : (
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}>
+                {image.map((img, index) => (
+                  <Image
+                    key={index}
+                    source={{uri: img.uri}}
+                    style={{width: 100, height: 100, marginRight: 5}}
+                  />
+                ))}
+              </ScrollView>
+            )
           ) : (
             <Svg
               xmlns="http://www.w3.org/2000/svg"

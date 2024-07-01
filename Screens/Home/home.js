@@ -28,6 +28,7 @@ import axios from 'axios';
 import Toast from 'react-native-toast-message';
 import queryString from 'query-string';
 import {ApiLink} from '../../enums/apiLink';
+import tw from '../../lib/tailwind';
 
 const wait = timeout => {
   return new Promise(resolve => {
@@ -809,7 +810,9 @@ const Home = () => {
                 </Svg>
               </View>
 
-              <Text style={styles.advertText}>Create an Advert</Text>
+              <Text style={[tw.style(''), styles.advertText]}>
+                Create an Advert
+              </Text>
               <Text style={styles.advertSubText}>
                 Get real people to post your ads on their social media account.
               </Text>

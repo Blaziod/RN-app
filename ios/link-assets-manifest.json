@@ -28,6 +28,62 @@
     {
       "path": "assets/font/Manrope-SemiBold.ttf",
       "sha1": "e423e112f4832916b05308934c10aa84fd14c607"
+    },
+    {
+      "path": "assets/font/RedHatDisplay-Black.ttf",
+      "sha1": "907fee5cac8408a196b6d60afd65788133804286"
+    },
+    {
+      "path": "assets/font/RedHatDisplay-BlackItalic.ttf",
+      "sha1": "967e7fa5b8da8305182fef11bda7d2945d4b71d2"
+    },
+    {
+      "path": "assets/font/RedHatDisplay-Bold.ttf",
+      "sha1": "21f434c491bf80c1a53b976839ed17d54ce6b854"
+    },
+    {
+      "path": "assets/font/RedHatDisplay-BoldItalic.ttf",
+      "sha1": "6d652b57137e7d2df4472ecfcb2ae82580b5ff15"
+    },
+    {
+      "path": "assets/font/RedHatDisplay-ExtraBold.ttf",
+      "sha1": "8efe686f963b63be61974b16aacca08209d481f2"
+    },
+    {
+      "path": "assets/font/RedHatDisplay-ExtraBoldItalic.ttf",
+      "sha1": "e8b44b11f761108963f9f63684d185af4fc62586"
+    },
+    {
+      "path": "assets/font/RedHatDisplay-Italic.ttf",
+      "sha1": "0a05e2df1e9cac06b555c54f17ff1c4afc71f24d"
+    },
+    {
+      "path": "assets/font/RedHatDisplay-Light.ttf",
+      "sha1": "23fcd421b506d38fcd6c0360b69c1d9cb44c63bc"
+    },
+    {
+      "path": "assets/font/RedHatDisplay-LightItalic.ttf",
+      "sha1": "0e099e0cae86520990272eab55db0ec5f3b4f7f7"
+    },
+    {
+      "path": "assets/font/RedHatDisplay-Medium.ttf",
+      "sha1": "66ae8fcb8e678fec9170f0ca0f18b44ce36dac81"
+    },
+    {
+      "path": "assets/font/RedHatDisplay-MediumItalic.ttf",
+      "sha1": "18d81bbc2e60dda8f4c7e01ff9e56af5b6252f9b"
+    },
+    {
+      "path": "assets/font/RedHatDisplay-Regular.ttf",
+      "sha1": "18f63b4dd6a63d52af14932a1a72bf00b6c5e7f9"
+    },
+    {
+      "path": "assets/font/RedHatDisplay-SemiBold.ttf",
+      "sha1": "78e6e51ae157103cc99093d76251b018cbd7c3d7"
+    },
+    {
+      "path": "assets/font/RedHatDisplay-SemiBoldItalic.ttf",
+      "sha1": "68cc50805e4311fe42409319c37359cb5f606a3c"
     }
   ]
 }

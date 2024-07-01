@@ -8,10 +8,6 @@ import {
   ScrollView,
   View,
   Text,
-  Image,
-  TextInput,
-  TouchableOpacity,
-  ActivityIndicator,
   Alert,
   Linking,
 } from 'react-native';
@@ -21,14 +17,20 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import queryString from 'query-string';
 import axios from 'axios';
 import {ApiLink} from '../../enums/apiLink';
-
+import Google from '../../assets/SVG/googleicon.svg';
+import Facebook from '../../assets/SVG/facebook.svg';
+import TikTok from '../../assets/SVG/tiktok.svg';
+import Divider from '../../assets/SVG/divider.svg';
+import LogoSvg from '../../customSvg/logo';
+import StyledText from '../../Components/Styledtext';
+import tw from '../../lib/tailwind';
+import Button from '../../Components/Button';
+import TextInput from '../../Components/TextInput';
 const SignUp = () => {
   const [email, setEmail] = useState('');
   const [referral, setReferral] = useState('');
   const [signupToken, setSignupToken] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
-  const [isFocused1, setIsFocused1] = useState(false);
   const navigation = useNavigation();
   const [ggToken, setGgToken] = useState(null);
 
@@ -372,7 +374,6 @@ const SignUp = () => {
   }, [ggToken]);
 
   const handleGoogleSignUp = async () => {
-    console.log('Signing in with Google');
     setIsLoading(true);
     try {
       const response = await fetch(`${ApiLink.ENDPOINT_1}/app/gg_signup`, {
@@ -448,133 +449,96 @@ const SignUp = () => {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollView}>
         {/* <View style={{width: WIDTH - 25, justifyContent: 'center'}}> */}
-        <View>
-          <View style={styles.header}>
-            <Text style={styles.welcomeText}>Welcome to </Text>
-            <Text style={styles.welcomeText2}>Trendit³!</Text>
-            <Text style={styles.tagline}>
-              Turn Daily Social Tasks into Paychecks!{' '}
-            </Text>
-            <Text style={styles.tagline}>Get Paid for your Engagements.</Text>
-          </View>
+        <View style={tw`p-10 flex justify-center items-center`}>
+          <LogoSvg width={100} height={100} />
 
-          <View style={styles.formContainer}>
+          <StyledText style={tw`font-bold text-2xl mt-28`}>
+            Create an account
+          </StyledText>
+          <StyledText style={tw`font-normal text-base mt-2 text-center`}>
+            Turn Daily Social Tasks into Paychecks! Get Paid for your
+            Engagements.
+          </StyledText>
+
+          <View style={tw`flex items-center w-full mt-8 gap-y-4`}>
             <TextInput
-              style={[styles.textInput, isFocused && styles.focused]}
+              containerStyle={tw`w-full`}
               placeholder="Enter a valid email"
-              placeholderTextColor="#888"
-              autoCapitalize="none"
-              autoCorrect={false}
               onChangeText={setEmail}
               value={email}
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
             />
             <TextInput
-              style={[styles.textInput, isFocused1 && styles.focused]}
+              containerStyle={tw`w-full`}
+              // style={[styles.textInput, isFocused1 && styles.focused]}
               placeholder="Referral code/Username(Optional)"
-              placeholderTextColor="#888"
-              autoCapitalize="none"
-              autoCorrect={false}
+              // placeholderTextColor="#888"
+              // autoCapitalize="none"
+              // autoCorrect={false}
               onChangeText={setReferral}
               value={referral}
-              onFocus={() => setIsFocused1(true)}
-              onBlur={() => setIsFocused1(false)}
             />
-            <TouchableOpacity
-              style={styles.continueButton}
+            <Button
               onPress={handleSignUp}
-              disabled={isLoading}>
-              {isLoading ? (
-                <ActivityIndicator size="small" color="#fff" />
-              ) : (
-                <Text style={styles.buttonLabel}>Sign Up</Text>
-              )}
-            </TouchableOpacity>
+              disabled={isLoading}
+              loading={isLoading}>
+              <Text style={tw`text-white font-semibold text-base`}>
+                Get Started
+              </Text>
+            </Button>
+            <View
+              style={tw`flex flex-row justify-center items-center w-full py-6`}>
+              <Divider />
+              <StyledText style={tw`text-center mx-3`}>Or</StyledText>
+              <Divider />
+            </View>
           </View>
 
-          <View style={styles.socialLogins}>
-            <Text style={styles.orText}>OR SIGN UP WITH</Text>
-
-            <TouchableOpacity
-              style={styles.socialButton}
+          <View style={tw`w-full flex-col gap-y-3`}>
+            <Button
+              style={tw`bg-white border-border-gray border-[1px]`}
               onPress={() => handleGoogleSignUp()}>
-              {isLoading ? (
-                <ActivityIndicator size="small" color="#000" />
-              ) : (
-                <>
-                  <Image
-                    source={require('../../assets/google-icon.png')}
-                    style={styles.socialIcon}
-                  />
-                  <Text style={styles.socialButtonText}>
-                    Sign Up with Google
-                  </Text>
-                </>
-              )}
-            </TouchableOpacity>
+              <View
+                style={tw`flex flex-row items-center justify-between gap-x-2`}>
+                <Google style={tw`w-6 h-6 `} />
+                <StyledText style={tw` text-[#344054] font-bold text-base`}>
+                  Sign up with Google
+                </StyledText>
+              </View>
+            </Button>
+            <Button
+              style={tw`bg-white border-border-gray border-[1px]`}
+              onPress={() => handleGoogleSignUp()}>
+              <View
+                style={tw`flex flex-row items-center justify-between gap-x-2`}>
+                <Facebook style={tw`w-6 h-6 `} />
+                <StyledText style={tw` text-[#344054] font-bold text-base`}>
+                  Sign up with Facebook
+                </StyledText>
+              </View>
+            </Button>
+            <Button
+              style={tw`bg-white border-border-gray border-[1px]`}
+              onPress={() => handleGoogleSignUp()}>
+              <View
+                style={tw`flex flex-row items-center justify-between gap-x-2`}>
+                <TikTok style={tw`w-6 h-6 `} />
+                <StyledText style={tw` text-[#344054] font-bold text-base`}>
+                  Sign up with Tiktok
+                </StyledText>
+              </View>
+            </Button>
+          </View>
+          <View
+            style={tw`flex flex-row justify-center items-center gap-x-2 mt-8`}>
+            <StyledText>Already have an account?</StyledText>
+            <StyledText style={tw`text-primary font-bold text-sm`}>
+              Log in
+            </StyledText>
           </View>
         </View>
 
         {/* </View> */}
       </ScrollView>
-      <View
-        style={{
-          flexDirection: 'row',
-          gap: 4,
-          alignSelf: 'center',
-          justifyContent: 'flex-end',
-          paddingBottom: 50,
-        }}
-        onPress={() => navigation.navigate('SignIn')}>
-        <Text
-          style={{
-            color: '#fff',
-            fontSize: 14,
-            fontFamily: 'Manrope-Regular',
-          }}>
-          Already have an account?
-        </Text>
-        <View onPress={() => navigation.navigate('SignIn')}>
-          <Text
-            style={{
-              color: 'red',
-              fontSize: 14,
-              fontFamily: 'Manrope-Regular',
-            }}
-            onPress={() => navigation.navigate('SignIn')}>
-            Sign In
-          </Text>
-        </View>
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          gap: 4,
-          paddingTop: 10,
-          alignSelf: 'center',
-          bottom: 10,
-          position: 'absolute',
-        }}>
-        <Text
-          style={{
-            color: '#b1b1b1',
-            fontSize: 14,
-            fontFamily: 'Manrope-Regular',
-          }}>
-          By signing up, you agree to our
-        </Text>
-        <View>
-          <Text
-            style={{
-              color: '#fff',
-              fontSize: 14,
-              fontFamily: 'Manrope-ExtraBold',
-            }}>
-            Terms and Privacy Policy
-          </Text>
-        </View>
-      </View>
     </SafeAreaView>
   );
 };
@@ -584,17 +548,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center', // Vertical alignment
     // alignItems: 'center',
-    backgroundColor: '#000000',
+    backgroundColor: '#fff',
     width: '100%',
   },
   scrollView: {
     // paddingHorizontal: 9,
     paddingVertical: 30,
     justifyContent: 'center',
-  },
-  header: {
-    marginBottom: 30,
-    alignItems: 'center', // Center horizontally for logo
   },
 
   logo: {
@@ -607,13 +567,13 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     textAlign: 'center',
     marginTop: 100,
-    fontFamily: 'Manrope-Bold',
+    fontFamily: 'RedHatDisplay',
   },
   welcomeText2: {
     fontSize: 32,
     color: '#FFFFFF',
     textAlign: 'center',
-    fontFamily: 'Manrope-Bold',
+    fontFamily: 'RedHatDisplay',
   },
   focused: {
     borderColor: '#CB29BE',
@@ -623,18 +583,14 @@ const styles = StyleSheet.create({
     color: '#B1B1B1',
     textAlign: 'center',
     marginTop: 5,
-    fontFamily: 'Manrope-Regular',
-  },
-  formContainer: {
-    marginTop: 5,
-    alignItems: 'center',
+    fontFamily: 'RedHatDisplay-',
   },
   textInput: {
     backgroundColor: 'rgba(255, 255, 255, 0.08)',
     padding: 12,
     borderRadius: 5,
     marginBottom: 10,
-    width: '92%',
+    width: '100%',
     color: 'white',
     fontFamily: 'Manrope-Light',
     borderWidth: 2,
@@ -646,12 +602,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '75%',
     marginTop: 5,
-  },
-  buttonLabel: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'normal',
-    fontFamily: 'Manrope-Light',
   },
   socialLogins: {
     marginTop: 20,

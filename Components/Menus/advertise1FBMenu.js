@@ -15,6 +15,7 @@ import {
   Alert,
   ScrollView,
   Linking,
+  Video,
 } from 'react-native';
 // import {AdvertiseModal1} from './Modals/AdvertiseModal1';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -37,7 +38,10 @@ import {
 
 const Advertise1FBMenu = () => {
   const [selectedImages, setSelectedImages] = useState([]);
+  const [selectedVideos, setSelectedVideos] = useState([]);
   const [base64Images, setBase64Images] = useState([]);
+  const [base64Videos, setBase64Videos] = useState([]);
+  const [videos, setVideos] = useState(null);
   const [religion, setReligion] = useState('Select Religion');
   const [gender, setGender] = useState('Select Gender');
   const [choosePlatform, setChoosePlatform] = useState('Select Platform');
@@ -213,7 +217,7 @@ const Advertise1FBMenu = () => {
         setSelectedImages(images);
         setImage(images);
         setBase64Images(base64Strs);
-
+        createMediaTask('photo', images);
         console.log('Images selected:', images);
 
         // Store the base64 strings in AsyncStorage
@@ -230,11 +234,105 @@ const Advertise1FBMenu = () => {
     });
   };
 
-  const createTask = async (paymentMethod = 'trendit_wallet') => {
-    if (!image) {
+  const chooseVideo = () => {
+    let options = {
+      mediaType: 'video',
+      includeBase64: true,
+      selectionLimit: 4, // Allow up to 4 videos to be selected
+    };
+    console.log('chooseVideo called');
+    launchImageLibrary(options, async response => {
+      if (response.didCancel) {
+        console.log('User cancelled video picker');
+      } else if (response.error) {
+        console.log('VideoPicker Error: ', response.error);
+      } else {
+        console.log(response, 'Response');
+        const videos = response.assets.map(asset => ({
+          uri: asset.uri,
+          type: asset.type,
+          name: asset.fileName,
+        }));
+        const base64Strs = response.assets.map(
+          asset => `data:${asset.type};base64,${asset.base64}`,
+        );
+
+        // Update state with the selected videos and their base64 strings
+        setSelectedVideos(videos);
+        setVideos(videos);
+        setBase64Videos(base64Strs);
+        createMediaTask('video', videos);
+        console.log('Videos selected:', videos);
+
+        // Store the base64 strings in AsyncStorage
+        try {
+          await AsyncStorage.setItem(
+            'profile_videos',
+            JSON.stringify(base64Strs),
+          );
+          console.log('Videos stored successfully');
+        } catch (error) {
+          console.error('Error storing videos:', error);
+        }
+      }
+    });
+  };
+
+  const createMediaTask = async (mediaType, mediaItems) => {
+    if (!mediaItems || mediaItems.length === 0) {
+      console.log(
+        `${mediaType.charAt(0).toUpperCase() + mediaType.slice(1)} Required`,
+        `Please choose a ${mediaType} before proceeding.`,
+      );
+      return;
+    }
+
+    console.log('Creating media task for:', mediaType);
+    const base64Strs = mediaItems.map(
+      item => `data:${item.type};base64,${item.base64}`,
+    );
+
+    // Update state with the selected media and their base64 strings
+    if (mediaType === 'photo') {
+      setSelectedImages(mediaItems);
+      setImage(mediaItems);
+      setBase64Images(base64Strs);
+    } else if (mediaType === 'video') {
+      setSelectedVideos(mediaItems);
+      setVideos(mediaItems);
+      setBase64Videos(base64Strs);
+    }
+
+    console.log(
+      `${mediaType.charAt(0).toUpperCase() + mediaType.slice(1)} selected:`,
+      mediaItems,
+    );
+
+    // Store the base64 strings in AsyncStorage
+    try {
+      await AsyncStorage.setItem(
+        `profile_${mediaType === 'photo' ? 'pictures' : 'videos'}`,
+        JSON.stringify(base64Strs),
+      );
+      console.log(
+        `${
+          mediaType.charAt(0).toUpperCase() + mediaType.slice(1)
+        } stored successfully`,
+      );
+    } catch (error) {
+      console.error(`Error storing ${mediaType}:`, error);
+    }
+  };
+
+  const createTask = async (
+    mediaType,
+    mediaItems,
+    paymentMethod = 'trendit_wallet',
+  ) => {
+    if (!mediaItems || mediaItems.length === 0) {
       Alert.alert(
-        'Image Required',
-        'Please choose an image before proceeding.',
+        `${mediaType.charAt(0).toUpperCase() + mediaType.slice(1)} Required`,
+        `Please choose a ${mediaType} before proceeding.`,
       );
       return;
     }
@@ -251,26 +349,26 @@ const Advertise1FBMenu = () => {
     // taskData.append('hashtags', hashtag);
     taskData.append('amount', chooseNumber * 140);
     taskData.append('target_state', 'Lagos');
-    console.log('Task Data:', image?.uri);
-    if (Array.isArray(image)) {
-      // If it's an array, append each image as part of the form data
-      image.forEach((img, index) => {
+    console.log('Task Data:', mediaItems?.[0]?.uri);
+
+    if (Array.isArray(mediaItems)) {
+      // If it's an array, append each media item as part of the form data
+      mediaItems.forEach((item, index) => {
         taskData.append(`media[${index}]`, {
-          uri: img.uri,
-          type: img.type,
-          name: img.fileName,
+          uri: item.uri,
+          type: item.type,
+          name: item.fileName,
         });
       });
     } else {
-      // If it's a single image, append it directly
+      // If it's a single media item, append it directly
       taskData.append('media', {
-        uri: image?.uri,
-        type: image?.type,
-        name: image?.fileName,
+        uri: mediaItems?.uri,
+        type: mediaItems?.type,
+        name: mediaItems?.fileName,
       });
     }
 
-    // taskData.append('media_path', imageData);
     const Token = userData?.accessToken;
     console.log('Testing', Token);
 
@@ -301,10 +399,9 @@ const Advertise1FBMenu = () => {
       }
 
       const data = await response.json();
-      //   Alert.alert('Success', data.message);
       setIsModal2Visible(false);
       setIsModal3Visible(true);
-      AsyncStorage.removeItem('profile_picture');
+      AsyncStorage.removeItem('profile_picture'); // Consider renaming or removing based on media type
       Toast.show({
         type: 'success',
         text1: 'Success',
@@ -353,14 +450,21 @@ const Advertise1FBMenu = () => {
           fontFamily: 'Manrope-ExtraBold',
         },
       });
-      if (error) {
-        console.error('Response data:', error);
-        console.error('Response status:', error);
-      }
     }
   };
 
-  const createTaskPaystack = async (paymentMethod = 'payment_gateway') => {
+  const createTaskPaystack = async (
+    mediaType,
+    mediaItems,
+    paymentMethod = 'payment_gateway',
+  ) => {
+    if (!mediaItems || mediaItems.length === 0) {
+      Alert.alert(
+        `${mediaType.charAt(0).toUpperCase() + mediaType.slice(1)} Required`,
+        `Please choose a ${mediaType} before proceeding.`,
+      );
+      return;
+    }
     setTaskType('advert');
     setAmount(chooseNumber * 140);
     const taskData = new FormData();
@@ -374,11 +478,24 @@ const Advertise1FBMenu = () => {
     taskData.append('amount', chooseNumber * 140);
     taskData.append('target_state', 'Lagos');
     console.log('Task Data:', image?.uri);
-    taskData.append('media', {
-      uri: image?.uri,
-      type: image?.type,
-      name: image?.fileName,
-    });
+    if (Array.isArray(mediaItems)) {
+      // If it's an array, append each media item as part of the form data
+      mediaItems.forEach((item, index) => {
+        taskData.append(`media[${index}]`, {
+          uri: item.uri,
+          type: item.type,
+          name: item.fileName,
+        });
+      });
+    } else {
+      // If it's a single media item, append it directly
+      taskData.append('media', {
+        uri: mediaItems?.uri,
+        type: mediaItems?.type,
+        name: mediaItems?.fileName,
+      });
+    }
+
     // taskData.append('media_path', imageData);
     const Token = userData?.accessToken;
     console.log('Testing', Token);
@@ -882,7 +999,8 @@ const Advertise1FBMenu = () => {
                 borderRadius: 4,
               },
               dynamicStyles.DivContainer,
-            ]}>
+            ]}
+            onPress={() => chooseImage()}>
             <Svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
@@ -916,7 +1034,8 @@ const Advertise1FBMenu = () => {
                 borderRadius: 4,
               },
               dynamicStyles.DivContainer,
-            ]}>
+            ]}
+            onPress={() => chooseVideo()}>
             <Svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
@@ -948,8 +1067,7 @@ const Advertise1FBMenu = () => {
             borderRadius: 4,
             height: 150,
             width: '50%',
-          }}
-          onPress={() => chooseImage()}>
+          }}>
           {Array.isArray(image) && image.length > 0 ? (
             image.length === 1 ? (
               <Image
@@ -961,6 +1079,28 @@ const Advertise1FBMenu = () => {
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}>
                 {image.map((img, index) => (
+                  <Image
+                    key={index}
+                    source={{uri: img.uri}}
+                    style={{width: 100, height: 100, marginRight: 5}}
+                  />
+                ))}
+              </ScrollView>
+            )
+          ) : (
+            <View />
+          )}
+          {Array.isArray(videos) && videos.length > 0 ? (
+            videos.length === 1 ? (
+              <Video
+                source={{uri: videos[0].uri}}
+                style={{width: 100, height: 100}}
+              />
+            ) : (
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}>
+                {videos.map((img, index) => (
                   <Image
                     key={index}
                     source={{uri: img.uri}}

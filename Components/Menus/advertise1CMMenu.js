@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-shadow */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect} from 'react';
@@ -9,34 +10,29 @@ import {
   StyleSheet,
   Modal,
   TextInput,
-  Image,
   Dimensions,
   SafeAreaView,
   Alert,
   Linking,
-  ScrollView,
 } from 'react-native';
 // import {AdvertiseModal1} from './Modals/AdvertiseModal1';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {Svg, Path, G} from 'react-native-svg';
 import Toast from 'react-native-toast-message';
-import {launchImageLibrary} from 'react-native-image-picker';
 import {ApiLink} from '../../enums/apiLink';
 import axios from 'axios';
 import queryString from 'query-string';
 
 import {
-  YTAdvertiseModalPicker,
   AdvertiseModalPicker2,
   AdvertiseModalPicker3,
   AdvertiseModalPicker4,
   AdvertiseModalPicker5,
+  AdvertiseModalPicker6,
 } from '../Modals/AdvertModalPicker';
 
-const Advertise1YTMenu = () => {
-  const [selectedImages, setSelectedImages] = useState([]);
-  const [base64Images, setBase64Images] = useState([]);
+const Advertise1CMMenu = () => {
   const [religion, setReligion] = useState('Select Religion');
   const [gender, setGender] = useState('Select Gender');
   const [choosePlatform, setChoosePlatform] = useState('Select Platform');
@@ -51,10 +47,9 @@ const Advertise1YTMenu = () => {
   const [caption, setCaption] = useState('');
   const navigation = useNavigation();
   const [amount, setAmount] = useState('');
-  const [targetState, setTargetState] = useState('');
   const [userData, setUserData] = useState(null);
   const [userData1, setUserData1] = useState(null);
-  const [image, setImage] = useState(null);
+  //   const [image, setImage] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModal2Visible, setIsModal2Visible] = useState(false);
   const [isModal3Visible, setIsModal3Visible] = useState(false);
@@ -66,7 +61,7 @@ const Advertise1YTMenu = () => {
   const [isLoading1, setIsLoading1] = useState(false);
   const result =
     userBalance?.balance -
-    (isNaN(Number(chooseNumber)) ? 0 : Number(chooseNumber) * 140);
+    (isNaN(Number(chooseNumber)) ? 0 : Number(chooseNumber) * 40);
 
   useEffect(() => {
     AsyncStorage.getItem('userbalance')
@@ -112,17 +107,6 @@ const Advertise1YTMenu = () => {
       });
   }, []);
 
-  useEffect(() => {
-    const fetchImage = async () => {
-      const storedImage = await AsyncStorage.getItem('profile_picture');
-      if (storedImage) {
-        setImage(storedImage);
-      }
-    };
-
-    fetchImage();
-  }, []);
-
   const changeModalVisibility = bool => {
     setModalVisible(bool);
   };
@@ -155,184 +139,120 @@ const Advertise1YTMenu = () => {
     setReligion(option5);
   };
 
-  const chooseImage = () => {
-    let options = {
-      mediaType: 'photo',
-      includeBase64: true,
-      selectionLimit: 4, // Allow up to 4 images to be selected
-    };
-    console.log('chooseImage called');
-    launchImageLibrary(options, async response => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else {
-        console.log(response, 'Response');
-        const images = response.assets.map(asset => ({
-          uri: asset.uri,
-          type: asset.type,
-          name: asset.fileName,
-        }));
-        const base64Strs = response.assets.map(
-          asset => `data:${asset.type};base64,${asset.base64}`,
-        );
-
-        // Update state with the selected images and their base64 strings
-        setSelectedImages(images);
-        setImage(images);
-        setBase64Images(base64Strs);
-
-        console.log('Images selected:', images);
-
-        // Store the base64 strings in AsyncStorage
-        try {
-          await AsyncStorage.setItem(
-            'profile_pictures',
-            JSON.stringify(base64Strs),
-          );
-          console.log('Images stored successfully');
-        } catch (error) {
-          console.error('Error storing images:', error);
-        }
-      }
-    });
-  };
-
   const createTask = async (paymentMethod = 'trendit_wallet') => {
-    console.log('Image at start of createTask:', image);
-    if (chooseImage) {
-      setTaskType('advert');
-      setAmount(chooseNumber * 140);
-      const taskData = new FormData();
-      taskData.append('platform', choosePlatform);
-      taskData.append('target_country', chooseLocation);
-      taskData.append('posts_count', chooseNumber);
-      taskData.append('task_type', 'advert');
-      taskData.append('caption', caption);
-      taskData.append('gender', gender);
-      // taskData.append('hashtags', hashtag);
-      taskData.append('amount', chooseNumber * 140);
-      taskData.append('target_state', 'Lagos');
-      if (Array.isArray(image)) {
-        // If it's an array, append each image as part of the form data
-        image.forEach((img, index) => {
-          taskData.append(`media[${index}]`, {
-            uri: img.uri,
-            type: img.type,
-            name: img.fileName,
-          });
-        });
-      } else {
-        // If it's a single image, append it directly
-        taskData.append('media', {
-          uri: image?.uri,
-          type: image?.type,
-          name: image?.fileName,
-        });
-      }
-
-      // taskData.append('media_path', imageData);
-      const Token = userData?.accessToken;
-      console.log('Testing', Token);
-
-      try {
-        const response = await fetch(
-          `${ApiLink.ENDPOINT_1}/tasks/new?payment_method=${paymentMethod}`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              Authorization: `Bearer ${Token}`,
-            },
-            body: taskData,
-          },
-        );
-
-        if (!response.ok) {
-          throw new Error('HTTP error ' + response);
-        }
-
-        const data = await response.json();
-        //   Alert.alert('Success', data.message);
-        setIsModal2Visible(false);
-        setIsModal3Visible(true);
-        AsyncStorage.removeItem('profile_picture');
-        Toast.show({
-          type: 'success',
-          text1: 'Success',
-          text2: data.message,
-          style: {
-            borderLeftColor: 'pink',
-            backgroundColor: 'yellow',
-            width: '80%',
-            alignSelf: 'center',
-            justifyContent: 'center',
-            alignItems: 'center',
-          },
-          text1Style: {
-            color: 'red',
-            fontSize: 14,
-          },
-          text2Style: {
-            color: 'green',
-            fontSize: 14,
-            fontFamily: 'Manrope-ExtraBold',
-          },
-        });
-        console.log(data);
-      } catch (error) {
-        console.error('Error:', error);
-        console.error('Error message:', error.message);
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: error.message,
-          style: {
-            borderLeftColor: 'pink',
-            backgroundColor: 'yellow',
-            width: '80%',
-            alignSelf: 'center',
-            justifyContent: 'center',
-            alignItems: 'center',
-          },
-          text1Style: {
-            color: 'red',
-            fontSize: 14,
-          },
-          text2Style: {
-            color: 'green',
-            fontSize: 14,
-            fontFamily: 'Manrope-ExtraBold',
-          },
-        });
-        if (error) {
-          console.error('Response data:', error);
-          console.error('Response status:', error);
-        }
-      }
-    }
-  };
-
-  const createTaskPaystack = async (paymentMethod = 'payment_gateway') => {
-    setTaskType('advert');
-    setAmount(chooseNumber * 140);
+    setTaskType('engagement');
+    setAmount(chooseNumber * 40);
     const taskData = new FormData();
     taskData.append('platform', choosePlatform);
+    taskData.append('goal', 'comment');
     taskData.append('target_country', chooseLocation);
     taskData.append('posts_count', chooseNumber);
     taskData.append('task_type', 'advert');
     taskData.append('caption', caption);
     taskData.append('gender', gender);
     // taskData.append('hashtags', hashtag);
-    taskData.append('amount', chooseNumber * 140);
+    taskData.append('amount', chooseNumber * 40);
     taskData.append('target_state', 'Lagos');
-    console.log('Task Data:', image?.uri);
-    taskData.append('media', {
-      uri: image?.uri,
-      type: image?.type,
-      name: image?.fileName,
-    });
+
+    const Token = userData?.accessToken;
+    console.log('Testing', Token);
+
+    try {
+      const response = await fetch(
+        `${ApiLink.ENDPOINT_1}/tasks/new?payment_method=${paymentMethod}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${Token}`,
+          },
+          body: taskData,
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error('HTTP error ' + response);
+      }
+
+      const data = await response.json();
+      //   Alert.alert('Success', data.message);
+      setIsModal2Visible(false);
+      setChoosePlatform('');
+      setAmount('');
+      setCaption('');
+      setChooseLocation('');
+      setChooseNumber('');
+      setGender('');
+      setIsModal3Visible(true);
+      //   AsyncStorage.clear('profile_picture');
+      Toast.show({
+        type: 'success',
+        text1: 'Success',
+        text2: data.message,
+        style: {
+          borderLeftColor: 'pink',
+          backgroundColor: 'yellow',
+          width: '80%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        text1Style: {
+          color: 'red',
+          fontSize: 14,
+        },
+        text2Style: {
+          color: 'green',
+          fontSize: 14,
+          fontFamily: 'Manrope-ExtraBold',
+        },
+      });
+      console.log(data);
+    } catch (error) {
+      console.error('Error:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: error.message,
+        style: {
+          borderLeftColor: 'pink',
+          backgroundColor: 'yellow',
+          width: '80%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        text1Style: {
+          color: 'red',
+          fontSize: 14,
+        },
+        text2Style: {
+          color: 'green',
+          fontSize: 14,
+          fontFamily: 'Manrope-ExtraBold',
+        },
+      });
+      if (error) {
+        console.error('Response data:', error);
+        console.error('Response status:', error);
+      }
+    }
+  };
+
+  const createTaskPaystack = async (paymentMethod = 'payment_gateway') => {
+    setTaskType('engagement');
+    setAmount(chooseNumber * 40);
+    const taskData = new FormData();
+    taskData.append('platform', choosePlatform);
+    taskData.append('goal', 'comment');
+    taskData.append('target_country', chooseLocation);
+    taskData.append('posts_count', chooseNumber);
+    taskData.append('task_type', 'advert');
+    taskData.append('caption', caption);
+    taskData.append('gender', gender);
+    // taskData.append('hashtags', hashtag);
+    taskData.append('amount', chooseNumber * 40);
+    taskData.append('target_state', 'Lagos');
 
     const Token = userData?.accessToken;
     console.log('Testing', Token);
@@ -573,7 +493,7 @@ const Advertise1YTMenu = () => {
           animationType="slide"
           visible={modalVisible}
           onRequestClose={() => changeModalVisibility(false)}>
-          <YTAdvertiseModalPicker
+          <AdvertiseModalPicker6
             changeModalVisibility={changeModalVisibility}
             setData={setData}
           />
@@ -608,8 +528,9 @@ const Advertise1YTMenu = () => {
             fontSize: 10,
             fontFamily: 'Manrope-Regular',
           }}>
-          Please select the social media or App Store platform where you want to
-          perform this action
+          You can target a particular location where your Advert task will be
+          mostly shown. Select “All over Nigeria” if you want to target every
+          location within the country.
         </Text>
         <Modal
           transparent={true}
@@ -631,7 +552,7 @@ const Advertise1YTMenu = () => {
         }}>
         <Text
           style={{color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13}}>
-          Number of YouTube Advert post you want
+          Number of Comments you want
         </Text>
         <TouchableOpacity
           style={{
@@ -655,8 +576,7 @@ const Advertise1YTMenu = () => {
             fontSize: 10,
             fontFamily: 'Manrope-Regular',
           }}>
-          Enter the desired Number of YouTube Advert Post you want us to get for
-          you
+          Enter the number of Comments you want us to get for you
         </Text>
         <Modal
           transparent={true}
@@ -741,12 +661,12 @@ const Advertise1YTMenu = () => {
         </Text>
         <Text
           style={{color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13}}>
-          Enter Advert Task or Caption
+          The Link to Your social Media Account
         </Text>
         <TouchableOpacity
           style={{
             backgroundColor: '#2f2f2f6b',
-            height: 120,
+            height: 50,
             width: '100%',
             borderRadius: 4,
             justifyContent: 'center',
@@ -754,7 +674,7 @@ const Advertise1YTMenu = () => {
           }}>
           <TextInput
             onChangeText={setCaption}
-            placeholder="Enter Your Caption"
+            placeholder="Input your Link"
             placeholderTextColor="#fff"
           />
         </TouchableOpacity>
@@ -764,133 +684,9 @@ const Advertise1YTMenu = () => {
             fontSize: 10,
             fontFamily: 'Manrope-Regular',
           }}>
-          Please enter the advert text or caption. The advert text or caption
-          should be well detailed. You can also include a link to your site, a
-          phone number for people to contact you or any information you want
-          people to see on your advert
+          Enter the link to the account you want people to follow. ensure the
+          link you paste here is the link to your page
         </Text>
-
-        <Text
-          style={{
-            color: '#fff',
-            fontFamily: 'Manrope-ExtraBold',
-            fontSize: 13,
-            paddingTop: 10,
-          }}>
-          Choose one of the Advert Media Upload Below:
-        </Text>
-        <View style={{flexDirection: 'row', gap: 5}}>
-          <TouchableOpacity
-            style={{
-              flexDirection: 'row',
-              gap: 5,
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: '#2f2f2f6b',
-              padding: 7,
-              borderRadius: 4,
-            }}>
-            <Svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none">
-              <Path
-                d="M2.50466 6.66667C2.5 7.01051 2.5 7.39635 2.5 7.83333V12.1667C2.5 14.0335 2.5 14.9669 2.86331 15.68C3.18289 16.3072 3.69282 16.8171 4.32003 17.1367C5.03307 17.5 5.96649 17.5 7.83333 17.5H12.1667C12.6037 17.5 12.9895 17.5 13.3333 17.4953M2.50466 6.66667C2.51991 5.54158 2.58504 4.86616 2.86331 4.32003C3.18289 3.69282 3.69282 3.18289 4.32003 2.86331C5.03307 2.5 5.96649 2.5 7.83333 2.5H12.1667C14.0335 2.5 14.9669 2.5 15.68 2.86331C16.3072 3.18289 16.8171 3.69282 17.1367 4.32003C17.5 5.03307 17.5 5.96649 17.5 7.83333V12.1667C17.5 13.4282 17.5 14.2635 17.3879 14.8925M2.50466 6.66667L6.67133 10.8333M13.3333 17.4953C14.4584 17.4801 15.1338 17.415 15.68 17.1367C16.3072 16.8171 16.8171 16.3072 17.1367 15.68C17.2545 15.4488 17.3341 15.1944 17.3879 14.8925M13.3333 17.4953L6.67133 10.8333M6.67133 10.8333L7.73726 9.7674C8.52929 8.97537 8.92531 8.57935 9.38197 8.43097C9.78365 8.30046 10.2163 8.30046 10.618 8.43097C11.0747 8.57935 11.4707 8.97537 12.2627 9.7674L17.3879 14.8925M14.175 5.83333H14.1583"
-                stroke="#FF6DFB"
-                stroke-width="2"
-                stroke-linecap="round"
-              />
-            </Svg>
-            <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'Manrope-Regular',
-                fontSize: 13,
-              }}>
-              Photo
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              flexDirection: 'row',
-              gap: 5,
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: '#2f2f2f6b',
-              padding: 7,
-              borderRadius: 4,
-            }}>
-            <Svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none">
-              <Path
-                d="M15.0013 6.66683L17.2992 6.09236C17.8251 5.96087 18.3346 6.35867 18.3346 6.90081V13.0995C18.3346 13.6417 17.8251 14.0395 17.2992 13.908L15.0013 13.3335M7.0013 16.6668H9.66797C11.5348 16.6668 12.4682 16.6668 13.1813 16.3035C13.8085 15.9839 14.3184 15.474 14.638 14.8468C15.0013 14.1338 15.0013 13.2003 15.0013 11.3335V8.66683C15.0013 6.79999 15.0013 5.86657 14.638 5.15353C14.3184 4.52632 13.8085 4.01639 13.1813 3.69681C12.4682 3.3335 11.5348 3.3335 9.66797 3.3335H7.0013C5.13446 3.3335 4.20104 3.3335 3.488 3.69681C2.86079 4.01639 2.35086 4.52632 2.03128 5.15353C1.66797 5.86657 1.66797 6.79999 1.66797 8.66683V11.3335C1.66797 13.2003 1.66797 14.1338 2.03128 14.8468C2.35086 15.474 2.86079 15.9839 3.488 16.3035C4.20104 16.6668 5.13446 16.6668 7.0013 16.6668Z"
-                stroke="#B1B1B1"
-                stroke-width="2"
-                stroke-linecap="round"
-              />
-            </Svg>
-            <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'Manrope-Regular',
-                fontSize: 13,
-              }}>
-              Video
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <TouchableOpacity
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#2f2f2f6b',
-            padding: 7,
-            borderRadius: 4,
-            height: 150,
-            width: '50%',
-          }}
-          onPress={() => chooseImage()}>
-          {Array.isArray(image) && image.length > 0 ? (
-            image.length === 1 ? (
-              <Image
-                source={{uri: image[0].uri}}
-                style={{width: 100, height: 100}}
-              />
-            ) : (
-              <ScrollView
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}>
-                {image.map((img, index) => (
-                  <Image
-                    key={index}
-                    source={{uri: img.uri}}
-                    style={{width: 100, height: 100, marginRight: 5}}
-                  />
-                ))}
-              </ScrollView>
-            )
-          ) : (
-            <Svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="25"
-              height="24"
-              viewBox="0 0 25 24"
-              fill="none">
-              <Path
-                d="M12.25 4V20M20.25 12L4.25 12"
-                stroke="#FFD0FE"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            </Svg>
-          )}
-        </TouchableOpacity>
       </View>
       <View
         style={{
@@ -919,7 +715,7 @@ const Advertise1YTMenu = () => {
               fontSize: 30,
             }}>
             {userData1?.userdata?.wallet?.currency_symbol}{' '}
-            {isNaN(Number(chooseNumber)) ? 0 : Number(chooseNumber) * 140}
+            {isNaN(Number(chooseNumber)) ? 0 : Number(chooseNumber) * 40}
           </Text>
         </View>
         <TouchableOpacity
@@ -1280,7 +1076,7 @@ const Advertise1YTMenu = () => {
                           {/* {userData1?.userdata?.wallet?.currency_symbol}{' '} */}
                           {isNaN(Number(chooseNumber))
                             ? 0
-                            : Number(chooseNumber) * 140}
+                            : Number(chooseNumber) * 40}
                         </Text>
                       </View>
                       <View
@@ -1305,7 +1101,7 @@ const Advertise1YTMenu = () => {
                           {/* {userData1?.userdata?.wallet?.currency_symbol}{' '} */}
                           {isNaN(Number(chooseNumber))
                             ? 0
-                            : Number(chooseNumber) * 140}
+                            : Number(chooseNumber) * 5}
                         </Text>
                       </View>
                       <View
@@ -1619,4 +1415,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Advertise1YTMenu;
+export default Advertise1CMMenu;

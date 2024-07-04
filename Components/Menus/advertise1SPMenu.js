@@ -176,6 +176,12 @@ const Advertise1SPMenu = () => {
       const data = await response.json();
       //   Alert.alert('Success', data.message);
       setIsModal2Visible(false);
+      setChoosePlatform('');
+      setAmount('');
+      setCaption('');
+      setChooseLocation('');
+      setChooseNumber('');
+      setGender('');
       setIsModal3Visible(true);
       //   AsyncStorage.clear('profile_picture');
       Toast.show({

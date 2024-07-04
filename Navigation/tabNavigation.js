@@ -27,7 +27,6 @@ import Advertise1 from '../Screens/Advertise/advertise1';
 import Transactions from '../Screens/Transactions';
 import Advertise1FB from '../Screens/Advertise/advertise1FB';
 import Advertise1TK from '../Screens/Advertise/advertise1TK';
-import Advertise1YT from '../Screens/Advertise/advertise1YT';
 import Advertise1X from '../Screens/Advertise/advertise1X';
 import Advertise1WA from '../Screens/Advertise/advertise1WA';
 import Advertise1AM from '../Screens/Advertise/advertise1AM';
@@ -54,6 +53,9 @@ import Earn2FS from '../Screens/Earn/earn2FS';
 import Earn1LS from '../Screens/Earn/earn1LS';
 import Earn1CM from '../Screens/Earn/earn1CM';
 import Advertise1TR from '../Screens/Advertise/advertise1TR';
+import SocialMedia from '../Screens/Settings/socialMedia';
+import Advertise1CM from '../Screens/Advertise/advertise1CM';
+import Advertise1EFB from '../Screens/Advertise/advertise1EFB';
 
 const Tab = createBottomTabNavigator();
 const MoreStack = createStackNavigator();
@@ -73,6 +75,7 @@ function MoreStackScreen() {
       <MoreStack.Screen name="Bank" component={BankSettings} />
       <MoreStack.Screen name="Notification" component={NotificationSettings} />
       <MoreStack.Screen name="Preference" component={PreferencesSettings} />
+      <MoreStack.Screen name="SocialMedia" component={SocialMedia} />
     </MoreStack.Navigator>
   );
 }
@@ -109,7 +112,6 @@ function AdvertiseStackScreen() {
       <AdvertiseStack.Screen name="Advertise1" component={Advertise1} />
       <AdvertiseStack.Screen name="Advertise1FB" component={Advertise1FB} />
       <AdvertiseStack.Screen name="Advertise1TK" component={Advertise1TK} />
-      <AdvertiseStack.Screen name="Advertise1YT" component={Advertise1YT} />
       <AdvertiseStack.Screen name="Advertise1X" component={Advertise1X} />
       <AdvertiseStack.Screen name="Advertise1WA" component={Advertise1WA} />
       <AdvertiseStack.Screen name="Advertise1AM" component={Advertise1AM} />
@@ -119,6 +121,8 @@ function AdvertiseStackScreen() {
       <AdvertiseStack.Screen name="Advertise1GP" component={Advertise1GP} />
       <AdvertiseStack.Screen name="Advertise1SP" component={Advertise1SP} />
       <AdvertiseStack.Screen name="Advertise1TR" component={Advertise1TR} />
+      <AdvertiseStack.Screen name="Advertise1CM" component={Advertise1CM} />
+      <AdvertiseStack.Screen name="Advertise1EFB" component={Advertise1EFB} />
       <AdvertiseStack.Screen name="History" component={History} />
     </AdvertiseStack.Navigator>
   );

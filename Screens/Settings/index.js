@@ -218,7 +218,7 @@ const Settings = () => {
                     paddingVertical: 10,
                     alignItems: 'center',
                   }}
-                  onPress={() => navigation.navigate('Notifications')}>
+                  onPress={() => navigation.navigate('SocialMedia')}>
                   <Svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="30"

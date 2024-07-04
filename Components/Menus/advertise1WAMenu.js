@@ -15,8 +15,9 @@ import {
   Alert,
   Linking,
   ScrollView,
-  Video,
+  ActivityIndicator,
 } from 'react-native';
+import Video from 'react-native-video';
 // import {AdvertiseModal1} from './Modals/AdvertiseModal1';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
@@ -189,6 +190,8 @@ const Advertise1WAMenu = () => {
     },
   });
 
+  const [mediaType, setMediaType] = useState('');
+  const [mediaItems, setMediaItems] = useState([]);
   const chooseImage = () => {
     let options = {
       mediaType: 'photo',
@@ -217,6 +220,8 @@ const Advertise1WAMenu = () => {
         setImage(images);
         setBase64Images(base64Strs);
         createMediaTask('photo', images);
+        setMediaType('photo');
+        setMediaItems(images);
         console.log('Images selected:', images);
 
         // Store the base64 strings in AsyncStorage
@@ -261,6 +266,8 @@ const Advertise1WAMenu = () => {
         setVideos(videos);
         setBase64Videos(base64Strs);
         createMediaTask('video', videos);
+        setMediaType('video');
+        setMediaItems(videos);
         console.log('Videos selected:', videos);
 
         // Store the base64 strings in AsyncStorage
@@ -323,21 +330,14 @@ const Advertise1WAMenu = () => {
     }
   };
 
-  const createTask = async (
-    mediaType,
-    mediaItems,
-    paymentMethod = 'trendit_wallet',
-  ) => {
+  const createTask = async (paymentMethod = 'trendit_wallet') => {
     if (!mediaItems || mediaItems.length === 0) {
-      Alert.alert(
-        `${mediaType.charAt(0).toUpperCase() + mediaType.slice(1)} Required`,
-        `Please choose a ${mediaType} before proceeding.`,
-      );
+      Alert.alert('Please choose a media before proceeding.');
       return;
     }
 
     setTaskType('advert');
-    setAmount(chooseNumber * 140);
+    setAmount(chooseNumber * 80);
     const taskData = new FormData();
     taskData.append('platform', choosePlatform);
     taskData.append('target_country', chooseLocation);
@@ -346,7 +346,7 @@ const Advertise1WAMenu = () => {
     taskData.append('caption', caption);
     taskData.append('gender', gender);
     // taskData.append('hashtags', hashtag);
-    taskData.append('amount', chooseNumber * 140);
+    taskData.append('amount', chooseNumber * 80);
     taskData.append('target_state', 'Lagos');
     console.log('Task Data:', mediaItems?.[0]?.uri);
 
@@ -372,6 +372,7 @@ const Advertise1WAMenu = () => {
     console.log('Testing', Token);
 
     try {
+      setIsLoading1(true);
       const response = await fetch(
         `${ApiLink.ENDPOINT_1}/tasks/new?payment_method=${paymentMethod}`,
         {
@@ -392,13 +393,22 @@ const Advertise1WAMenu = () => {
             text2: 'AccessToken expired',
             // Styling omitted for brevity
           });
+          setIsLoading1(false);
         } else {
+          setIsLoading1(false);
           throw new Error('HTTP error ' + response.status);
         }
       }
 
       const data = await response.json();
+      setIsLoading1(false);
       setIsModal2Visible(false);
+      setChoosePlatform('');
+      setAmount('');
+      setCaption('');
+      setChooseLocation('');
+      setChooseNumber('');
+      setGender('');
       setIsModal3Visible(true);
       AsyncStorage.removeItem('profile_picture'); // Consider renaming or removing based on media type
       Toast.show({
@@ -425,6 +435,7 @@ const Advertise1WAMenu = () => {
       });
       console.log(data);
     } catch (error) {
+      setIsLoading1(false);
       console.error('Error:', error);
       console.error('Error message:', error.message);
       Toast.show({
@@ -452,20 +463,13 @@ const Advertise1WAMenu = () => {
     }
   };
 
-  const createTaskPaystack = async (
-    mediaType,
-    mediaItems,
-    paymentMethod = 'payment_gateway',
-  ) => {
+  const createTaskPaystack = async (paymentMethod = 'payment_gateway') => {
     if (!mediaItems || mediaItems.length === 0) {
-      Alert.alert(
-        `${mediaType.charAt(0).toUpperCase() + mediaType.slice(1)} Required`,
-        `Please choose a ${mediaType} before proceeding.`,
-      );
+      Alert.alert('Please choose a media before proceeding.');
       return;
     }
     setTaskType('advert');
-    setAmount(chooseNumber * 140);
+    setAmount(chooseNumber * 80);
     const taskData = new FormData();
     taskData.append('platform', choosePlatform);
     taskData.append('target_country', chooseLocation);
@@ -474,7 +478,7 @@ const Advertise1WAMenu = () => {
     taskData.append('caption', caption);
     taskData.append('gender', gender);
     // taskData.append('hashtags', hashtag);
-    taskData.append('amount', chooseNumber * 140);
+    taskData.append('amount', chooseNumber * 80);
     taskData.append('target_state', 'Lagos');
     console.log('Task Data:', image?.uri);
     if (Array.isArray(mediaItems)) {
@@ -1543,14 +1547,18 @@ const Advertise1WAMenu = () => {
                       onPress={() => {
                         createTask();
                       }}>
-                      <Text
-                        style={{
-                          color: '#fff',
-                          fontFamily: 'Manrope-Regular',
-                          fontSize: 14,
-                        }}>
-                        proceed
-                      </Text>
+                      {isLoading1 ? (
+                        <ActivityIndicator size="small" color="#fff" />
+                      ) : (
+                        <Text
+                          style={{
+                            color: '#fff',
+                            fontFamily: 'Manrope-Regular',
+                            fontSize: 14,
+                          }}>
+                          proceed
+                        </Text>
+                      )}
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -1768,16 +1776,7 @@ const Advertise1WAMenu = () => {
                         width: 300,
                         borderRadius: 110,
                       }}
-                      onPress={() =>
-                        navigation.reset({
-                          index: 0,
-                          routes: [
-                            {
-                              name: 'History',
-                            },
-                          ],
-                        })
-                      }>
+                      onPress={() => navigation.navigate('History')}>
                       <Text
                         style={{
                           color: '#fff',

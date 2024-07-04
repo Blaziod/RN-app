@@ -13,10 +13,11 @@ import {
   Dimensions,
   SafeAreaView,
   Alert,
-  ScrollView,
   Linking,
-  Video,
+  ScrollView,
+  ActivityIndicator,
 } from 'react-native';
+import Video from 'react-native-video';
 // import {AdvertiseModal1} from './Modals/AdvertiseModal1';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
@@ -190,6 +191,8 @@ const Advertise1FBMenu = () => {
     setReligion(option5);
   };
 
+  const [mediaType, setMediaType] = useState('');
+  const [mediaItems, setMediaItems] = useState([]);
   const chooseImage = () => {
     let options = {
       mediaType: 'photo',
@@ -218,6 +221,8 @@ const Advertise1FBMenu = () => {
         setImage(images);
         setBase64Images(base64Strs);
         createMediaTask('photo', images);
+        setMediaType('photo');
+        setMediaItems(images);
         console.log('Images selected:', images);
 
         // Store the base64 strings in AsyncStorage
@@ -262,6 +267,8 @@ const Advertise1FBMenu = () => {
         setVideos(videos);
         setBase64Videos(base64Strs);
         createMediaTask('video', videos);
+        setMediaType('video');
+        setMediaItems(videos);
         console.log('Videos selected:', videos);
 
         // Store the base64 strings in AsyncStorage
@@ -324,16 +331,9 @@ const Advertise1FBMenu = () => {
     }
   };
 
-  const createTask = async (
-    mediaType,
-    mediaItems,
-    paymentMethod = 'trendit_wallet',
-  ) => {
+  const createTask = async (paymentMethod = 'trendit_wallet') => {
     if (!mediaItems || mediaItems.length === 0) {
-      Alert.alert(
-        `${mediaType.charAt(0).toUpperCase() + mediaType.slice(1)} Required`,
-        `Please choose a ${mediaType} before proceeding.`,
-      );
+      Alert.alert('Please choose a media before proceeding.');
       return;
     }
 
@@ -373,6 +373,7 @@ const Advertise1FBMenu = () => {
     console.log('Testing', Token);
 
     try {
+      setIsLoading1(true);
       const response = await fetch(
         `${ApiLink.ENDPOINT_1}/tasks/new?payment_method=${paymentMethod}`,
         {
@@ -393,13 +394,22 @@ const Advertise1FBMenu = () => {
             text2: 'AccessToken expired',
             // Styling omitted for brevity
           });
+          setIsLoading1(false);
         } else {
+          setIsLoading1(false);
           throw new Error('HTTP error ' + response.status);
         }
       }
 
       const data = await response.json();
+      setIsLoading1(false);
       setIsModal2Visible(false);
+      setChoosePlatform('');
+      setAmount('');
+      setCaption('');
+      setChooseLocation('');
+      setChooseNumber('');
+      setGender('');
       setIsModal3Visible(true);
       AsyncStorage.removeItem('profile_picture'); // Consider renaming or removing based on media type
       Toast.show({
@@ -426,6 +436,7 @@ const Advertise1FBMenu = () => {
       });
       console.log(data);
     } catch (error) {
+      setIsLoading1(false);
       console.error('Error:', error);
       console.error('Error message:', error.message);
       Toast.show({
@@ -453,16 +464,9 @@ const Advertise1FBMenu = () => {
     }
   };
 
-  const createTaskPaystack = async (
-    mediaType,
-    mediaItems,
-    paymentMethod = 'payment_gateway',
-  ) => {
+  const createTaskPaystack = async (paymentMethod = 'payment_gateway') => {
     if (!mediaItems || mediaItems.length === 0) {
-      Alert.alert(
-        `${mediaType.charAt(0).toUpperCase() + mediaType.slice(1)} Required`,
-        `Please choose a ${mediaType} before proceeding.`,
-      );
+      Alert.alert('Please choose a media before proceeding.');
       return;
     }
     setTaskType('advert');
@@ -1637,14 +1641,18 @@ const Advertise1FBMenu = () => {
                       onPress={() => {
                         createTask();
                       }}>
-                      <Text
-                        style={{
-                          color: '#fff',
-                          fontFamily: 'Manrope-Regular',
-                          fontSize: 14,
-                        }}>
-                        proceed
-                      </Text>
+                      {isLoading1 ? (
+                        <ActivityIndicator size="small" color="#fff" />
+                      ) : (
+                        <Text
+                          style={{
+                            color: '#fff',
+                            fontFamily: 'Manrope-Regular',
+                            fontSize: 14,
+                          }}>
+                          proceed
+                        </Text>
+                      )}
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -1685,7 +1693,7 @@ const Advertise1FBMenu = () => {
                       top: -10,
                       alignSelf: 'center',
                     }}
-                    onPress={() => setIsModal3Visible(false)}>
+                    onPress={() => navigation.navigate('History')}>
                     <View
                       style={{
                         backgroundColor: '#FF6DFB',
@@ -1851,16 +1859,7 @@ const Advertise1FBMenu = () => {
                         width: 300,
                         borderRadius: 110,
                       }}
-                      onPress={() =>
-                        navigation.reset({
-                          index: 0,
-                          routes: [
-                            {
-                              name: 'History',
-                            },
-                          ],
-                        })
-                      }>
+                      onPress={() => navigation.navigate('History')}>
                       <Text
                         style={{
                           color: '#fff',

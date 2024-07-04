@@ -13,6 +13,7 @@ import {
   SafeAreaView,
   Alert,
   Linking,
+  ActivityIndicator,
 } from 'react-native';
 // import {AdvertiseModal1} from './Modals/AdvertiseModal1';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -157,6 +158,7 @@ const Advertise1FSMenu = () => {
     console.log('Testing', Token);
 
     try {
+      setIsLoading1(true);
       const response = await fetch(
         `${ApiLink.ENDPOINT_1}/tasks/new?payment_method=${paymentMethod}`,
         {
@@ -170,11 +172,12 @@ const Advertise1FSMenu = () => {
       );
 
       if (!response.ok) {
+        setIsLoading1(false);
         throw new Error('HTTP error ' + response);
       }
 
       const data = await response.json();
-      //   Alert.alert('Success', data.message);
+      setIsLoading1(false);
       setIsModal2Visible(false);
       setChoosePlatform('');
       setAmount('');
@@ -208,6 +211,7 @@ const Advertise1FSMenu = () => {
       });
       console.log(data);
     } catch (error) {
+      setIsLoading1(false);
       console.error('Error:', error);
       Toast.show({
         type: 'error',
@@ -232,6 +236,7 @@ const Advertise1FSMenu = () => {
         },
       });
       if (error) {
+        setIsLoading1(false);
         console.error('Response data:', error);
         console.error('Response status:', error);
       }
@@ -1147,14 +1152,18 @@ const Advertise1FSMenu = () => {
                       onPress={() => {
                         createTask();
                       }}>
-                      <Text
-                        style={{
-                          color: '#fff',
-                          fontFamily: 'Manrope-Regular',
-                          fontSize: 14,
-                        }}>
-                        proceed
-                      </Text>
+                      {isLoading1 ? (
+                        <ActivityIndicator size="small" color="#fff" />
+                      ) : (
+                        <Text
+                          style={{
+                            color: '#fff',
+                            fontFamily: 'Manrope-Regular',
+                            fontSize: 14,
+                          }}>
+                          proceed
+                        </Text>
+                      )}
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -1196,7 +1205,7 @@ const Advertise1FSMenu = () => {
                       top: -10,
                       alignSelf: 'center',
                     }}
-                    onPress={() => setIsModal3Visible(false)}>
+                    onPress={() => navigation.navigate('History')}>
                     <View
                       style={{
                         backgroundColor: '#FF6DFB',
@@ -1362,16 +1371,7 @@ const Advertise1FSMenu = () => {
                         width: 300,
                         borderRadius: 110,
                       }}
-                      onPress={() =>
-                        navigation.reset({
-                          index: 0,
-                          routes: [
-                            {
-                              name: 'History',
-                            },
-                          ],
-                        })
-                      }>
+                      onPress={() => navigation.navigate('History')}>
                       <Text
                         style={{
                           color: '#fff',

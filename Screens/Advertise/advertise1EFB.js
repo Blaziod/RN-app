@@ -11,13 +11,9 @@ import {
   ImageBackground,
 } from 'react-native';
 import Headers from '../../Components/Headers/Headers';
-// import Wallet from '../../assets/SVG/post-earn.svg';
+import Advertise1EFBMenu from '../../Components/Menus/advertise1EFBMenu';
 
-// import Left from '../../assets/SVG/left';
-// import Info from '../../assets/SVG/info';
-import Advertise1YTMenu from '../../Components/Menus/advertise1YTMenu';
-
-const Advertise1YT = ({navigation}) => {
+const Advertise1EFB = ({navigation}) => {
   const [currentDateTime, setCurrentDateTime] = useState(
     new Date().toLocaleString(),
   );
@@ -47,11 +43,11 @@ const Advertise1YT = ({navigation}) => {
             <View
               style={{
                 backgroundColor: '#2F2F2F6B',
-                opacity: 0.9,
+                // opacity: 0.9,
                 height: 'auto',
               }}>
               <ImageBackground
-                source={require('../../assets/yt1.png')}
+                source={require('../../assets/fbi2.png')}
                 style={{
                   height: 'auto',
                   paddingHorizontal: 20,
@@ -72,7 +68,8 @@ const Advertise1YT = ({navigation}) => {
                     fontFamily: 'Manrope-Medium',
                     fontSize: 30,
                   }}>
-                  Get People to Post Your Advert on YouTube
+                  Get Genuine People to Like and Follow Your Facebook Business
+                  Page
                 </Text>
                 <View
                   style={{
@@ -98,22 +95,20 @@ const Advertise1YT = ({navigation}) => {
                       fontFamily: 'Manrope-ExtraBold',
                       fontSize: 12,
                     }}>
-                    ₦140 Per Advert Post
+                    ₦20 per Like and Follow
                   </Text>
                 </View>
 
                 <Text
                   style={{
-                    color: '#909090',
+                    color: '#fff',
                     fontFamily: 'Manrope-Regular',
                     fontSize: 12,
                     paddingTop: 10,
                   }}>
-                  Get real people to post your advert on their Youtube account
-                  having at least 1000 active followers each on their account to
-                  post your advert to their followers. This will give your
-                  advert massive views within a short period of time. You can
-                  indicate any number of people you want to post your advert.
+                  Get Real People To Like And Follow Your Facebook Business
+                  Page. You Can Get Any Number Of People To Like And Follow Your
+                  Facebook Business Page Without Disclosing Your Login Details
                 </Text>
               </ImageBackground>
             </View>
@@ -131,7 +126,7 @@ const Advertise1YT = ({navigation}) => {
                   fontSize: 25,
                   //   paddingTop: 10,
                 }}>
-                Create Advert Task
+                Create an Engagement Task
               </Text>
               <View
                 style={{
@@ -141,7 +136,7 @@ const Advertise1YT = ({navigation}) => {
               />
             </View>
           </View>
-          <Advertise1YTMenu />
+          <Advertise1EFBMenu />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -180,4 +175,4 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
   },
 });
-export default Advertise1YT;
+export default Advertise1EFB;

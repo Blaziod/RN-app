@@ -60,11 +60,11 @@ const Earn1 = ({navigation}) => {
     fetchUserAccessToken();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const sendLinkData = async type => {
+  const sendLinkData = async (type, link) => {
     setIsLoading(true);
     try {
       const response = await fetch(
-        `${ApiLink.ENDPOINT_1}/send_social_verification_request`,
+        `${ApiLink.ENDPOINT_1}/users/social-profiles/new`,
         {
           method: 'POST',
           headers: {
@@ -73,18 +73,18 @@ const Earn1 = ({navigation}) => {
           },
           body: JSON.stringify({
             link: link,
-            type: 'instagram',
+            platform: type,
           }),
         },
       );
       const data = await response.json();
       if (response.ok && (response.status === 200 || response.status === 201)) {
-        console.log('Success: Link successfully submitted.');
+        console.log('Success: Link successfully submitted.', data);
         console.log(data.message);
         Toast.show({
           type: 'success',
           text1: 'Success',
-          text2: 'Your Instagram account has been submitted for review',
+          text2: data.message,
           style: {
             borderLeftColor: 'pink',
             backgroundColor: 'yellow',
@@ -103,7 +103,6 @@ const Earn1 = ({navigation}) => {
             fontFamily: 'Manrope-ExtraBold',
           },
         });
-        setIsModalVisible(false);
         setLink('');
         fetchSocialLinks();
       } else if (response.status === 401) {
@@ -165,7 +164,6 @@ const Earn1 = ({navigation}) => {
         });
       }
     } catch (error) {
-      // Handle network or other errors
       console.error(`Error: ${error}`);
       Toast.show({
         type: 'error',
@@ -190,25 +188,29 @@ const Earn1 = ({navigation}) => {
         },
       });
     } finally {
-      setIsLoading(false); // Reset loading state regardless of the outcome
+      setIsLoading(false);
     }
   };
+
   const fetchSocialLinks = async () => {
     setIsLoading(true);
     if (userAccessToken) {
       try {
-        const response = await fetch(`${ApiLink.ENDPOINT_1}/verified_socials`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${userAccessToken.accessToken}`, // Add the access token to the headers
+        const response = await fetch(
+          `${ApiLink.ENDPOINT_1}/users/social-profiles`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${userAccessToken.accessToken}`, // Add the access token to the headers
+            },
           },
-        });
+        );
 
         const data = await response.json();
 
         if (response.ok) {
-          console.log('Successful', data);
+          console.log('Social Links', data);
           AsyncStorage.setItem(
             'sociallinks',
             JSON.stringify({
@@ -219,8 +221,9 @@ const Earn1 = ({navigation}) => {
             }),
           )
             .then(() => {
-              setUserSocials(data);
+              setUserSocials(data.social_profiles);
               console.log('Socials Stored');
+              console.log('Socials:', userSocials);
             })
             .catch(error => {
               console.error('Error storing user Socials:', error);
@@ -249,7 +252,7 @@ const Earn1 = ({navigation}) => {
           throw new Error(data.message);
         }
       } catch (error) {
-        console.error('Error during balance fetch:', error);
+        console.error('Error during Socials fetch:', error);
       }
     } else {
       console.log('No access token found');
@@ -262,6 +265,19 @@ const Earn1 = ({navigation}) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userAccessToken]);
+
+  const isProfileAvailable = platform => {
+    if (userSocials && Array.isArray(userSocials)) {
+      return userSocials.some(
+        profile => profile.platform.toLowerCase() === platform.toLowerCase(),
+      );
+    }
+    return false;
+  };
+
+  const instagramAccount = userSocials?.find(
+    social => social.platform.toLowerCase() === 'instagram',
+  );
 
   const fetchAvailableTasks = async () => {
     if (userAccessToken) {
@@ -517,7 +533,7 @@ const Earn1 = ({navigation}) => {
                       width: '50%',
                       borderRadius: 110,
                     }}
-                    onPress={() => sendLinkData(link, 'Instagram')}
+                    onPress={() => sendLinkData('Instagram', link)}
                     disabled={isLoading}>
                     {isLoading ? (
                       <ActivityIndicator size="small" color="#FFFFFF" />
@@ -656,7 +672,7 @@ const Earn1 = ({navigation}) => {
               <ActivityIndicator size="large" color="#fff" />
             ) : (
               <View>
-                {userSocials?.instagram_verified && (
+                {isProfileAvailable('instagram') && (
                   <View>
                     <View style={styles.ProfileSetUp}>
                       <View style={styles.ProfileTexting}>
@@ -672,11 +688,13 @@ const Earn1 = ({navigation}) => {
                         <TouchableOpacity style={styles.GotoButton3}>
                           <View style={{width: '60%'}}>
                             <Text style={styles.GotoText2}>
-                              {userSocials?.instagram_link}
+                              {instagramAccount?.link || 'No link found'}
                             </Text>
                           </View>
 
-                          <Text style={styles.GotoText3}>verified</Text>
+                          <Text style={styles.GotoText3}>
+                            {instagramAccount?.status}
+                          </Text>
                         </TouchableOpacity>
                       </View>
                       <View style={styles.IconAA}>
@@ -721,7 +739,7 @@ const Earn1 = ({navigation}) => {
                     {earnMenu === 5}
                   </View>
                 )}
-                {!userSocials?.instagram_verified && (
+                {!isProfileAvailable('instagram') && (
                   <View style={styles.ProfileSetUp}>
                     <View style={styles.ProfileTexting}>
                       <Text style={styles.SetUpText}>

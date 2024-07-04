@@ -504,7 +504,7 @@ const EngageAdvertiseMenu = () => {
                   alignItems: 'center',
                   width: 90,
                 }}
-                onPress={() => navigation.navigate('Advertise1FBB')}>
+                onPress={() => navigation.navigate('Advertise1EFB')}>
                 <Text
                   style={{
                     color: '#fff',

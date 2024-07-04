@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+
 /* eslint-disable no-shadow */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect} from 'react';
@@ -15,7 +16,9 @@ import {
   Alert,
   Linking,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
+import Video from 'react-native-video';
 // import {AdvertiseModal1} from './Modals/AdvertiseModal1';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
@@ -25,6 +28,7 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import {ApiLink} from '../../enums/apiLink';
 import axios from 'axios';
 import queryString from 'query-string';
+import {useTheme} from '../../Components/Contexts/colorTheme';
 
 import {
   XAdvertiseModalPicker,
@@ -36,7 +40,10 @@ import {
 
 const Advertise1XMenu = () => {
   const [selectedImages, setSelectedImages] = useState([]);
+  const [selectedVideos, setSelectedVideos] = useState([]);
   const [base64Images, setBase64Images] = useState([]);
+  const [base64Videos, setBase64Videos] = useState([]);
+  const [videos, setVideos] = useState(null);
   const [religion, setReligion] = useState('Select Religion');
   const [gender, setGender] = useState('Select Gender');
   const [choosePlatform, setChoosePlatform] = useState('Select Platform');
@@ -51,7 +58,6 @@ const Advertise1XMenu = () => {
   const [caption, setCaption] = useState('');
   const navigation = useNavigation();
   const [amount, setAmount] = useState('');
-  const [targetState, setTargetState] = useState('');
   const [userData, setUserData] = useState(null);
   const [userData1, setUserData1] = useState(null);
   const [image, setImage] = useState(null);
@@ -154,6 +160,38 @@ const Advertise1XMenu = () => {
   const setData5 = option5 => {
     setReligion(option5);
   };
+  const {theme} = useTheme();
+
+  const dynamicStyles = StyleSheet.create({
+    AppContainer: {
+      flex: 1,
+      backgroundColor: theme === 'dark' ? '#121212' : '#FFFFFF', // Dynamic background color
+      width: '100%',
+    },
+    DivContainer: {
+      backgroundColor:
+        theme === 'dark' ? '#2f2f2f6b' : 'rgba(177, 177, 177, 0.20)', // Dynamic background color
+    },
+    TextColor: {
+      color: theme === 'dark' ? '#FFFFFF' : '#000000', // Dynamic text color
+    },
+    Button: {
+      backgroundColor: theme === 'dark' ? '#FFF' : '#CB29BE', // Dynamic background color
+    },
+    Btext: {
+      color: theme === 'dark' ? '#FF6DFB' : '#FFF', // Dynamic text color
+    },
+    ModalContainer: {
+      backgroundColor: theme === 'dark' ? '#000' : '#FFF', // Dynamic background color
+    },
+    ModalDivContainer: {
+      backgroundColor:
+        theme === 'dark' ? '#1a1a1a' : 'rgba(177, 177, 177, 0.20)', // Dynamic background color
+    },
+  });
+
+  const [mediaType, setMediaType] = useState('');
+  const [mediaItems, setMediaItems] = useState([]);
   const chooseImage = () => {
     let options = {
       mediaType: 'photo',
@@ -181,7 +219,9 @@ const Advertise1XMenu = () => {
         setSelectedImages(images);
         setImage(images);
         setBase64Images(base64Strs);
-
+        createMediaTask('photo', images);
+        setMediaType('photo');
+        setMediaItems(images);
         console.log('Images selected:', images);
 
         // Store the base64 strings in AsyncStorage
@@ -198,107 +238,236 @@ const Advertise1XMenu = () => {
     });
   };
 
-  const createTask = async (paymentMethod = 'trendit_wallet') => {
-    console.log('Image at start of createTask:', image);
-
-    AsyncStorage.removeItem('profile_picture');
-    if (chooseImage) {
-      setTaskType('advert');
-      setAmount(chooseNumber * 140);
-      const taskData = new FormData();
-      taskData.append('platform', choosePlatform);
-      taskData.append('target_country', chooseLocation);
-      taskData.append('posts_count', chooseNumber);
-      taskData.append('task_type', 'advert');
-      taskData.append('caption', caption);
-      taskData.append('gender', gender);
-      // taskData.append('hashtags', hashtag);
-      taskData.append('amount', chooseNumber * 140);
-      taskData.append('target_state', 'Lagos');
-      console.log('Task Data:', image?.uri);
-
-      const Token = userData?.accessToken;
-      console.log('Testing', Token);
-
-      try {
-        const response = await fetch(
-          `${ApiLink.ENDPOINT_1}/tasks/new?payment_method=${paymentMethod}`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              Authorization: `Bearer ${Token}`,
-            },
-            body: taskData,
-          },
+  const chooseVideo = () => {
+    let options = {
+      mediaType: 'video',
+      includeBase64: true,
+      selectionLimit: 4, // Allow up to 4 videos to be selected
+    };
+    console.log('chooseVideo called');
+    launchImageLibrary(options, async response => {
+      if (response.didCancel) {
+        console.log('User cancelled video picker');
+      } else if (response.error) {
+        console.log('VideoPicker Error: ', response.error);
+      } else {
+        console.log(response, 'Response');
+        const videos = response.assets.map(asset => ({
+          uri: asset.uri,
+          type: asset.type,
+          name: asset.fileName,
+        }));
+        const base64Strs = response.assets.map(
+          asset => `data:${asset.type};base64,${asset.base64}`,
         );
 
-        if (!response.ok) {
-          throw new Error('HTTP error ' + response);
-        }
+        // Update state with the selected videos and their base64 strings
+        setSelectedVideos(videos);
+        setVideos(videos);
+        setBase64Videos(base64Strs);
+        createMediaTask('video', videos);
+        setMediaType('video');
+        setMediaItems(videos);
+        console.log('Videos selected:', videos);
 
-        const data = await response.json();
-        //   Alert.alert('Success', data.message);
-        setIsModal2Visible(false);
-        setIsModal3Visible(true);
-        AsyncStorage.removeItem('profile_picture');
-        Toast.show({
-          type: 'success',
-          text1: 'Success',
-          text2: data.message,
-          style: {
-            borderLeftColor: 'pink',
-            backgroundColor: 'yellow',
-            width: '80%',
-            alignSelf: 'center',
-            justifyContent: 'center',
-            alignItems: 'center',
-          },
-          text1Style: {
-            color: 'red',
-            fontSize: 14,
-          },
-          text2Style: {
-            color: 'green',
-            fontSize: 14,
-            fontFamily: 'Manrope-ExtraBold',
-          },
-        });
-        console.log(data);
-      } catch (error) {
-        console.error('Error:', error);
-        console.error('Error message:', error.message);
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: error.message,
-          style: {
-            borderLeftColor: 'pink',
-            backgroundColor: 'yellow',
-            width: '80%',
-            alignSelf: 'center',
-            justifyContent: 'center',
-            alignItems: 'center',
-          },
-          text1Style: {
-            color: 'red',
-            fontSize: 14,
-          },
-          text2Style: {
-            color: 'green',
-            fontSize: 14,
-            fontFamily: 'Manrope-ExtraBold',
-          },
-        });
-        if (error) {
-          console.error('Response data:', error);
-          console.error('Response status:', error);
+        // Store the base64 strings in AsyncStorage
+        try {
+          await AsyncStorage.setItem(
+            'profile_videos',
+            JSON.stringify(base64Strs),
+          );
+          console.log('Videos stored successfully');
+        } catch (error) {
+          console.error('Error storing videos:', error);
         }
       }
+    });
+  };
+
+  const createMediaTask = async (mediaType, mediaItems) => {
+    if (!mediaItems || mediaItems.length === 0) {
+      console.log(
+        `${mediaType.charAt(0).toUpperCase() + mediaType.slice(1)} Required`,
+        `Please choose a ${mediaType} before proceeding.`,
+      );
+      return;
+    }
+
+    console.log('Creating media task for:', mediaType);
+    const base64Strs = mediaItems.map(
+      item => `data:${item.type};base64,${item.base64}`,
+    );
+
+    // Update state with the selected media and their base64 strings
+    if (mediaType === 'photo') {
+      setSelectedImages(mediaItems);
+      setImage(mediaItems);
+      setBase64Images(base64Strs);
+    } else if (mediaType === 'video') {
+      setSelectedVideos(mediaItems);
+      setVideos(mediaItems);
+      setBase64Videos(base64Strs);
+    }
+
+    console.log(
+      `${mediaType.charAt(0).toUpperCase() + mediaType.slice(1)} selected:`,
+      mediaItems,
+    );
+
+    // Store the base64 strings in AsyncStorage
+    try {
+      await AsyncStorage.setItem(
+        `profile_${mediaType === 'photo' ? 'pictures' : 'videos'}`,
+        JSON.stringify(base64Strs),
+      );
+      console.log(
+        `${
+          mediaType.charAt(0).toUpperCase() + mediaType.slice(1)
+        } stored successfully`,
+      );
+    } catch (error) {
+      console.error(`Error storing ${mediaType}:`, error);
+    }
+  };
+
+  const createTask = async (paymentMethod = 'trendit_wallet') => {
+    if (!mediaItems || mediaItems.length === 0) {
+      Alert.alert('Please choose a media before proceeding.');
+      return;
+    }
+
+    setTaskType('advert');
+    setAmount(chooseNumber * 140);
+    const taskData = new FormData();
+    taskData.append('platform', choosePlatform);
+    taskData.append('target_country', chooseLocation);
+    taskData.append('posts_count', chooseNumber);
+    taskData.append('task_type', 'advert');
+    taskData.append('caption', caption);
+    taskData.append('gender', gender);
+    // taskData.append('hashtags', hashtag);
+    taskData.append('amount', chooseNumber * 140);
+    taskData.append('target_state', 'Lagos');
+    console.log('Task Data:', mediaItems?.[0]?.uri);
+
+    if (Array.isArray(mediaItems)) {
+      // If it's an array, append each media item as part of the form data
+      mediaItems.forEach((item, index) => {
+        taskData.append(`media[${index}]`, {
+          uri: item.uri,
+          type: item.type,
+          name: item.fileName,
+        });
+      });
+    } else {
+      // If it's a single media item, append it directly
+      taskData.append('media', {
+        uri: mediaItems?.uri,
+        type: mediaItems?.type,
+        name: mediaItems?.fileName,
+      });
+    }
+
+    const Token = userData?.accessToken;
+    console.log('Testing', Token);
+
+    try {
+      setIsLoading1(true);
+      const response = await fetch(
+        `${ApiLink.ENDPOINT_1}/tasks/new?payment_method=${paymentMethod}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${Token}`,
+          },
+          body: taskData,
+        },
+      );
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          Toast.show({
+            type: 'error',
+            text1: 'Error',
+            text2: 'AccessToken expired',
+            // Styling omitted for brevity
+          });
+          setIsLoading1(false);
+        } else {
+          setIsLoading1(false);
+          throw new Error('HTTP error ' + response.status);
+        }
+      }
+
+      const data = await response.json();
+      setIsLoading1(false);
+      setIsModal2Visible(false);
+      setChoosePlatform('');
+      setAmount('');
+      setCaption('');
+      setChooseLocation('');
+      setChooseNumber('');
+      setGender('');
+      setIsModal3Visible(true);
+      AsyncStorage.removeItem('profile_picture'); // Consider renaming or removing based on media type
+      Toast.show({
+        type: 'success',
+        text1: 'Success',
+        text2: data.message,
+        style: {
+          borderLeftColor: 'pink',
+          backgroundColor: 'yellow',
+          width: '80%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        text1Style: {
+          color: 'red',
+          fontSize: 14,
+        },
+        text2Style: {
+          color: 'green',
+          fontSize: 14,
+          fontFamily: 'Manrope-ExtraBold',
+        },
+      });
+      console.log(data);
+    } catch (error) {
+      setIsLoading1(false);
+      console.error('Error:', error);
+      console.error('Error message:', error.message);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: error.message,
+        style: {
+          borderLeftColor: 'pink',
+          backgroundColor: 'yellow',
+          width: '80%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        text1Style: {
+          color: 'red',
+          fontSize: 14,
+        },
+        text2Style: {
+          color: 'green',
+          fontSize: 14,
+          fontFamily: 'Manrope-ExtraBold',
+        },
+      });
     }
   };
 
   const createTaskPaystack = async (paymentMethod = 'payment_gateway') => {
+    if (!mediaItems || mediaItems.length === 0) {
+      Alert.alert('Please choose a media before proceeding.');
+      return;
+    }
     setTaskType('advert');
     setAmount(chooseNumber * 140);
     const taskData = new FormData();
@@ -312,7 +481,25 @@ const Advertise1XMenu = () => {
     taskData.append('amount', chooseNumber * 140);
     taskData.append('target_state', 'Lagos');
     console.log('Task Data:', image?.uri);
+    if (Array.isArray(mediaItems)) {
+      // If it's an array, append each media item as part of the form data
+      mediaItems.forEach((item, index) => {
+        taskData.append(`media[${index}]`, {
+          uri: item.uri,
+          type: item.type,
+          name: item.fileName,
+        });
+      });
+    } else {
+      // If it's a single media item, append it directly
+      taskData.append('media', {
+        uri: mediaItems?.uri,
+        type: mediaItems?.type,
+        name: mediaItems?.fileName,
+      });
+    }
 
+    // taskData.append('media_path', imageData);
     const Token = userData?.accessToken;
     console.log('Testing', Token);
 
@@ -369,6 +556,7 @@ const Advertise1XMenu = () => {
       }
     }
   };
+
   useEffect(() => {
     const handleUrl = async event => {
       try {
@@ -760,15 +948,19 @@ const Advertise1XMenu = () => {
         </Text>
         <View style={{flexDirection: 'row', gap: 5}}>
           <TouchableOpacity
-            style={{
-              flexDirection: 'row',
-              gap: 5,
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: '#2f2f2f6b',
-              padding: 7,
-              borderRadius: 4,
-            }}>
+            style={[
+              {
+                flexDirection: 'row',
+                gap: 5,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: '#2f2f2f6b',
+                padding: 7,
+                borderRadius: 4,
+              },
+              dynamicStyles.DivContainer,
+            ]}
+            onPress={() => chooseImage()}>
             <Svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
@@ -783,24 +975,27 @@ const Advertise1XMenu = () => {
               />
             </Svg>
             <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'Manrope-Regular',
-                fontSize: 13,
-              }}>
+              style={[
+                {color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13},
+                dynamicStyles.TextColor,
+              ]}>
               Photo
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={{
-              flexDirection: 'row',
-              gap: 5,
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: '#2f2f2f6b',
-              padding: 7,
-              borderRadius: 4,
-            }}>
+            style={[
+              {
+                flexDirection: 'row',
+                gap: 5,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: '#2f2f2f6b',
+                padding: 7,
+                borderRadius: 4,
+              },
+              dynamicStyles.DivContainer,
+            ]}
+            onPress={() => chooseVideo()}>
             <Svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
@@ -815,11 +1010,10 @@ const Advertise1XMenu = () => {
               />
             </Svg>
             <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'Manrope-Regular',
-                fontSize: 13,
-              }}>
+              style={[
+                {color: '#fff', fontFamily: 'Manrope-Regular', fontSize: 13},
+                dynamicStyles.TextColor,
+              ]}>
               Video
             </Text>
           </TouchableOpacity>
@@ -833,8 +1027,7 @@ const Advertise1XMenu = () => {
             borderRadius: 4,
             height: 150,
             width: '50%',
-          }}
-          onPress={() => chooseImage()}>
+          }}>
           {Array.isArray(image) && image.length > 0 ? (
             image.length === 1 ? (
               <Image
@@ -847,6 +1040,28 @@ const Advertise1XMenu = () => {
                 showsHorizontalScrollIndicator={false}>
                 {image.map((img, index) => (
                   <Image
+                    key={index}
+                    source={{uri: img.uri}}
+                    style={{width: 100, height: 100, marginRight: 5}}
+                  />
+                ))}
+              </ScrollView>
+            )
+          ) : (
+            <View />
+          )}
+          {Array.isArray(videos) && videos.length > 0 ? (
+            videos.length === 1 ? (
+              <Video
+                source={{uri: videos[0].uri}}
+                style={{width: 100, height: 100}}
+              />
+            ) : (
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}>
+                {videos.map((img, index) => (
+                  <Video
                     key={index}
                     source={{uri: img.uri}}
                     style={{width: 100, height: 100, marginRight: 5}}
@@ -1332,14 +1547,18 @@ const Advertise1XMenu = () => {
                       onPress={() => {
                         createTask();
                       }}>
-                      <Text
-                        style={{
-                          color: '#fff',
-                          fontFamily: 'Manrope-Regular',
-                          fontSize: 14,
-                        }}>
-                        proceed
-                      </Text>
+                      {isLoading1 ? (
+                        <ActivityIndicator size="small" color="#fff" />
+                      ) : (
+                        <Text
+                          style={{
+                            color: '#fff',
+                            fontFamily: 'Manrope-Regular',
+                            fontSize: 14,
+                          }}>
+                          proceed
+                        </Text>
+                      )}
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -1381,7 +1600,7 @@ const Advertise1XMenu = () => {
                       top: -10,
                       alignSelf: 'center',
                     }}
-                    onPress={() => setIsModal3Visible(false)}>
+                    onPress={() => navigation.navigate('History')}>
                     <View
                       style={{
                         backgroundColor: '#FF6DFB',
@@ -1547,16 +1766,7 @@ const Advertise1XMenu = () => {
                         width: 300,
                         borderRadius: 110,
                       }}
-                      onPress={() =>
-                        navigation.reset({
-                          index: 0,
-                          routes: [
-                            {
-                              name: 'History',
-                            },
-                          ],
-                        })
-                      }>
+                      onPress={() => navigation.navigate('History')}>
                       <Text
                         style={{
                           color: '#fff',
